@@ -9,10 +9,4 @@ export default defineConfig({
             'src': path.resolve(__dirname, './src'),
         },
     },
-    // server: {
-    //     port: 4201,
-    //     cors: false,
-    //     open: true,
-    //     origin: 'http://192.168.50.210:4201'
-    // }
 })
