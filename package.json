@@ -1,0 +1,27 @@
+{
+  "name": "project",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "admin",
+    "server",
+    "storefront"
+  ],
+  "scripts": {
+    "dev": "concurrently \"cd admin && yarn start\" \"cd server && yarn start:dev\"",
+    "build:admin": "cd admin && yarn build",
+    "build:server": "cd server && yarn build",
+    "build": "yarn build:admin && build:server",
+    "p:studio": "cd server && prisma studio",
+    "p:format": "cd server && prisma format",
+    "db:push": "cd server && prisma db push"
+  },
+  "dependencies": {
+    "lodash": "4.17.21",
+    "@types/lodash": "4.14.194"
+  },
+  "devDependencies": {
+    "concurrently": "8.0.1"
+  }
+}

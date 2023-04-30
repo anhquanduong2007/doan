@@ -1,0 +1,171 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int           @id @default(autoincrement())
+  created_at    DateTime      @default(now())
+  updated_at    DateTime      @updatedAt
+  email         String        @unique @db.VarChar(255)
+  address       String?       @db.VarChar(255)
+  phone         String?       @db.VarChar(10)
+  first_name    String        @db.VarChar(255)
+  gender        Boolean       @default(true)
+  last_name     String        @db.VarChar(255)
+  password      String
+  active        Boolean
+  refresh_token RefreshToken?
+  user_on_role  UserOnRole[]
+}
+
+model RefreshToken {
+  id      Int     @id @default(autoincrement())
+  token   String?
+  user    User    @relation(fields: [user_id], references: [id])
+  user_id Int     @unique
+}
+
+model Role {
+  id           Int           @id @default(autoincrement())
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  code         String        @unique @db.VarChar(255)
+  description  String?
+  permissions  Permissions[]
+  user_on_role UserOnRole[]
+}
+
+model UserOnRole {
+  role    Role @relation(fields: [role_id], references: [id])
+  role_id Int // relation scalar field (used in the `@relation` attribute above)
+  user    User @relation(fields: [user_id], references: [id])
+  user_id Int // relation scalar field (used in the `@relation` attribute above)
+
+  @@id([role_id, user_id])
+}
+
+enum Permissions {
+  SuperAdmin
+  ReadProduct
+  DeleteProduct
+  UpdateProduct
+  CreateProduct
+  ReadCollection
+  CreateCollection
+  DeleteCollection
+  UpdateCollection
+  ReadAsset
+  CreateAsset
+  DeleteAsset
+  UpdateAsset
+  ReadCustomer
+  CreateCustomer
+  DeleteCustomer
+  UpdateCustomer
+  ReadPromotion
+  CreatePromotion
+  DeletePromotion
+  UpdatePromotion
+  ReadAdministrator
+  CreateAdministrator
+  DeleteAdministrator
+  UpdateAdministrator
+  ReadRole
+  CreateRole
+  DeleteRole
+  UpdateRole
+}
+
+model Product {
+  id                   Int                  @id @default(autoincrement())
+  created_at           DateTime             @default(now())
+  updated_at           DateTime             @updatedAt
+  name                 String               @db.VarChar(255)
+  slug                 String               @unique @db.VarChar(255)
+  description          String?
+  enabled              Boolean              @default(true)
+  product_variant      ProductVariant[]
+  product_option_group ProductOptionGroup[]
+  // featuredAssetId
+}
+
+model ProductVariant {
+  id                                Int                             @id @default(autoincrement())
+  created_at                        DateTime                        @default(now())
+  updated_at                        DateTime                        @updatedAt
+  name                              String                          @db.VarChar(255)
+  enabled                           Boolean                         @default(true)
+  sku                               String                          @unique @db.VarChar(255)
+  price                             Int                             @default(0)
+  stockOnHand                       Int                             @default(0)
+  product                           Product?                        @relation(fields: [product_id], references: [id])
+  product_id                        Int?
+  product_variant_on_product_option ProductVariantOnProductOption[]
+}
+
+model ProductOptionGroup {
+  id             Int             @id @default(autoincrement())
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  code           String          @db.VarChar(255)
+  name           String          @db.VarChar(255)
+  product        Product?        @relation(fields: [product_id], references: [id])
+  product_id     Int?
+  product_option ProductOption[]
+}
+
+model ProductOption {
+  id                                Int                             @id @default(autoincrement())
+  created_at                        DateTime                        @default(now())
+  updated_at                        DateTime                        @updatedAt
+  name                              String                          @db.VarChar(255)
+  code                              String                          @db.VarChar(255)
+  product_option_group              ProductOptionGroup?             @relation(fields: [product_option_group_id], references: [id])
+  product_option_group_id           Int?
+  product_variant_on_product_option ProductVariantOnProductOption[]
+}
+
+model ProductVariantOnProductOption {
+  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id])
+  product_variant_id Int
+  product_option     ProductOption  @relation(fields: [product_option_id], references: [id])
+  product_option_id  Int
+
+  @@id([product_variant_id, product_option_id])
+}
+
+model Collection {
+  id          Int          @id @default(autoincrement())
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  name        String       @db.VarChar(255)
+  slug        String       @unique @db.VarChar(255)
+  description String
+  isRoot      Boolean
+  position    Int
+  isPrivate   Boolean      @default(true)
+  children    Collection[] @relation("SubCollection")
+  parent      Collection?  @relation("SubCollection", fields: [parentId], references: [id])
+  parentId    Int?
+}
+
+model Asset {
+  id                   Int      @id @default(autoincrement())
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+  name                 String
+  url                  String
+  width                Int
+  height               Int
+  format               String
+  cloudinary_asset_id  String
+  cloudinary_public_id String
+}
