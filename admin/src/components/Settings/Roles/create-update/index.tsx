@@ -1,11 +1,13 @@
+import { Box, Flex } from '@chakra-ui/react';
 import { Breadcrumb, Button, Card, Col, Divider, Input, Row, message } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { createRole } from 'src/features/setting/role/actions';
+import { createRole, getSingleRole, updateRole } from 'src/features/setting/role/actions';
 import { createAxiosClient } from 'src/helper/axiosInstance';
+import { ErrorValidateResponse } from 'src/types';
 
 interface PermissionType {
     title: string
@@ -52,72 +54,22 @@ const permissions: PermissionType[] = [
 
 ]
 
-interface DefaultValuesType {
+interface FormValues  {
     description: string
     code: string,
-    SuperAdmin: boolean
-    ReadProduct: boolean
-    DeleteProduct: boolean
-    UpdateProduct: boolean
-    CreateProduct: boolean
-    ReadCollection: boolean
-    CreateCollection: boolean
-    DeleteCollection: boolean
-    UpdateCollection: boolean
-    ReadAsset: boolean
-    CreateAsset: boolean
-    DeleteAsset: boolean
-    UpdateAsset: boolean
-    ReadCustomer: boolean
-    CreateCustomer: boolean
-    DeleteCustomer: boolean
-    UpdateCustomer: boolean
-    ReadPromotion: boolean
-    CreatePromotion: boolean
-    DeletePromotion: boolean
-    UpdatePromotion: boolean
-    ReadAdministrator: boolean
-    CreateAdministrator: boolean
-    DeleteAdministrator: boolean
-    UpdateAdministrator: boolean
-    ReadRole: boolean
-    CreateRole: boolean
-    DeleteRole: boolean
-    UpdateRole: boolean
 }
 
-const defaultValues: DefaultValuesType = {
+const defaultValues: FormValues = {
     description: '',
     code: '',
-    SuperAdmin: false,
-    ReadProduct: false,
-    DeleteProduct: false,
-    UpdateProduct: false,
-    CreateProduct: false,
-    ReadCollection: false,
-    CreateCollection: false,
-    DeleteCollection: false,
-    UpdateCollection: false,
-    ReadAsset: false,
-    CreateAsset: false,
-    DeleteAsset: false,
-    UpdateAsset: false,
-    ReadCustomer: false,
-    CreateCustomer: false,
-    DeleteCustomer: false,
-    UpdateCustomer: false,
-    ReadPromotion: false,
-    CreatePromotion: false,
-    DeletePromotion: false,
-    UpdatePromotion: false,
-    ReadAdministrator: false,
-    CreateAdministrator: false,
-    DeleteAdministrator: false,
-    UpdateAdministrator: false,
-    ReadRole: false,
-    CreateRole: false,
-    DeleteRole: false,
-    UpdateRole: false,
+    ...permissions.map((permission) => {
+        return permission.permissions
+    }).flat(1).reduce((prewPermiss, currentPermiss) => {
+        return {
+            ...prewPermiss,
+            [currentPermiss]: false
+        }
+    }, {})
 }
 const RoleCreateUpdate = () => {
     // ** State
@@ -126,7 +78,7 @@ const RoleCreateUpdate = () => {
     // ** Third party
     const navigate = useNavigate()
     const params = useParams()
-    const { control, handleSubmit, formState: { errors } } = useForm<DefaultValuesType>({ defaultValues });
+    const { control, handleSubmit, setValue, setError, formState: { errors } } = useForm({ defaultValues });
 
     // ** Variables
     const { id } = params
@@ -138,19 +90,71 @@ const RoleCreateUpdate = () => {
 
     // ** Effect
     useEffect(() => {
+        if (id) {
+            getSingleRole({
+                axiosClient,
+                dispatch,
+                id: +id
+            })
+        }
+    }, [id])
+
+    useEffect(() => {
+        if (id && !store.single.loading && store.single.result) {
+            setValue("code", store.single.result.code)
+            setValue("description", store.single.result.description)
+            store.single.result.permissions.forEach((permission) => {
+                setValue(permission, true)
+            })
+        }
+    }, [id, store.single.loading, store.single.result])
+
+    useEffect(() => {
         // ** Create role
         if (!store.create.loading && isSubmited && !id && !store.create.error) {
             setIsSubmited(false)
-            navigate('/roles')
+            navigate('/settings/roles')
             message.success('Create role successfully!');
         }
-    }, [store.create.loading, isSubmited, id, store.create.error])
+        // ** Update role
+        if (!store.update.loading && isSubmited && id && !store.update.error) {
+            setIsSubmited(false)
+            navigate('/settings/roles')
+            message.success('Update role successfully!');
+        }
+        // ** Error when create role
+        if (!store.create.loading && isSubmited && !id && store.create.error) {
+            const error = { ...store.create.result } as ErrorValidateResponse
+            setError(error.fieldError, { message: error.message })
+        }
+        // ** Error when update role
+        if (!store.update.loading && isSubmited && id && store.update.error) {
+            const error = { ...store.update.result } as ErrorValidateResponse
+            setError(error.fieldError, { message: error.message })
+        }
+    }, [
+        store.create.loading,
+        store.create.error,
+        store.update.loading,
+        store.update.error,
+        isSubmited,
+        id,
+    ])
 
     // ** Function handle
     const onSubmit = (data: any) => {
         const permissions = Object.keys(data).filter(key => data[key] === true)
         if (id) {
-
+            updateRole({
+                axiosClient,
+                dispatch,
+                id: +id,
+                role: {
+                    code: data.code,
+                    permissions,
+                    description: data.description
+                }
+            })
         } else {
             createRole({
                 axiosClient,
@@ -174,7 +178,7 @@ const RoleCreateUpdate = () => {
                             <Link to='/'>Home</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/roles'>Roles</Link>
+                            <Link to='/settings/roles'>Roles</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>{id ? 'Update' : 'Create'}</Breadcrumb.Item>
                     </Breadcrumb>
@@ -183,7 +187,7 @@ const RoleCreateUpdate = () => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Row>
                             <Col span={24}>
-                                <div className='flex justify-end items-center'>
+                                <Flex justifyContent="flex-end" alignItems="center">
                                     {
                                         id && store.update.loading ?
                                             <Button type="primary" loading>Updating...</Button> :
@@ -192,75 +196,74 @@ const RoleCreateUpdate = () => {
                                                 id ? <Button htmlType="submit" type="primary">Update</Button> :
                                                     <Button htmlType="submit" type="primary">Create</Button>
                                     }
-                                </div>
+                                </Flex>
                             </Col>
                             <Divider />
                             <Col span={24}>
                                 <Card>
-                                    <div className='mb-4'>
-                                        <label className='mr-2 cursor-pointer font-semibold' htmlFor='description'>Description</label>
+                                    <Box mb={4}>
+                                        <Box as="label" htmlFor='description' mr={2} cursor="pointer" fontWeight="bold">Description</Box>
                                         <Controller
                                             name="description"
                                             control={control}
-                                            rules={{ required: true }}
                                             render={({ field: { value, ...other } }) => {
                                                 return (
-                                                    <Fragment>
+                                                    <Box mt={1}>
                                                         <Input
                                                             id='description'
                                                             value={value || ''}
                                                             {...other}
-                                                            status={errors?.description ? 'error' : ''}
                                                             placeholder='Description'
-                                                            className='!mt-1'
                                                         />
-                                                        {errors?.description ? <p className='mt-1 text-red-600'>{errors.description?.type === 'required' ? "This field is required!" : errors.description.message}</p> : null}
-                                                    </Fragment>
+                                                    </Box>
                                                 )
                                             }}
                                         />
-                                    </div>
-                                    <div className='mb-4'>
-                                        <label className='mr-2 cursor-pointer font-semibold' htmlFor='code'>Code</label>
+                                    </Box>
+                                    <Box mb={4}>
+                                        <Box as="label" mr={2} cursor="pointer" fontWeight="bold" htmlFor='code'>Code</Box>
                                         <Controller
                                             name="code"
                                             control={control}
                                             rules={{ required: true }}
                                             render={({ field: { value, ...other } }) => {
                                                 return (
-                                                    <Fragment>
+                                                    <Box mt={1}>
                                                         <Input
                                                             id='code'
                                                             status={errors?.code ? 'error' : ''}
                                                             value={value || ''}
                                                             {...other}
-                                                            className='!mt-1'
                                                             placeholder='Code'
                                                         />
-                                                        {errors?.code ? <p className='mt-1 text-red-600'>{errors.code?.type === 'required' ? "This field is required!" : errors.code.message}</p> : null}
-                                                    </Fragment>
+                                                        {errors?.code ? <Box as="p" mt={1} textColor="red.600">{errors.code?.type === 'required' ? "This field is required!" : errors.code.message}</Box> : null}
+                                                    </Box>
                                                 )
                                             }}
                                         />
-                                    </div>
+                                    </Box>
                                     <div>
-                                        <div className='mb-4'>Permissions</div>
+                                        <Box mb={4} fontWeight="bold">Permissions</Box>
                                         {permissions.map((permission, index: number) => {
                                             return (
                                                 <Row key={index}>
-                                                    <Col span={6} className='bg-[#f2f3f5] border-b  border-[#bfc3cc] p-4'>
-                                                        <div className='flex flex-col'>
-                                                            <span className='font-bold text-[#666]'>{permission.title}</span>
-                                                            <span className='text-[12px] text-[#666]'>{permission.description}</span>
-                                                        </div>
+                                                    <Col span={6} style={{ background: "#f2f3f5", padding: "16px", borderBottom: "1px solid #bfc3cc" }}>
+                                                        <Flex flexDirection="column">
+                                                            <Box fontWeight="bold" textColor="#666">{permission.title}</Box>
+                                                            <Box textColor="#666" fontSize="12px">{permission.description}</Box>
+                                                        </Flex>
                                                     </Col>
-                                                    <Col span={18} className={index === 0 ? 'border-b border-l border-t  border-[#f2f3f5] p-4' : 'border-b border-l  border-[#f2f3f5] p-4'}>
-                                                        <div className='flex justify-around items-center h-full'>
+                                                    <Col span={18}
+                                                        style={index === 0 ?
+                                                            { padding: "16px", border: "1px solid #f2f3f5", borderRight: "unset" } :
+                                                            { padding: "16px", border: "1px solid #f2f3f5", borderRight: "unset", borderTop: "unset" }}
+                                                    >
+                                                        <Flex justifyContent="space-around" alignItems="center" height="100%">
                                                             {permission.permissions.map((item, index: number) => {
                                                                 return (
-                                                                    <div className='flex justify-center items-center' key={index}>
+                                                                    <Flex justifyContent="center" alignItems="center" key={index}>
                                                                         <Controller
-                                                                            name={item as any}
+                                                                            name={item}
                                                                             control={control}
                                                                             render={({ field: { value, ...other } }) => {
                                                                                 return (
@@ -268,20 +271,20 @@ const RoleCreateUpdate = () => {
                                                                                         <Input
                                                                                             id={item}
                                                                                             type='checkbox'
+                                                                                            checked={value || false}
                                                                                             value={value || false}
                                                                                             {...other}
-                                                                                            className='!mr-2 focus:!shadow-none'
                                                                                             placeholder='Code'
                                                                                         />
                                                                                     </Fragment>
                                                                                 )
                                                                             }}
                                                                         />
-                                                                        <label className='mr-2 cursor-pointer font-semibold' htmlFor={item}>{item}</label>
-                                                                    </div>
+                                                                        <Box as="label" ml={2} cursor="pointer" fontWeight="semibold" htmlFor={item}>{item}</Box>
+                                                                    </Flex>
                                                                 )
                                                             })}
-                                                        </div>
+                                                        </Flex>
                                                     </Col>
                                                 </Row>
                                             )

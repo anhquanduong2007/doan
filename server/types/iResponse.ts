@@ -1,9 +1,13 @@
 export class IResponse<T extends {}> {
     code: number;
+    isValidate?: boolean;
+    errors?: Array<{
+        fieldError: string;
+        message: string;
+    }>;
     success: boolean;
-    message?: string;
     accessToken?: string;
     refreshToken?: string;
-    fieldError?: string;
     data?: T;
+    message?: string;
 }

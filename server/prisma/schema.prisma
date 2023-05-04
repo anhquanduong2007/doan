@@ -1,171 +1,348 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            Int           @id @default(autoincrement())
-  created_at    DateTime      @default(now())
-  updated_at    DateTime      @updatedAt
-  email         String        @unique @db.VarChar(255)
-  address       String?       @db.VarChar(255)
-  phone         String?       @db.VarChar(10)
-  first_name    String        @db.VarChar(255)
-  gender        Boolean       @default(true)
-  last_name     String        @db.VarChar(255)
-  password      String
-  active        Boolean
-  refresh_token RefreshToken?
-  user_on_role  UserOnRole[]
+model banner {
+  id            Int       @id @default(autoincrement())
+  banner_name   String?   @db.VarChar(45)
+  banner_code   String?   @db.VarChar(45)
+  img           String?   @db.VarChar(255)
+  banner_type   String?   @db.VarChar(45)
+  number        Int?
+  banner_link   String?   @db.VarChar(45)
+  created_date  DateTime? @db.Timestamp(0)
+  modified_date DateTime? @db.Timestamp(0)
+  created_by    Int?
+  modified_by   Int?
 }
 
-model RefreshToken {
-  id      Int     @id @default(autoincrement())
-  token   String?
-  user    User    @relation(fields: [user_id], references: [id])
-  user_id Int     @unique
+model bill {
+  id                         Int            @id @default(autoincrement())
+  code                       String?        @db.VarChar(45)
+  user_id                    Int?
+  bill_date                  DateTime?      @db.Timestamp(0)
+  total_price                Decimal?       @default(0.00) @db.Decimal(18, 2)
+  delivery_time              DateTime?      @db.Timestamp(0)
+  status                     Int?           @default(-1)
+  staff_id                   Int?
+  note                       String?        @db.VarChar(255)
+  payment                    Int?
+  address                    String?        @db.Text
+  created_date               DateTime?      @db.Timestamp(0)
+  modified_date              DateTime?      @db.Timestamp(0)
+  created_by                 Int?
+  modified_by                Int?
+  users_bill_user_idTousers  users?         @relation("bill_user_idTousers", fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_bill_user")
+  users_bill_staff_idTousers users?         @relation("bill_staff_idTousers", fields: [staff_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_bill_user_staff")
+  product_bill               product_bill[]
+
+  @@unique([user_id, bill_date], map: "unique_bill")
+  @@index([staff_id], map: "fk_bill_user_staff")
 }
 
-model Role {
-  id           Int           @id @default(autoincrement())
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
-  code         String        @unique @db.VarChar(255)
-  description  String?
-  permissions  Permissions[]
-  user_on_role UserOnRole[]
+model brand {
+  id            Int       @id @default(autoincrement())
+  brand_name    String    @db.VarChar(60)
+  brand_code    String    @db.VarChar(50)
+  content       String    @db.VarChar(255)
+  status        Int       @default(0)
+  icon          String?   @db.VarChar(255)
+  created_date  DateTime? @db.Timestamp(0)
+  modified_date DateTime? @unique(map: "modified_date_UNIQUE") @db.Timestamp(0)
+  created_by    Int?
+  modified_by   Int?
+  product       product[]
 }
 
-model UserOnRole {
-  role    Role @relation(fields: [role_id], references: [id])
-  role_id Int // relation scalar field (used in the `@relation` attribute above)
-  user    User @relation(fields: [user_id], references: [id])
-  user_id Int // relation scalar field (used in the `@relation` attribute above)
-
-  @@id([role_id, user_id])
+model campaign {
+  id              Int               @id @default(autoincrement())
+  campaign_name   String?           @db.VarChar(255)
+  content         String?           @db.VarChar(255)
+  start_day       DateTime?         @db.Timestamp(0)
+  end_day         DateTime?         @db.Timestamp(0)
+  status          Int?
+  created_date    DateTime?         @db.Timestamp(0)
+  modified_date   DateTime?         @db.Timestamp(0)
+  created_by      Int?
+  modified_by     Int?
+  campaign_detail campaign_detail[]
 }
 
-enum Permissions {
-  SuperAdmin
-  ReadProduct
-  DeleteProduct
-  UpdateProduct
-  CreateProduct
-  ReadCollection
-  CreateCollection
-  DeleteCollection
-  UpdateCollection
-  ReadAsset
-  CreateAsset
-  DeleteAsset
-  UpdateAsset
-  ReadCustomer
-  CreateCustomer
-  DeleteCustomer
-  UpdateCustomer
-  ReadPromotion
-  CreatePromotion
-  DeletePromotion
-  UpdatePromotion
-  ReadAdministrator
-  CreateAdministrator
-  DeleteAdministrator
-  UpdateAdministrator
-  ReadRole
-  CreateRole
-  DeleteRole
-  UpdateRole
+model campaign_detail {
+  id          Int      @id @default(autoincrement())
+  product_id  String?  @db.LongText
+  campaign_id Int
+  discount    Int?
+  campaign    campaign @relation(fields: [campaign_id], references: [id], onUpdate: Restrict, map: "fk_campaign_detail")
+
+  @@index([campaign_id], map: "fk_campaign_detail")
 }
 
-model Product {
-  id                   Int                  @id @default(autoincrement())
-  created_at           DateTime             @default(now())
-  updated_at           DateTime             @updatedAt
-  name                 String               @db.VarChar(255)
-  slug                 String               @unique @db.VarChar(255)
-  description          String?
-  enabled              Boolean              @default(true)
-  product_variant      ProductVariant[]
-  product_option_group ProductOptionGroup[]
-  // featuredAssetId
+model category {
+  id             Int        @id @default(autoincrement())
+  category_name  String     @db.VarChar(60)
+  category_code  String     @db.VarChar(50)
+  content        String?    @db.VarChar(255)
+  parent_id      Int?
+  status         Int        @default(-1)
+  created_date   DateTime?  @db.Timestamp(0)
+  modified_date  DateTime?  @db.Timestamp(0)
+  created_by     Int?
+  modified_by    Int?
+  category       category?  @relation("categoryTocategory", fields: [parent_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_category_parent_id")
+  other_category category[] @relation("categoryTocategory")
+  product        product[]
+
+  @@index([parent_id], map: "fk_category_parent_id")
 }
 
-model ProductVariant {
-  id                                Int                             @id @default(autoincrement())
-  created_at                        DateTime                        @default(now())
-  updated_at                        DateTime                        @updatedAt
-  name                              String                          @db.VarChar(255)
-  enabled                           Boolean                         @default(true)
-  sku                               String                          @unique @db.VarChar(255)
-  price                             Int                             @default(0)
-  stockOnHand                       Int                             @default(0)
-  product                           Product?                        @relation(fields: [product_id], references: [id])
-  product_id                        Int?
-  product_variant_on_product_option ProductVariantOnProductOption[]
+model favorite {
+  id           Int       @id @default(autoincrement())
+  product_id   Int
+  user_id      Int
+  created_date DateTime? @db.Timestamp(0)
+  product      product   @relation(fields: [product_id], references: [id], onUpdate: Restrict, map: "fk_favorite_product")
+  users        users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_favorite_user")
+
+  @@index([product_id], map: "fk_favorite_product")
+  @@index([user_id], map: "fk_favorite_user")
 }
 
-model ProductOptionGroup {
-  id             Int             @id @default(autoincrement())
-  created_at     DateTime        @default(now())
-  updated_at     DateTime        @updatedAt
-  code           String          @db.VarChar(255)
-  name           String          @db.VarChar(255)
-  product        Product?        @relation(fields: [product_id], references: [id])
-  product_id     Int?
-  product_option ProductOption[]
+model img {
+  id            Int       @id @default(autoincrement())
+  img           String    @db.VarChar(255)
+  product_id    Int?
+  created_date  DateTime? @db.Timestamp(0)
+  modified_date DateTime? @db.Timestamp(0)
+  created_by    Int?
+  modified_by   Int?
+
+  @@index([product_id], map: "fk_img_product")
 }
 
-model ProductOption {
-  id                                Int                             @id @default(autoincrement())
-  created_at                        DateTime                        @default(now())
-  updated_at                        DateTime                        @updatedAt
-  name                              String                          @db.VarChar(255)
-  code                              String                          @db.VarChar(255)
-  product_option_group              ProductOptionGroup?             @relation(fields: [product_option_group_id], references: [id])
-  product_option_group_id           Int?
-  product_variant_on_product_option ProductVariantOnProductOption[]
+model product {
+  id                 Int                  @id @default(autoincrement())
+  product_name       String               @db.VarChar(255)
+  name_search        String?              @db.VarChar(255)
+  product_code       String?              @db.VarChar(255)
+  price_sell         Decimal              @db.Decimal(18, 2)
+  sale               Int?                 @default(0)
+  price              Decimal?             @db.Decimal(18, 2)
+  description        String               @db.Text
+  content            String?              @db.Text
+  category_id        Int
+  brand_id           Int?
+  parent_id          Int?
+  img                String?              @db.VarChar(255)
+  active             Int
+  type               String?              @db.VarChar(45)
+  quantity           Int?                 @default(0)
+  sold               Int?                 @default(0)
+  rate               Float?               @default(0) @db.Float
+  total_rate         Int?                 @default(0)
+  created_date       DateTime?            @db.Timestamp(0)
+  modified_date      DateTime?            @db.Timestamp(0)
+  created_by         Int?
+  modified_by        Int?
+  favorite           favorite[]
+  brand              brand?               @relation(fields: [brand_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_product_brand")
+  category           category             @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
+  product            product?             @relation("productToproduct", fields: [parent_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_product_id")
+  other_product      product[]            @relation("productToproduct")
+  product_bill       product_bill[]
+  product_receipt    product_receipt[]
+  product_speciality product_speciality[]
+
+  @@index([brand_id], map: "fk_product_brand")
+  @@index([category_id], map: "fk_product_cate")
+  @@index([parent_id], map: "fk_product_id2")
 }
 
-model ProductVariantOnProductOption {
-  product_variant    ProductVariant @relation(fields: [product_variant_id], references: [id])
-  product_variant_id Int
-  product_option     ProductOption  @relation(fields: [product_option_id], references: [id])
-  product_option_id  Int
+model product_bill {
+  id            Int       @id @default(autoincrement())
+  product_id    Int?
+  bill_id       Int?
+  price_sell    Decimal?  @db.Decimal(18, 2)
+  quantity      Int
+  total_price   Decimal?  @db.Decimal(18, 2)
+  status        Int?      @default(0)
+  created_date  DateTime? @db.Timestamp(0)
+  modified_date DateTime? @db.Timestamp(0)
+  created_by    Int?
+  modified_by   Int?
+  bill          bill?     @relation(fields: [bill_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_bill_product")
+  product       product?  @relation(fields: [product_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_prodcut_bill")
 
-  @@id([product_variant_id, product_option_id])
+  @@unique([product_id, bill_id], map: "unique_product_bill")
+  @@index([bill_id], map: "fk_bill_product")
 }
 
-model Collection {
-  id          Int          @id @default(autoincrement())
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @updatedAt
-  name        String       @db.VarChar(255)
-  slug        String       @unique @db.VarChar(255)
-  description String
-  isRoot      Boolean
-  position    Int
-  isPrivate   Boolean      @default(true)
-  children    Collection[] @relation("SubCollection")
-  parent      Collection?  @relation("SubCollection", fields: [parentId], references: [id])
-  parentId    Int?
+model product_receipt {
+  id            Int       @id @default(autoincrement())
+  product_id    Int?
+  receipt_id    Int?
+  price_entry   Decimal?  @db.Decimal(18, 2)
+  quantity      Int
+  total_price   Decimal?  @db.Decimal(18, 2)
+  created_date  DateTime? @db.Timestamp(0)
+  modified_date DateTime? @db.Timestamp(0)
+  created_by    Int?
+  modified_by   Int?
+  product       product?  @relation(fields: [product_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_prodcut_receipt")
+  receipt       receipt?  @relation(fields: [receipt_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_receipt_product")
+
+  @@unique([product_id, receipt_id], map: "unique_product_receipt")
+  @@index([receipt_id], map: "fk_receipt_product")
 }
 
-model Asset {
-  id                   Int      @id @default(autoincrement())
-  created_at           DateTime @default(now())
-  updated_at           DateTime @updatedAt
-  name                 String
-  url                  String
-  width                Int
-  height               Int
-  format               String
-  cloudinary_asset_id  String
-  cloudinary_public_id String
+model product_speciality {
+  id            Int        @id @default(autoincrement())
+  speciality_id Int
+  product_id    Int
+  speciality    speciality @relation(fields: [speciality_id], references: [id], onUpdate: Restrict, map: "fk_product_speciality")
+  product       product    @relation(fields: [product_id], references: [id], onUpdate: Restrict, map: "fk_speciality_product")
+
+  @@unique([speciality_id, product_id], map: "unique_speciality")
+  @@index([product_id], map: "fk_speciality_product")
+}
+
+model rate {
+  id            Int       @id @default(autoincrement())
+  product_id    Int
+  user_id       Int
+  title         String?   @db.VarChar(255)
+  stars         Int?
+  cmt_datetime  DateTime  @default(now()) @db.Timestamp(0)
+  context       String    @db.Text
+  created_date  DateTime? @db.Timestamp(0)
+  modified_date DateTime? @db.Timestamp(0)
+  created_by    Int?
+  modified_by   Int?
+ 
+  users         users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_cmt")
+
+  @@unique([product_id, user_id, cmt_datetime], map: "unique_comments")
+  @@index([user_id], map: "fk_users_cmt")
+}
+
+model receipt {
+  id                               Int               @id @default(autoincrement())
+  code                             String?           @db.VarChar(45)
+  user_id                          Int
+  receipt_date                     DateTime          @default(now()) @db.Timestamp(0)
+  received_date                    DateTime?         @db.Timestamp(0)
+  total_price                      Decimal?          @db.Decimal(18, 2)
+  status                           Int?
+  supplier_id                      Int?
+  note                             String?           @db.VarChar(255)
+  created_date                     DateTime?         @db.Timestamp(0)
+  modified_date                    DateTime?         @db.Timestamp(0)
+  created_by                       Int?
+  modified_by                      Int?
+  product_receipt                  product_receipt[]
+  users_receipt_user_idTousers     users             @relation("receipt_user_idTousers", fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_receipt_user")
+  users_receipt_supplier_idTousers users?            @relation("receipt_supplier_idTousers", fields: [supplier_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_receipt_user_supplier_id")
+
+  @@unique([user_id, receipt_date], map: "unique_receipt")
+  @@index([supplier_id], map: "fk_receipt_user_supplier_id")
+}
+
+model role {
+  id            Int          @id @default(autoincrement())
+  role_name     String       @db.VarChar(20)
+  role_code     String       @db.VarChar(20)
+  created_date  DateTime?    @db.Timestamp(0)
+  modified_date DateTime?    @db.Timestamp(0)
+  created_by    Int?
+  modified_by   Int?
+  users_role    users_role[]
+}
+
+model speciality {
+  id                 Int                  @id @default(autoincrement())
+  type_name          String               @db.VarChar(50)
+  type_number        Int
+  description        String               @db.VarChar(100)
+  type_code          String               @db.VarChar(50)
+  type               String?              @db.VarChar(45)
+  active             Int
+  position           Int?
+  created_date       DateTime?            @db.Timestamp(0)
+  modified_date      DateTime?            @db.Timestamp(0)
+  created_by         Int?
+  modified_by        Int?
+  product_speciality product_speciality[]
+
+  @@unique([type_name, type_number], map: "unique_speciality")
+}
+
+model system_params {
+  id          Int     @id
+  key         String? @db.VarChar(100)
+  value       String? @db.Text
+  type        String? @db.VarChar(255)
+  description String? @db.VarChar(255)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model two_factor_code {
+  id                Int       @id @default(autoincrement())
+  user_id           Int?
+  type              String?   @db.VarChar(45)
+  email             String?   @db.VarChar(255)
+  phone             String?   @db.VarChar(255)
+  country_code      String?   @db.VarChar(45)
+  verification_code String?   @db.VarChar(255)
+  status            String?   @default("ACTIVE") @db.VarChar(45)
+  created_at        DateTime? @db.Timestamp(0)
+  expired_at        DateTime? @db.Timestamp(0)
+  sid               String?   @db.VarChar(250)
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model users {
+  id                                 Int          @id @default(autoincrement())
+  user_name                          String?      @db.VarChar(100)
+  password                           String?      @db.VarChar(255)
+  type                               String?      @db.VarChar(45)
+  full_name                          String?      @db.VarChar(150)
+  gender                             Int?
+  birthday                           DateTime?    @db.Timestamp(0)
+  avatar                             String?      @db.VarChar(255)
+  email                              String?      @db.VarChar(45)
+  phone                              String?      @db.VarChar(45)
+  address                            String?      @db.VarChar(100)
+  ward                               String?      @db.VarChar(100)
+  district                           String?      @db.VarChar(100)
+  city                               String?      @db.VarChar(100)
+  status                             Int?         @default(0)
+  user_type                          String?      @db.VarChar(50)
+  created_date                       DateTime?    @db.Timestamp(0)
+  modified_date                      DateTime?    @db.Timestamp(0)
+  created_by                         Int?
+  modified_by                        Int?
+  bill_bill_user_idTousers           bill[]       @relation("bill_user_idTousers")
+  bill_bill_staff_idTousers          bill[]       @relation("bill_staff_idTousers")
+  favorite                           favorite[]
+  rate                               rate[]
+  receipt_receipt_user_idTousers     receipt[]    @relation("receipt_user_idTousers")
+  receipt_receipt_supplier_idTousers receipt[]    @relation("receipt_supplier_idTousers")
+  users_role                         users_role[]
+}
+
+model users_role {
+  id        Int     @id @default(autoincrement())
+  user_id   Int
+  role_id   Int
+  role_code String? @db.VarChar(45)
+  role      role    @relation(fields: [role_id], references: [id], onUpdate: Restrict, map: "fk_role_users")
+  users     users   @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_role")
+
+  @@unique([user_id, role_id], map: "unique_speciality")
+  @@index([role_id], map: "fk_role_users")
 }

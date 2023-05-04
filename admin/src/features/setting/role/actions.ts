@@ -10,21 +10,31 @@ import {
     deleteRoleSuccess,
     createRoleFailed,
     createRoleStart,
-    createRoleSuccess
+    createRoleSuccess,
+    getRoleStart,
+    getRoleSuccess,
+    getRoleFailed,
+    RoleType,
+    updateRoleStart,
+    updateRoleSuccess,
+    updateRoleFailed
 } from "./roleSlice";
+import { Pagination } from "src/types";
+import { IAxiosResponse } from "src/types/axiosResponse";
 
 export type GetListRoleParams = {
     dispatch: AppDispatch,
     axiosClient: Axios,
-    pagination: {
-        take: number,
-        skip: number
-    }
+    pagination: Pagination
 }
 
 export type DeleteRoleParams = Omit<GetListRoleParams, "pagination"> & { id: number }
 
 export type CreateRoleParams = Omit<GetListRoleParams, "pagination"> & { role: Role }
+
+export type GetRoleParams = DeleteRoleParams
+
+export type UpdateRoleParams = GetRoleParams & { role: Role }
 
 export type Role = {
     code: string
@@ -59,11 +69,17 @@ export const getListRole = async ({ pagination, dispatch, axiosClient }: GetList
 export const deleteRole = async ({ id, dispatch, axiosClient }: DeleteRoleParams) => {
     dispatch(deleteRoleStart());
     try {
-        const res: any = await axiosClient.delete(`/admin/role/delete/${id}`);
+        const res: IAxiosResponse<RoleType> = await axiosClient.delete(`/admin/role/delete/${id}`);
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteRoleSuccess(res.response.data));
             }, 1000);
+        } else if (res?.response?.code === 406 && !res?.response?.success) {
+            dispatch(deleteRoleFailed());
+            Inotification({
+                type: 'error',
+                message: res?.response?.message || 'Something went wrong!'
+            })
         }
     } catch (error) {
         dispatch(deleteRoleFailed());
@@ -87,9 +103,60 @@ export const createRole = async ({ role, dispatch, axiosClient }: CreateRolePara
             setTimeout(function () {
                 dispatch(createRoleSuccess(res.response.data));
             }, 1000);
+        } else {
+            dispatch(createRoleFailed({
+                fieldError: res.response.fieldError,
+                message: res.response.message
+            }));
         }
     } catch (error) {
-        dispatch(createRoleFailed());
+        dispatch(createRoleFailed(null));
+        Inotification({
+            type: 'error',
+            message: 'Something went wrong!'
+        })
+    }
+}
+
+export const getSingleRole = async ({ axiosClient, dispatch, id }: GetRoleParams) => {
+    dispatch(getRoleStart());
+    try {
+        const res: IAxiosResponse<RoleType> = await axiosClient.get(`admin/role/single/${id}`);
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(getRoleSuccess(res.response.data));
+            }, 1000);
+        }
+    } catch (error) {
+        dispatch(getRoleFailed());
+        Inotification({
+            type: 'error',
+            message: 'Something went wrong!'
+        })
+    }
+}
+
+export const updateRole = async ({ axiosClient, dispatch, id, role }: UpdateRoleParams) => {
+    const { code, permissions, description } = role
+    dispatch(updateRoleStart());
+    try {
+        const res: IAxiosResponse<RoleType> = await axiosClient.put(`admin/role/update/${id}`, {
+            code,
+            permissions,
+            description
+        });
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(updateRoleSuccess(res.response.data));
+            }, 1000);
+        } else {
+            dispatch(updateRoleFailed({
+                fieldError: res.response.fieldError,
+                message: res.response.message
+            }));
+        }
+    } catch (error) {
+        dispatch(updateRoleFailed(null));
         Inotification({
             type: 'error',
             message: 'Something went wrong!'

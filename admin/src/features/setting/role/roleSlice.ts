@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { ErrorValidateResponse } from 'src/types';
 
-interface RoleType {
+export interface RoleType {
     code: string
     created_at: string
     description: string
@@ -11,7 +12,7 @@ interface RoleType {
 
 interface RoleState {
     create: {
-        result: RoleType | null;
+        result: RoleType | ErrorValidateResponse | null;
         loading: boolean;
         error: boolean;
     },
@@ -32,6 +33,11 @@ interface RoleState {
         error: boolean;
     },
     update: {
+        result: RoleType | ErrorValidateResponse | null;
+        loading: boolean;
+        error: boolean;
+    },
+    single: {
         result: RoleType | null;
         loading: boolean;
         error: boolean;
@@ -58,6 +64,11 @@ const initialState: RoleState = {
         result: null,
         loading: false,
         error: false
+    },
+    single: {
+        result: null,
+        loading: false,
+        error: false
     }
 } as RoleState;
 
@@ -74,11 +85,12 @@ export const roleSlice = createSlice({
             state.create.result = action.payload;
             state.create.error = false
         },
-        createRoleFailed: (state) => {
+        createRoleFailed: (state, action) => {
             state.create.loading = false;
+            state.create.result = action.payload;
             state.create.error = true;
         },
-        // ** Get list role
+        // ** Get roles
         getListRoleStart: (state) => {
             state.list.loading = true;
         },
@@ -113,9 +125,23 @@ export const roleSlice = createSlice({
             state.update.result = action.payload;
             state.update.error = false
         },
-        updateRoleFailed: (state) => {
+        updateRoleFailed: (state, action) => {
             state.update.loading = false;
+            state.update.result = action.payload;
             state.update.error = true;
+        },
+        // ** Get role
+        getRoleStart: (state) => {
+            state.single.loading = true;
+        },
+        getRoleSuccess: (state, action) => {
+            state.single.loading = false;
+            state.single.result = action.payload;
+            state.single.error = false
+        },
+        getRoleFailed: (state) => {
+            state.single.loading = false;
+            state.single.error = true;
         },
     },
 });
@@ -129,7 +155,13 @@ export const {
     getListRoleFailed,
     deleteRoleStart,
     deleteRoleSuccess,
-    deleteRoleFailed
+    deleteRoleFailed,
+    getRoleStart,
+    getRoleSuccess,
+    getRoleFailed,
+    updateRoleStart,
+    updateRoleSuccess,
+    updateRoleFailed
 } = roleSlice.actions;
 
 export default roleSlice.reducer;

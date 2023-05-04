@@ -38,9 +38,9 @@ const SiderBar = () => {
                         key: "products",
                         icon: <InboxOutlined />,
                         label: "Products",
-                        className: location.pathname === "/products" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "catalog/products" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/products')
+                            navigate('catalog/products')
                         }
                     },
                     {
@@ -120,18 +120,18 @@ const SiderBar = () => {
                         key: "administrators",
                         icon: <UserAddOutlined />,
                         label: "Administrators",
-                        className: location.pathname === "/administrators" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "settings/administrators" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/administrators')
+                            navigate('settings/administrators')
                         }
                     },
                     {
                         key: "roles",
                         icon: <UsergroupAddOutlined />,
                         label: "Roles",
-                        className: location.pathname === "/roles" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "settings/roles" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/roles')
+                            navigate('settings/roles')
                         }
                     },
                 ]

@@ -1,6 +1,6 @@
 import { Breadcrumb, Button, Col, Divider, Row, Table, Space, Tag, Modal, Card, message, Tooltip } from 'antd';
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavigateFunction } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import type { ColumnsType } from 'antd/es/table';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
@@ -8,7 +8,8 @@ import { createAxiosClient } from 'src/helper/axiosInstance';
 import { deleteRole, getListRole } from 'src/features/setting/role/actions';
 import {
     EditOutlined,
-    DeleteOutlined
+    DeleteOutlined,
+    PlusCircleOutlined
 } from '@ant-design/icons';
 
 interface DataType {
@@ -22,7 +23,8 @@ interface DataType {
 const columns = (
     setIsModalOpen: (open: boolean) => void,
     roleDelete: { id: number, code: string } | undefined,
-    setRoleDelete: ({ id, code }: { id: number, code: string }) => void
+    setRoleDelete: ({ id, code }: { id: number, code: string }) => void,
+    navigate: NavigateFunction
 ): ColumnsType<DataType> => [
         {
             title: 'Description',
@@ -49,11 +51,11 @@ const columns = (
                         {
                             permissions.length > 4 && (
                                 <Tooltip title={permissions.map((permission, index) => {
-                                    if (index > 4) {
+                                    if (index >= 4) {
                                         return permission
                                     }
                                 }).filter(notUndefined => notUndefined !== undefined).join(', ')}>
-                                    <Tag className='cursor-pointer'>+{permissions.length - 4}</Tag>
+                                    <Tag style={{ cursor: "pointer" }}>+{permissions.length - 4}</Tag>
                                 </Tooltip>)
                         }
                     </Space>
@@ -64,9 +66,12 @@ const columns = (
             title: 'Action',
             key: 'action',
             render: (_, record) => {
+                if (record.code === "superadmin") {
+                    return null
+                }
                 return (
                     <Space size="middle">
-                        <Button shape="circle" icon={<EditOutlined />} />
+                        <Button shape="circle" icon={<EditOutlined />} onClick={() => navigate(`update/${record.id}`)} />
                         <Button shape="circle" icon={<DeleteOutlined />} onClick={() => {
                             setIsModalOpen(true)
                             setRoleDelete({
@@ -131,11 +136,17 @@ const RoleList = () => {
             dispatch,
             id: roleDelete?.id!
         })
-        setTimeout(function () {
-            message.success('Delete role successfully!');
-            setIsModalOpen(false)
-            setRefresh({})
-        }, 1000)
+        if (store.delete.error) {
+            setTimeout(function () {
+                setIsModalOpen(false)
+            }, 1000)
+        } else {
+            setTimeout(function () {
+                message.success('Delete role successfully!');
+                setIsModalOpen(false)
+                setRefresh({})
+            }, 1000)
+        }
     };
 
     const handleCancel = () => {
@@ -156,21 +167,28 @@ const RoleList = () => {
                 <Col span={24}>
                     <Row>
                         <Col span={24}>
-                            <div className='flex justify-end items-center'>
-                                <Button type="primary" className='uppercase' onClick={() => navigate('create', { replace: true })}>Create new role</Button>
+                            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center" }}>
+                                <Button
+                                    style={{ textTransform: "uppercase" }}
+                                    type="primary"
+                                    onClick={() => navigate('create')}
+                                    icon={<PlusCircleOutlined />}
+                                >
+                                    Create new role
+                                </Button>
                             </div>
                         </Col>
                         <Divider />
                         <Col span={24}>
                             <Card>
-                                <Table bordered columns={columns(setIsModalOpen, roleDelete, setRoleDelete)} dataSource={dataRender()} loading={store.list.loading} />
+                                <Table bordered columns={columns(setIsModalOpen, roleDelete, setRoleDelete, navigate)} dataSource={dataRender()} loading={store.list.loading} />
                             </Card>
                         </Col>
                     </Row>
                 </Col>
             </Row>
             <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
-                <p>Do you want to delete this role (<span className='font-bold'>{roleDelete?.code}</span>) ?</p>
+                <p>Do you want to delete this role (<span style={{ fontWeight: "bold" }}>{roleDelete?.code}</span>) ?</p>
             </Modal>
         </Fragment>
     );

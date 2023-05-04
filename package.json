@@ -18,8 +18,12 @@
     "db:push": "cd server && prisma db push"
   },
   "dependencies": {
-    "lodash": "4.17.21",
-    "@types/lodash": "4.14.194"
+    "@chakra-ui/react": "^2.6.0",
+    "@emotion/react": "^11.10.8",
+    "@emotion/styled": "^11.10.8",
+    "@types/lodash": "4.14.194",
+    "framer-motion": "^10.12.7",
+    "lodash": "4.17.21"
   },
   "devDependencies": {
     "concurrently": "8.0.1"

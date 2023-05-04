@@ -3,7 +3,7 @@ import Meta from 'antd/lib/card/Meta';
 import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { deleteAsset, getListAsset } from 'src/features/asset/actions';
+import { deleteAsset, getListAsset } from 'src/features/catalog/asset/actions';
 import { createAxiosClient } from "src/helper/axiosInstance";
 import AssetSkeleton from './AssetSkeleton';
 import { EyeOutlined } from '@ant-design/icons';
@@ -50,7 +50,6 @@ const AssetList = () => {
             },
             axiosClient,
             dispatch,
-            navigate
         });
     }, [skip, take])
 
@@ -70,7 +69,6 @@ const AssetList = () => {
             },
             axiosClient,
             dispatch,
-            navigate
         });
     }
 
