@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BrandCreateDto } from '../dto';
+import { BrandCreateDto } from './dto';
 import { IResponse } from 'types';
 import { brand } from '@prisma/client';
-import { BrandEditDto } from '../dto/brandEdit.dto';
+import { BrandEditDto } from './dto/brandEdit.dto';
 import { PaginationDto } from 'src/common/dto';
 
 @Injectable()
@@ -15,38 +15,15 @@ export class BrandService {
     async create(input: BrandCreateDto): Promise<IResponse<brand>> {
         try {
             const { brand_code, brand_name, content, icon, status } = input
-            if (!brand_code || !brand_name || !content) {
-                return {
-                    code: 400,
-                    success: false,
-                    isValidate: true,
-                    errors: [
-                        ... !brand_code ? [{
-                            fieldError: "brand_code",
-                            message: "Please enter brand code!"
-                        }] : [],
-                        ... !brand_name ? [{
-                            fieldError: "brand_name",
-                            message: "Please enter brand name!"
-                        }] : [],
-                        ...!content ? [{
-                            fieldError: "content",
-                            message: "Please enter content!"
-                        }] : []
-                    ]
-                };
-            }
-            const isExistingBrandCode = await this.prisma.brand.findFirst({
+            const isExistingBrandCode = await this.prisma.brand.findUnique({
                 where: { brand_code }
             })
             if (isExistingBrandCode) {
                 return {
                     code: 400,
                     success: false,
-                    errors: [{
-                        fieldError: "brand_code",
-                        message: 'Brand code already exists!',
-                    }]
+                    fieldError: "brand_code",
+                    message: 'Brand code already exists!',
                 }
             }
             return {
@@ -128,7 +105,7 @@ export class BrandService {
         }
     }
 
-    async edit(input: BrandEditDto, id: number): Promise<IResponse<brand>> {
+    async update(input: BrandEditDto, id: number): Promise<IResponse<brand>> {
         try {
             const { brand_code, brand_name, content, status, icon } = input
             const brand = await this.prisma.brand.findUnique({
@@ -151,10 +128,8 @@ export class BrandService {
                     return {
                         code: 400,
                         success: false,
-                        errors: [{
-                            fieldError: "brand_code",
-                            message: 'Brand code already exists!',
-                        }]
+                        fieldError: "brand_code",
+                        message: 'Brand code already exists!',
                     }
                 }
                 return {

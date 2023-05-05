@@ -5,6 +5,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './common/guard';
 import { BrandModule } from './brand/brand.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { BrandModule } from './brand/brand.module';
     PrismaModule,
     CloudinaryModule,
     BrandModule,
+    RoleModule,
   ],
   controllers: [],
   providers: [

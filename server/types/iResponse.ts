@@ -10,4 +10,5 @@ export class IResponse<T extends {}> {
     refreshToken?: string;
     data?: T;
     message?: string;
+    fieldError?: string;
 }

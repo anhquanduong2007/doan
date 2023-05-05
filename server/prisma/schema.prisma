@@ -49,11 +49,11 @@ model brand {
   id            Int       @id @default(autoincrement())
   brand_name    String    @db.VarChar(60)
   brand_code    String    @db.VarChar(50)
-  content       String    @db.VarChar(255)
+  content       String?   @db.VarChar(255)
   status        Int       @default(0)
   icon          String?   @db.VarChar(255)
-  created_date  DateTime? @db.Timestamp(0)
-  modified_date DateTime? @unique(map: "modified_date_UNIQUE") @db.Timestamp(0)
+  created_date  DateTime  @default(now())
+  modified_date DateTime  @updatedAt
   created_by    Int?
   modified_by   Int?
   product       product[]
@@ -223,8 +223,8 @@ model rate {
   modified_date DateTime? @db.Timestamp(0)
   created_by    Int?
   modified_by   Int?
- 
-  users         users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_cmt")
+
+  users users @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_cmt")
 
   @@unique([product_id, user_id, cmt_datetime], map: "unique_comments")
   @@index([user_id], map: "fk_users_cmt")
@@ -254,12 +254,14 @@ model receipt {
 
 model role {
   id            Int          @id @default(autoincrement())
-  role_name     String       @db.VarChar(20)
-  role_code     String       @db.VarChar(20)
-  created_date  DateTime?    @db.Timestamp(0)
-  modified_date DateTime?    @db.Timestamp(0)
+  role_name     String       @db.VarChar(255)
+  role_code     String       @unique @db.VarChar(255)
+  description   String?
+  created_date  DateTime     @default(now())
+  modified_date DateTime     @updatedAt
   created_by    Int?
   modified_by   Int?
+  permissions   Json?
   users_role    users_role[]
 }
 
@@ -289,7 +291,6 @@ model system_params {
   description String? @db.VarChar(255)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model two_factor_code {
   id                Int       @id @default(autoincrement())
   user_id           Int?
@@ -304,7 +305,6 @@ model two_factor_code {
   sid               String?   @db.VarChar(250)
 }
 
-/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model users {
   id                                 Int          @id @default(autoincrement())
   user_name                          String?      @db.VarChar(100)

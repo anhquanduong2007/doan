@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, Query } from '@nestjs/common';
 import { BrandService } from './brand.service';
-import { BrandCreateDto } from '../dto';
+import { BrandCreateDto } from './dto';
 import { Response } from 'express';
-import { BrandEditDto } from '../dto/brandEdit.dto';
+import { BrandEditDto } from './dto/brandEdit.dto';
 import { PaginationDto } from 'src/common/dto';
 
-@Controller('admin/brand')
+@Controller('brand')
 export class BrandController {
     constructor(
         private readonly brandService: BrandService
@@ -29,9 +29,9 @@ export class BrandController {
         res.json({ response })
     }
 
-    @Put("edit/:id")
+    @Put("update/:id")
     async editBrand(@Body() dto: BrandEditDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const response = await this.brandService.edit(dto, id)
+        const response = await this.brandService.update(dto, id)
         res.json({ response })
     }
 
