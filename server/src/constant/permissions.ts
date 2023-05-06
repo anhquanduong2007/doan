@@ -1,32 +1,34 @@
 export enum Permissions {
     SuperAdmin = "SuperAdmin",
+    // Product
     ReadProduct = "ReadProduct",
     DeleteProduct = "DeleteProduct",
     UpdateProduct = "UpdateProduct",
     CreateProduct = "CreateProduct",
-    ReadCollection = "CreateProduct",
-    CreateCollection = "CreateCollection",
-    DeleteCollection = "DeleteCollection",
-    UpdateCollection = "UpdateCollection",
-    ReadAsset = "ReadAsset",
-    CreateAsset = "CreateAsset",
-    DeleteAsset = "DeleteAsset",
-    UpdateAsset = "UpdateAsset",
+    // ** Customer
     ReadCustomer = "ReadCustomer",
     CreateCustomer = "CreateCustomer",
     DeleteCustomer = "DeleteCustomer",
     UpdateCustomer = "UpdateCustomer",
-    ReadPromotion = "ReadPromotion",
-    CreatePromotion = "CreatePromotion",
-    DeletePromotion = "DeletePromotion",
-    UpdatePromotion = "UpdatePromotion",
-    ReadAdministrator = "ReadAdministrator",
-    CreateAdministrator = "CreateAdministrator",
-    DeleteAdministrator = "DeleteAdministrator",
-    UpdateAdministrator = "UpdateAdministrator",
+    // User
+    CreateUser = "CreateUser",
+    ReadUser = "ReadUser",
+    DeleteUser = "DeleteUser",
+    UpdateUser = "UpdateUser",
+    // Role
     ReadRole = "UpdateAdministrator",
     CreateRole = "UpdateAdministrator",
     DeleteRole = "UpdateAdministrator",
-    UpdateRole = "UpdateAdministrator"
+    UpdateRole = "UpdateAdministrator",
+    // Brand
+    ReadBrand = "ReadBrand",
+    DeleteBrand = "DeleteBrand",
+    UpdateBrand = "UpdateBrand",
+    CreateBrand = "CreateBrand",
+    // Campaign
+    ReadCampaign = "ReadCampaign",
+    DeleteCampaign = "DeleteCampaign",
+    UpdateCampaign = "UpdateCampaign",
+    CreateCampaign = "CreateCampaign"
 }
 

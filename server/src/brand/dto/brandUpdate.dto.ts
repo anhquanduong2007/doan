@@ -1,7 +1,7 @@
 import { BrandCreateDto } from "./brandCreate.dto";
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsOptional } from 'class-validator';
 
-export class BrandEditDto extends BrandCreateDto {
+export class BrandUpdateDto extends BrandCreateDto {
     @IsString()
     @IsOptional()
     brand_name: string;

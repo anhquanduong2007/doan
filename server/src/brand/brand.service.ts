@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { BrandCreateDto } from './dto';
-import { IResponse } from 'types';
+import { IResponse } from 'src/common/types';
 import { brand } from '@prisma/client';
-import { BrandEditDto } from './dto/brandEdit.dto';
+import { BrandUpdateDto } from './dto/brandUpdate.dto';
 import { PaginationDto } from 'src/common/dto';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class BrandService {
 
     async create(input: BrandCreateDto): Promise<IResponse<brand>> {
         try {
-            const { brand_code, brand_name, content, icon, status } = input
+            const { brand_code, brand_name, content, icon, active } = input
             const isExistingBrandCode = await this.prisma.brand.findUnique({
                 where: { brand_code }
             })
@@ -36,7 +36,7 @@ export class BrandService {
                         brand_code,
                         content,
                         icon,
-                        status: status ? status : 1,
+                        active
                     }
                 })
             }
@@ -105,9 +105,9 @@ export class BrandService {
         }
     }
 
-    async update(input: BrandEditDto, id: number): Promise<IResponse<brand>> {
+    async update(input: BrandUpdateDto, id: number): Promise<IResponse<brand>> {
         try {
-            const { brand_code, brand_name, content, status, icon } = input
+            const { brand_code, brand_name, content, active, icon } = input
             const brand = await this.prisma.brand.findUnique({
                 where: { id }
             })
@@ -142,7 +142,7 @@ export class BrandService {
                             ...brand_code && { brand_code },
                             ...content && { content },
                             ...icon && { icon },
-                            ...status && { status }
+                            ...active && { active }
                         },
                         where: { id }
                     })

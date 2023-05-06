@@ -6,6 +6,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './common/guard';
 import { BrandModule } from './brand/brand.module';
 import { RoleModule } from './role/role.module';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+import { CampaignModule } from './campaign/campaign.module';
 
 @Module({
   imports: [
@@ -17,6 +20,9 @@ import { RoleModule } from './role/role.module';
     CloudinaryModule,
     BrandModule,
     RoleModule,
+    AuthModule,
+    UserModule,
+    CampaignModule,
   ],
   controllers: [],
   providers: [

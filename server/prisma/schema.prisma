@@ -7,20 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model banner {
-  id            Int       @id @default(autoincrement())
-  banner_name   String?   @db.VarChar(45)
-  banner_code   String?   @db.VarChar(45)
-  img           String?   @db.VarChar(255)
-  banner_type   String?   @db.VarChar(45)
-  number        Int?
-  banner_link   String?   @db.VarChar(45)
-  created_date  DateTime? @db.Timestamp(0)
-  modified_date DateTime? @db.Timestamp(0)
-  created_by    Int?
-  modified_by   Int?
-}
-
 model bill {
   id                         Int            @id @default(autoincrement())
   code                       String?        @db.VarChar(45)
@@ -48,9 +34,9 @@ model bill {
 model brand {
   id            Int       @id @default(autoincrement())
   brand_name    String    @db.VarChar(60)
-  brand_code    String    @db.VarChar(50)
+  brand_code    String    @unique @db.VarChar(50)
   content       String?   @db.VarChar(255)
-  status        Int       @default(0)
+  active        Int       @default(1)
   icon          String?   @db.VarChar(255)
   created_date  DateTime  @default(now())
   modified_date DateTime  @updatedAt
@@ -61,13 +47,13 @@ model brand {
 
 model campaign {
   id              Int               @id @default(autoincrement())
-  campaign_name   String?           @db.VarChar(255)
+  campaign_name   String            @db.VarChar(255)
   content         String?           @db.VarChar(255)
-  start_day       DateTime?         @db.Timestamp(0)
-  end_day         DateTime?         @db.Timestamp(0)
-  status          Int?
-  created_date    DateTime?         @db.Timestamp(0)
-  modified_date   DateTime?         @db.Timestamp(0)
+  start_day       DateTime
+  end_day         DateTime
+  active          Int               @default(1)
+  created_date    DateTime          @default(now())
+  modified_date   DateTime          @updatedAt
   created_by      Int?
   modified_by     Int?
   campaign_detail campaign_detail[]
@@ -75,7 +61,7 @@ model campaign {
 
 model campaign_detail {
   id          Int      @id @default(autoincrement())
-  product_id  String?  @db.LongText
+  product_id  Json?
   campaign_id Int
   discount    Int?
   campaign    campaign @relation(fields: [campaign_id], references: [id], onUpdate: Restrict, map: "fk_campaign_detail")
@@ -283,47 +269,19 @@ model speciality {
   @@unique([type_name, type_number], map: "unique_speciality")
 }
 
-model system_params {
-  id          Int     @id
-  key         String? @db.VarChar(100)
-  value       String? @db.Text
-  type        String? @db.VarChar(255)
-  description String? @db.VarChar(255)
-}
-
-model two_factor_code {
-  id                Int       @id @default(autoincrement())
-  user_id           Int?
-  type              String?   @db.VarChar(45)
-  email             String?   @db.VarChar(255)
-  phone             String?   @db.VarChar(255)
-  country_code      String?   @db.VarChar(45)
-  verification_code String?   @db.VarChar(255)
-  status            String?   @default("ACTIVE") @db.VarChar(45)
-  created_at        DateTime? @db.Timestamp(0)
-  expired_at        DateTime? @db.Timestamp(0)
-  sid               String?   @db.VarChar(250)
-}
-
 model users {
   id                                 Int          @id @default(autoincrement())
-  user_name                          String?      @db.VarChar(100)
-  password                           String?      @db.VarChar(255)
-  type                               String?      @db.VarChar(45)
-  full_name                          String?      @db.VarChar(150)
-  gender                             Int?
-  birthday                           DateTime?    @db.Timestamp(0)
-  avatar                             String?      @db.VarChar(255)
-  email                              String?      @db.VarChar(45)
-  phone                              String?      @db.VarChar(45)
-  address                            String?      @db.VarChar(100)
-  ward                               String?      @db.VarChar(100)
-  district                           String?      @db.VarChar(100)
-  city                               String?      @db.VarChar(100)
-  status                             Int?         @default(0)
-  user_type                          String?      @db.VarChar(50)
-  created_date                       DateTime?    @db.Timestamp(0)
-  modified_date                      DateTime?    @db.Timestamp(0)
+  hashed_rt                          String?
+  password                           String       @db.VarChar(255)
+  first_name                         String?      @db.VarChar(255)
+  last_name                          String?      @db.VarChar(255)
+  gender                             Int          @default(0)
+  date_of_birth                      DateTime?
+  email                              String       @unique @db.VarChar(125)
+  phone                              String?      @db.VarChar(10)
+  active                             Int          @default(1)
+  created_date                       DateTime     @default(now())
+  modified_date                      DateTime     @updatedAt
   created_by                         Int?
   modified_by                        Int?
   bill_bill_user_idTousers           bill[]       @relation("bill_user_idTousers")
@@ -336,12 +294,11 @@ model users {
 }
 
 model users_role {
-  id        Int     @id @default(autoincrement())
-  user_id   Int
-  role_id   Int
-  role_code String? @db.VarChar(45)
-  role      role    @relation(fields: [role_id], references: [id], onUpdate: Restrict, map: "fk_role_users")
-  users     users   @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_role")
+  id      Int   @id @default(autoincrement())
+  user_id Int
+  role_id Int
+  role    role  @relation(fields: [role_id], references: [id], onUpdate: Restrict, map: "fk_role_users")
+  users   users @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_role")
 
   @@unique([user_id, role_id], map: "unique_speciality")
   @@index([role_id], map: "fk_role_users")

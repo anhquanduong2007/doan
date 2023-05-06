@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { IResponse } from 'types';
+import { IResponse } from 'src/common/types';
 import { role } from '@prisma/client';
-import { CreateRoleDto, UpdateRoleDto } from './dto';
+import { RoleCreateDto, RoleUpdateDto } from './dto';
 import { PaginationDto } from 'src/common/dto';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class RoleService {
         private readonly prisma: PrismaService,
     ) { }
 
-    public async create(input: CreateRoleDto): Promise<IResponse<role>> {
+    public async create(input: RoleCreateDto): Promise<IResponse<role>> {
         try {
             const { role_code, role_name, description, permissions } = input;
             const isRoleCodeExist = await this.prisma.role.findUnique({
@@ -126,7 +126,7 @@ export class RoleService {
         }
     }
 
-    public async update(id: number, input: UpdateRoleDto): Promise<IResponse<role>> {
+    public async update(id: number, input: RoleUpdateDto): Promise<IResponse<role>> {
         try {
             const { description, permissions, role_code, role_name } = input;
             const role = await this.prisma.role.findUnique({

@@ -1,7 +1,4 @@
-
-import { IsString, IsNotEmpty, IsOptional,IsNumber } from 'class-validator';
-import { Transform } from 'class-transformer';
-
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max } from 'class-validator';
 export class BrandCreateDto {
     @IsString()
     @IsNotEmpty()
@@ -19,8 +16,9 @@ export class BrandCreateDto {
     @IsOptional()
     icon: string
 
-    @IsNumber()
+    @IsInt()
+    @Min(0)
+    @Max(1)
     @IsOptional()
-    @Transform(({ value }) => +value)
-    status?: number;
+    active: number;
 }
