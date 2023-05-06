@@ -12,7 +12,7 @@ export class BrandService {
         private readonly prisma: PrismaService
     ) { }
 
-    async create(input: BrandCreateDto): Promise<IResponse<brand>> {
+    async create(input: BrandCreateDto, userId: number): Promise<IResponse<brand>> {
         try {
             const { brand_code, brand_name, content, icon, active } = input
             const isExistingBrandCode = await this.prisma.brand.findUnique({
@@ -36,8 +36,10 @@ export class BrandService {
                         brand_code,
                         content,
                         icon,
+                        created_by: userId,
+                        modified_by: userId,
                         active
-                    }
+                    },
                 })
             }
         } catch (error) {
@@ -105,7 +107,7 @@ export class BrandService {
         }
     }
 
-    async update(input: BrandUpdateDto, id: number): Promise<IResponse<brand>> {
+    async update(input: BrandUpdateDto, id: number, userId: number): Promise<IResponse<brand>> {
         try {
             const { brand_code, brand_name, content, active, icon } = input
             const brand = await this.prisma.brand.findUnique({
@@ -142,7 +144,8 @@ export class BrandService {
                             ...brand_code && { brand_code },
                             ...content && { content },
                             ...icon && { icon },
-                            ...active && { active }
+                            ...active && { active },
+                            modified_by: userId
                         },
                         where: { id }
                     })
