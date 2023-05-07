@@ -35,5 +35,10 @@ export enum Permissions {
     DeleteCategory = "DeleteCategory",
     UpdateCategory = "UpdateCategory",
     CreateCategory = "CreateCategory",
+    // Asset
+    ReadAsset = "ReadAsset",
+    DeleteAsset = "DeleteAsset",
+    UpdateAsset = "UpdateAsset",
+    CreateAsset = "CreateAsset",
 }
 

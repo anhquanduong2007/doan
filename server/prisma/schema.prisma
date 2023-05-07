@@ -99,16 +99,19 @@ model favorite {
   @@index([user_id], map: "fk_favorite_user")
 }
 
-model img {
-  id            Int       @id @default(autoincrement())
-  img           String    @db.VarChar(255)
-  product_id    Int?
-  created_date  DateTime? @db.Timestamp(0)
-  modified_date DateTime? @db.Timestamp(0)
-  created_by    Int?
-  modified_by   Int?
-
-  @@index([product_id], map: "fk_img_product")
+model asset {
+  id                   Int       @id @default(autoincrement())
+  name                 String
+  url                  String
+  width                Int
+  height               Int
+  format               String
+  cloudinary_asset_id  String
+  cloudinary_public_id String
+  created_date         DateTime? @db.Timestamp(0)
+  modified_date        DateTime? @db.Timestamp(0)
+  created_by           Int?
+  modified_by          Int?
 }
 
 model product {
