@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { BrandCreateDto } from '../dto';
-import { IResponse } from 'types';
+import { BrandCreateDto } from './dto';
+import { IResponse } from 'src/common/types';
 import { brand } from '@prisma/client';
-import { BrandEditDto } from '../dto/brandEdit.dto';
+import { BrandUpdateDto } from './dto/brandUpdate.dto';
 import { PaginationDto } from 'src/common/dto';
 
 @Injectable()
@@ -12,41 +12,18 @@ export class BrandService {
         private readonly prisma: PrismaService
     ) { }
 
-    async create(input: BrandCreateDto): Promise<IResponse<brand>> {
+    async create(input: BrandCreateDto, userId: number): Promise<IResponse<brand>> {
         try {
-            const { brand_code, brand_name, content, icon, status } = input
-            if (!brand_code || !brand_name || !content) {
-                return {
-                    code: 400,
-                    success: false,
-                    isValidate: true,
-                    errors: [
-                        ... !brand_code ? [{
-                            fieldError: "brand_code",
-                            message: "Please enter brand code!"
-                        }] : [],
-                        ... !brand_name ? [{
-                            fieldError: "brand_name",
-                            message: "Please enter brand name!"
-                        }] : [],
-                        ...!content ? [{
-                            fieldError: "content",
-                            message: "Please enter content!"
-                        }] : []
-                    ]
-                };
-            }
-            const isExistingBrandCode = await this.prisma.brand.findFirst({
+            const { brand_code, brand_name, content, icon, active } = input
+            const isExistingBrandCode = await this.prisma.brand.findUnique({
                 where: { brand_code }
             })
             if (isExistingBrandCode) {
                 return {
                     code: 400,
                     success: false,
-                    errors: [{
-                        fieldError: "brand_code",
-                        message: 'Brand code already exists!',
-                    }]
+                    fieldError: "brand_code",
+                    message: 'Brand code already exists!',
                 }
             }
             return {
@@ -59,8 +36,10 @@ export class BrandService {
                         brand_code,
                         content,
                         icon,
-                        status: status ? status : 1,
-                    }
+                        created_by: userId,
+                        modified_by: userId,
+                        active
+                    },
                 })
             }
         } catch (error) {
@@ -128,9 +107,9 @@ export class BrandService {
         }
     }
 
-    async edit(input: BrandEditDto, id: number): Promise<IResponse<brand>> {
+    async update(input: BrandUpdateDto, id: number, userId: number): Promise<IResponse<brand>> {
         try {
-            const { brand_code, brand_name, content, status, icon } = input
+            const { brand_code, brand_name, content, active, icon } = input
             const brand = await this.prisma.brand.findUnique({
                 where: { id }
             })
@@ -151,10 +130,8 @@ export class BrandService {
                     return {
                         code: 400,
                         success: false,
-                        errors: [{
-                            fieldError: "brand_code",
-                            message: 'Brand code already exists!',
-                        }]
+                        fieldError: "brand_code",
+                        message: 'Brand code already exists!',
                     }
                 }
                 return {
@@ -167,7 +144,8 @@ export class BrandService {
                             ...brand_code && { brand_code },
                             ...content && { content },
                             ...icon && { icon },
-                            ...status && { status }
+                            active,
+                            modified_by: userId
                         },
                         where: { id }
                     })
