@@ -8,11 +8,27 @@ import "./header.scss";
 
 const Header = () => {
   const [mobileOpenMenu, setMobileOpenMenu] = React.useState(false)
+  const [show, setShow] = React.useState<string>()
+
+  const controlNavbar = () => {
+    if (window.scrollY > 80) {
+      setShow("!bg-white !shadow");
+    } else {
+      setShow("");
+    }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("scroll", controlNavbar);
+    return () => {
+      window.removeEventListener("scroll", controlNavbar);
+    };
+  }, []);
 
   return (
     <>
-      <header className="sticky shadow lg:fixed lg:shadow-none top-0 bg-white lg:bg-transparent z-50 w-full">
-        <div className="flex px-4 mx-auto h-16 xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm justify-between items-center">
+      <header className={`sticky shadow lg:fixed lg:shadow-none top-0 bg-white lg:bg-transparent z-50 w-full transition duration-200 ${show}`}>
+        <div className="flex px-4 mx-auto h-16 2xl:max-w-screen-2xl xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm justify-between items-center">
           <div className="flex items-center gap-8">
             <nav className="shrink-0">
               <Link to="/" className="logo">
@@ -55,7 +71,7 @@ const Header = () => {
               <div className="">
                 <div className="flex gap-2 justify-end p-5 bg-[#f3f4f6]">
                   <p>Main Menu</p>
-                  <Close size={24} className="cursor-pointer" onClick={() => setMobileOpenMenu(false)}/>
+                  <Close size={24} className="cursor-pointer" onClick={() => setMobileOpenMenu(false)} />
                 </div>
                 <ul className="flex justify-end flex-col text-end p-5 pt-0">
                   <li className="p-4 border-b border-[#D1D5DB]">
