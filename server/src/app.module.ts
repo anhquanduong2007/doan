@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { CategoryModule } from './category/category.module';
 import { AssetModule } from './asset/asset.module';
+import { RateModule } from './rate/rate.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { AssetModule } from './asset/asset.module';
     CampaignModule,
     CategoryModule,
     AssetModule,
+    RateModule,
   ],
   controllers: [],
   providers: [
