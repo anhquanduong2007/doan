@@ -144,7 +144,7 @@ export class BrandService {
                             ...brand_code && { brand_code },
                             ...content && { content },
                             ...icon && { icon },
-                            ...active && { active },
+                            active,
                             modified_by: userId
                         },
                         where: { id }

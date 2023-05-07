@@ -5,7 +5,7 @@ export enum Permissions {
     DeleteProduct = "DeleteProduct",
     UpdateProduct = "UpdateProduct",
     CreateProduct = "CreateProduct",
-    // ** Customer
+    // Customer
     ReadCustomer = "ReadCustomer",
     CreateCustomer = "CreateCustomer",
     DeleteCustomer = "DeleteCustomer",
@@ -29,6 +29,11 @@ export enum Permissions {
     ReadCampaign = "ReadCampaign",
     DeleteCampaign = "DeleteCampaign",
     UpdateCampaign = "UpdateCampaign",
-    CreateCampaign = "CreateCampaign"
+    CreateCampaign = "CreateCampaign",
+    // Category
+    ReadCategory = "ReadCategory",
+    DeleteCategory = "DeleteCategory",
+    UpdateCategory = "UpdateCategory",
+    CreateCategory = "CreateCategory",
 }
 

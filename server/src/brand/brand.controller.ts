@@ -49,5 +49,4 @@ export class BrandController {
         const response = await this.brandService.brands(pagination);
         return res.json({ response });
     }
-
 }

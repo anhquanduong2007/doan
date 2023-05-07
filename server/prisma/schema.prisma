@@ -71,13 +71,13 @@ model campaign_detail {
 
 model category {
   id             Int        @id @default(autoincrement())
-  category_name  String     @db.VarChar(60)
-  category_code  String     @db.VarChar(50)
-  content        String?    @db.VarChar(255)
+  category_name  String     @db.VarChar(255)
+  category_code  String     @unique @db.VarChar(255)
+  description    String?    @db.VarChar(255)
   parent_id      Int?
-  status         Int        @default(-1)
-  created_date   DateTime?  @db.Timestamp(0)
-  modified_date  DateTime?  @db.Timestamp(0)
+  active         Int        @default(1)
+  created_date   DateTime?  @default(now())
+  modified_date  DateTime?  @updatedAt
   created_by     Int?
   modified_by    Int?
   category       category?  @relation("categoryTocategory", fields: [parent_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_category_parent_id")
@@ -114,25 +114,22 @@ model img {
 model product {
   id                 Int                  @id @default(autoincrement())
   product_name       String               @db.VarChar(255)
-  name_search        String?              @db.VarChar(255)
-  product_code       String?              @db.VarChar(255)
+  sku                String               @unique @db.VarChar(255)
   price_sell         Decimal              @db.Decimal(18, 2)
   sale               Int?                 @default(0)
   price              Decimal?             @db.Decimal(18, 2)
-  description        String               @db.Text
-  content            String?              @db.Text
+  description        String?              @db.Text
   category_id        Int
   brand_id           Int?
   parent_id          Int?
   img                String?              @db.VarChar(255)
-  active             Int
-  type               String?              @db.VarChar(45)
+  active             Int                  @default(1)
   quantity           Int?                 @default(0)
   sold               Int?                 @default(0)
   rate               Float?               @default(0) @db.Float
   total_rate         Int?                 @default(0)
-  created_date       DateTime?            @db.Timestamp(0)
-  modified_date      DateTime?            @db.Timestamp(0)
+  created_date       DateTime?            @default(now())
+  modified_date      DateTime?            @updatedAt
   created_by         Int?
   modified_by        Int?
   favorite           favorite[]

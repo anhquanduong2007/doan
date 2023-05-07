@@ -9,6 +9,7 @@ import { RoleModule } from './role/role.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { CampaignModule } from './campaign/campaign.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CampaignModule } from './campaign/campaign.module';
     AuthModule,
     UserModule,
     CampaignModule,
+    CategoryModule,
   ],
   controllers: [],
   providers: [
