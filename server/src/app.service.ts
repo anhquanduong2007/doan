@@ -1,63 +1,127 @@
-import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { superadminPermissions, userPermissions } from './constant';
-import { role, users } from '@prisma/client';
+import { role } from '@prisma/client';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class AppService implements OnApplicationBootstrap {
     constructor(
         private readonly prisma: PrismaService,
-        private readonly logger: Logger,
     ) { }
 
     async onApplicationBootstrap() {
         // ** ur - user role, sar - superadmin role
-        // const [ur, sar, superadmin] = await Promise.all([
-        //     this.prisma.role.findUnique({
-        //         where: { role_code: "user" }
-        //     }),
-        //     this.prisma.role.findUnique({
-        //         where: { role_code: "superadmin" }
-        //     }),
-        //     this.prisma.users.findUnique({
-        //         where: { email: "superadmin@gmail.com" },
-        //         include: {
-        //             users_role: {
-        //                 select: {
-        //                     role_id: true
-        //                 }
-        //             }
-        //         }
-        //     })
-        // ])
-        // switch (true) {
-        //     case !ur:
-        //         await this.createUserRole(false)
-        //         this.logger.log("Create user role successfully!")
-        //         return;
-        //     case !sar:
-        //         const role = await this.createSuperadminRole(true)
-        //         if (role) {
-        //             this.logger.log("Create superadmin role successfully!")
-        //             // if()
-        //         }
-        //         return;
-        //     // case !ur && !sar:
-        //     //     await Promise.all([this.createUserRole(false), this.createSuperadminRole(false)])
-        //     //     console.log("Create user and superadmin role successfully!")
-        //     //     return;
-        //     default:
-        //         return;
-        // }
+        const [cr, sar, superadmin] = await Promise.all([
+            this.prisma.role.findUnique({
+                where: { role_code: "customer" }
+            }),
+            this.prisma.role.findUnique({
+                where: { role_code: "superadmin" }
+            }),
+            this.prisma.users.findUnique({
+                where: { email: "superadmin@gmail.com" },
+                include: {
+                    users_role: {
+                        select: {
+                            role_id: true
+                        }
+                    }
+                }
+            })
+        ])
+        if (!cr) {
+            await this.createCustomerRole(false)
+        }
+        if (!sar && !superadmin) {
+            const role = await this.createSuperadminRole(true) as role
+            await this.prisma.users.create({
+                data: {
+                    email: "superadmin@gmail.com",
+                    password: await argon2.hash("superadmin"),
+                    users_role: {
+                        createMany: {
+                            data: [{ role_id: role.id }]
+                        }
+                    }
+                }
+            })
+        }
+        if (!sar && superadmin) {
+            const role = await this.createSuperadminRole(true) as role
+            // ** Delete all roles of user before
+            await this.prisma.users.update({
+                where: { id: superadmin.id },
+                data: {
+                    users_role: {
+                        deleteMany: superadmin?.users_role.map((role) => {
+                            return {
+                                role_id: role.role_id
+                            }
+                        })
+                    }
+                }
+            })
+            // ** assign new roles for this user
+            await this.prisma.users.update({
+                where: { id: superadmin.id },
+                data: {
+                    users_role: {
+                        createMany: {
+                            data: [{ role_id: role.id }]
+                        }
+                    }
+                }
+            })
+        }
+        if (sar && !superadmin) {
+            await this.prisma.users.create({
+                data: {
+                    email: "superadmin@gmail.com",
+                    password: await argon2.hash("superadmin"),
+                    users_role: {
+                        createMany: {
+                            data: [{ role_id: sar.id }]
+                        }
+                    }
+                }
+            })
+        }
+        if (sar && superadmin) {
+            // ** Delete all roles of user before
+            await this.prisma.users.update({
+                where: { id: superadmin.id },
+                data: {
+                    users_role: {
+                        deleteMany: superadmin?.users_role.map((role) => {
+                            return {
+                                role_id: role.role_id
+                            }
+                        })
+                    }
+                }
+            })
+            // ** assign new roles for this user
+            await this.prisma.users.update({
+                where: { id: superadmin.id },
+                data: {
+                    users_role: {
+                        createMany: {
+                            data: [{ role_id: sar.id }]
+                        }
+                    }
+                }
+            })
+        }
     }
 
-    private async createUserRole(isReturn: boolean): Promise<void | role> {
+    private async createCustomerRole(isReturn: boolean): Promise<void | role> {
         try {
             const role = await this.prisma.role.create({
                 data: {
-                    role_code: "user",
-                    role_name: "user",
-                    description: "user",
+                    role_code: "customer",
+                    role_name: "customer",
+                    description: "customer",
                     permissions: userPermissions
                 }
             })
@@ -87,19 +151,4 @@ export class AppService implements OnApplicationBootstrap {
         }
     }
 
-    private async createSuperadmin(isReturn: boolean): Promise<void | users> {
-        try {
-            const user = await this.prisma.users.create({
-                data: {
-                    email: "superadmin@gmail.com",
-                    password: "superadmin"
-                }
-            })
-            if (isReturn) {
-                return user
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
 }
