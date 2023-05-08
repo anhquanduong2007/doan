@@ -53,26 +53,27 @@ export class ProductService {
                     message: 'Brand does not exist in the system!',
                 }
             }
+            const data = {
+              active,
+              asset_id,
+              brand_id,
+              category_id,
+              description,
+              price,
+              price_sell,
+              product_name,
+              quantity,
+              sale,
+              sku,
+              created_by: userId,
+              modified_by: userId
+          }
             return {
                 code: 200,
                 message: 'Success',
                 success: true,
                 data: await this.prisma.product.create({
-                    data: {
-                        active,
-                        asset_id,
-                        brand_id,
-                        category_id,
-                        description,
-                        price,
-                        price_sell,
-                        product_name,
-                        quantity,
-                        sale,
-                        sku,
-                        created_by: userId,
-                        modified_by: userId
-                    }
+                    data
                 })
             }
         } catch (error) {

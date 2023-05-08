@@ -12,6 +12,9 @@ import { CampaignModule } from './campaign/campaign.module';
 import { CategoryModule } from './category/category.module';
 import { AssetModule } from './asset/asset.module';
 import { ProductModule } from './product/product.module';
+import { SpecialityModule } from './speciality/speciality.module';
+import { ProductSpecialityModule } from './product-speciality/product-speciality.module';
+
 import { AppService } from './app.service';
 
 @Module({
@@ -30,6 +33,8 @@ import { AppService } from './app.service';
     CategoryModule,
     AssetModule,
     ProductModule,
+    SpecialityModule,
+    ProductSpecialityModule
   ],
   controllers: [],
   providers: [

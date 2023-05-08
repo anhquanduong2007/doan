@@ -262,8 +262,8 @@ model speciality {
   type               String?              @db.VarChar(45)
   active             Int
   position           Int?
-  created_date       DateTime?            @db.Timestamp(0)
-  modified_date      DateTime?            @db.Timestamp(0)
+  created_date       DateTime?            @default(now())
+  modified_date      DateTime?            @updatedAt
   created_by         Int?
   modified_by        Int?
   product_speciality product_speciality[]

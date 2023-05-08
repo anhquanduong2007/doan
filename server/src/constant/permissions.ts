@@ -40,5 +40,15 @@ export enum Permissions {
     DeleteAsset = "DeleteAsset",
     UpdateAsset = "UpdateAsset",
     CreateAsset = "CreateAsset",
+    // Speciality
+    ReadSpeciality = 'ReadSpeciality',
+    DeleteSpeciality = 'DeleteSpeciality',
+    UpdateSpeciality = 'UpdateSpeciality',
+    CreateSpeciality = 'CreateSpeciality',
+    //ProductSpeciality
+    ReadProductSpeciality = 'ReadSpeciality',
+    DeleteProductSpeciality = 'DeleteProductSpeciality',
+    UpdateProductSpeciality = 'UpdateProductSpeciality',
+    CreateProductSpeciality = 'CreateProductSpeciality',
 }
 
