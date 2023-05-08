@@ -112,20 +112,20 @@ model asset {
   modified_date        DateTime? @db.Timestamp(0)
   created_by           Int?
   modified_by          Int?
+  products             product[]
 }
 
 model product {
   id                 Int                  @id @default(autoincrement())
   product_name       String               @db.VarChar(255)
   sku                String               @unique @db.VarChar(255)
-  price_sell         Decimal              @db.Decimal(18, 2)
+  price_sell         Decimal?             @default(0) @db.Decimal(18, 2)
   sale               Int?                 @default(0)
-  price              Decimal?             @db.Decimal(18, 2)
-  description        String?              @db.Text
+  price              Decimal?             @default(0) @db.Decimal(18, 2)
+  description        String?
   category_id        Int
   brand_id           Int?
   parent_id          Int?
-  img                String?              @db.VarChar(255)
   active             Int                  @default(1)
   quantity           Int?                 @default(0)
   sold               Int?                 @default(0)
@@ -143,6 +143,8 @@ model product {
   product_bill       product_bill[]
   product_receipt    product_receipt[]
   product_speciality product_speciality[]
+  asset              asset?               @relation(fields: [asset_id], references: [id])
+  asset_id           Int?
 
   @@index([brand_id], map: "fk_product_brand")
   @@index([category_id], map: "fk_product_cate")
