@@ -13,6 +13,7 @@ import { CategoryModule } from './category/category.module';
 import { AssetModule } from './asset/asset.module';
 import { ProductModule } from './product/product.module';
 import { AppService } from './app.service';
+import { RateModule } from './rate/rate.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AppService } from './app.service';
     CategoryModule,
     AssetModule,
     ProductModule,
+    RateModule,
   ],
   controllers: [],
   providers: [
