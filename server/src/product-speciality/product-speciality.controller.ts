@@ -18,32 +18,31 @@ export class ProductSpecialityController {
     return res.json({ response })
   }
 
-  // @Delete("delete/:id")
-  // @Permission(Permissions.DeleteSpeciality)
-  // async deleteSpeciality(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-  //   const response = await this.specialityService.delete(id)
-  //   return res.json({ response })
-  // }
+  @Delete("delete/:id")
+  @Permission(Permissions.DeleteProductSpeciality)
+  async deleteProductSpeciality(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    const response = await this.productSpecialityService.delete(id)
+    return res.json({ response })
+  }
 
-  // @Put("update/:id")
-  // @Permission(Permissions.UpdateSpeciality)
-  // async updateSpeciality(@Req() req: Request, @Body() dto: SpecialityUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-  //   const userId = req.user['userId']
-  //   const response = await this.specialityService.update(dto, id, userId)
-  //   return res.json({ response })
-  // }
+  @Put("update/:id")
+  @Permission(Permissions.UpdateProductSpeciality)
+  async updateSpeciality(@Req() req: Request, @Body() dto: ProductSpecialityUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    const response = await this.productSpecialityService.update(dto, id)
+    return res.json({ response })
+  }
 
   @Get()
   @Permission(Permissions.ReadProductSpeciality)
-  async getProductSpecialitys(@Query() pagination: PaginationDto, @Res() res: Response) {
-    const response = await this.productSpecialityService.productSpecialitys(pagination);
+  async getProductSpecialities(@Query() pagination: PaginationDto, @Res() res: Response) {
+    const response = await this.productSpecialityService.productSpecialities(pagination);
     return res.json({ response });
   }
 
-  // @Get(":id")
-  // @Permission(Permissions.ReadSpeciality)
-  // async getSpeciality(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-  //   const response = await this.specialityService.speciality(id)
-  //   return res.json({ response })
-  // }
+  @Get(":productId")
+  @Permission(Permissions.ReadProductSpeciality)
+  async getProductSpeciality(@Param('productId', ParseIntPipe) productId: number, @Res() res: Response) {
+    const response = await this.productSpecialityService.specialityByProduct(productId)
+    return res.json({ response })
+  }
 }

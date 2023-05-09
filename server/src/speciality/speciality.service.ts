@@ -100,7 +100,7 @@ export class SpecialityService {
     }
   }
 
-  async specialitys(input: PaginationDto): Promise<IResponse<{ specialitys: speciality[], totalPage: number, skip: number, take: number, total: number }>> {
+  async specialities(input: PaginationDto): Promise<IResponse<{ specialitys: speciality[], totalPage: number, skip: number, take: number, total: number }>> {
     try {
       const { skip, take } = input;
 

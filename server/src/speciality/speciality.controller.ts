@@ -35,8 +35,8 @@ export class SpecialityController {
 
   @Get()
   @Permission(Permissions.ReadSpeciality)
-  async getSpecialitys(@Query() pagination: PaginationDto, @Res() res: Response) {
-    const response = await this.specialityService.specialitys(pagination);
+  async getSpecialities(@Query() pagination: PaginationDto, @Res() res: Response) {
+    const response = await this.specialityService.specialities(pagination);
     return res.json({ response });
   }
 

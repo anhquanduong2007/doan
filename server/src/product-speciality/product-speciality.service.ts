@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import { Injectable } from '@nestjs/common';
 import { product_speciality } from '@prisma/client';
 import { IResponse } from 'src/common/types';
@@ -34,71 +33,81 @@ export class ProductSpecialityService {
     }
   }
 
-  // async delete(id: number): Promise<IResponse<speciality>> {
-  //   try {
-  //     const speciality = await this.prisma.speciality.findUnique({
-  //       where: { id }
-  //     })
+  async delete(id: number): Promise<IResponse<product_speciality>> {
+    try {
+      const productSpeciality = await this.prisma.product_speciality.findUnique({
+        where: { id },
+        include: {
+          product: true,
+          speciality: true
+        }
+      })
 
-  //     if (speciality) {
-  //       return {
-  //         code: 200,
-  //         message: 'Success',
-  //         success: true,
-  //         data: await this.prisma.speciality.delete({
-  //           where: { id }
-  //         })
-  //       }
-  //     }
-  //     return {
-  //       code: 404,
-  //       message: 'Speciality does not exist in the system!',
-  //       success: false,
-  //     }
-  //   } catch (error) {
-  //     return {
-  //       code: 500,
-  //       message: "An error occurred in the system!",
-  //       success: false,
-  //     }
-  //   }
-  // }
+      if (productSpeciality) {
+        return {
+          code: 200,
+          message: 'Success',
+          success: true,
+          data: await this.prisma.product_speciality.delete({
+            where: { id }
+          })
+        }
+      }
+      return {
+        code: 404,
+        message: 'Product speciality does not exist in the system!',
+        success: false,
+      }
+    } catch (error) {
+      return {
+        code: 500,
+        message: "An error occurred in the system!",
+        success: false,
+      }
+    }
+  }
 
-  // async speciality(id: number): Promise<IResponse<speciality>> {
-  //   try {
-  //     const speciality = await this.prisma.speciality.findUnique({
-  //       where: { id },
-  //       include: {
-  //         product_speciality: true
-  //       }
-  //     })
-  //     if (speciality) {
-  //       return {
-  //         code: 200,
-  //         message: 'Success',
-  //         success: true,
-  //         data: speciality
-  //       }
-  //     }
-  //     return {
-  //       code: 404,
-  //       message: 'Speciality does not exist in the system!',
-  //       success: false,
-  //     }
-  //   } catch (error) {
-  //     return {
-  //       code: 500,
-  //       message: "An error occurred in the system!",
-  //       success: false,
-  //     }
-  //   }
-  // }
+  async specialityByProduct(productId: number): Promise<IResponse<{ productSpecialities: product_speciality[] }>> {
+    try {
+      const productSpecialities = await this.prisma.product_speciality.findMany({
+        where: {
+          product_id: productId
+        },
+        include: {
+          product: true,
+          speciality: true
+        }
+      })
+      console.log(productSpecialities)
+      if (productSpecialities) {
+        return {
+          code: 200,
+          message: 'Success',
+          success: true,
+          data: {
+            productSpecialities
+          }
+        }
+      }
+      return {
+        code: 404,
+        message: 'Product Speciality does not exist in the system!',
+        success: false,
+      }
+    } catch (error) {
+      return {
+        code: 500,
+        message: "An error occurred in the system!",
+        success: false,
+      }
+    }
+  }
 
-  async productSpecialitys(input: PaginationDto): Promise<IResponse<{ productSpecialitys: product_speciality[], totalPage: number, skip: number, take: number, total: number }>> {
+  async productSpecialities(input: PaginationDto): Promise<IResponse<{ productSpecialities: product_speciality[], totalPage: number, skip: number, take: number, total: number }>> {
     try {
       const { skip, take } = input;
 
-      const [totalRecord, productSpecialitys] = await this.prisma.$transaction([
+      const [totalRecord, productSpecialities] = await this.prisma.$transaction([
         this.prisma.product_speciality.count(),
         this.prisma.product_speciality.findMany({
           take: take || 10,
@@ -114,7 +123,7 @@ export class ProductSpecialityService {
         success: true,
         message: "Success!",
         data: {
-          productSpecialitys,
+          productSpecialities,
           totalPage: take ? Math.ceil(totalRecord / take) : Math.ceil(totalRecord / 10),
           total: totalRecord,
           skip: skip || 0,
@@ -130,50 +139,43 @@ export class ProductSpecialityService {
     }
   }
 
-  // async update(input: SpecialityUpdateDto, id: number, userId: number): Promise<IResponse<speciality>> {
-  //   try {
-  //     const { type_code, type_name, type_number, type, description, position, active } = input
+  async update(input: ProductSpecialityUpdateDto, id: number): Promise<IResponse<product_speciality>> {
+    try {
+      const { speciality_id, product_id } = input
 
-  //     const speciality = await this.prisma.speciality.findUnique({
-  //       where: { id }
-  //     })
+      const productSpeciality = await this.prisma.product_speciality.findUnique({
+        where: { id }
+      })
 
-  //     if (speciality) {
-  //       const data = {
-  //         type_code,
-  //         type_name,
-  //         type_number,
-  //         type,
-  //         description,
-  //         position,
-  //         active,
-  //         created_by: userId,
-  //         modified_by: userId,
-  //       }
+      if (productSpeciality) {
+        const data = {
+          product_id,
+          speciality_id
+        }
 
-  //       return {
-  //         code: 200,
-  //         message: 'Success',
-  //         success: true,
-  //         data: await this.prisma.speciality.update({
-  //           where: { id },
-  //           data
-  //         })
-  //       }
-  //     }
+        return {
+          code: 200,
+          message: 'Success',
+          success: true,
+          data: await this.prisma.product_speciality.update({
+            where: { id },
+            data
+          })
+        }
+      }
 
-  //     return {
-  //       code: 404,
-  //       message: 'Speciality does not exist in the system!',
-  //       success: false,
-  //     }
-  //   } catch (error) {
-  //     return {
-  //       code: 500,
-  //       message: "An error occurred in the system!",
-  //       success: false,
-  //     }
-  //   }
-  // }
+      return {
+        code: 404,
+        message: 'Product Speciality does not exist in the system!',
+        success: false,
+      }
+    } catch (error) {
+      return {
+        code: 500,
+        message: "An error occurred in the system!",
+        success: false,
+      }
+    }
+  }
 
 }
