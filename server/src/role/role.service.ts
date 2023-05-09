@@ -53,6 +53,13 @@ export class RoleService {
                 where: { id }
             })
             if (role) {
+                if (role.role_code === "customer" || role.role_code === "superadmin") {
+                    return {
+                        code: 400,
+                        message: 'You cannot perform this action!',
+                        success: false,
+                    }
+                }
                 return {
                     code: 200,
                     message: 'Delete successfully!',
@@ -62,7 +69,7 @@ export class RoleService {
 
             }
             return {
-                code: 400,
+                code: 404,
                 message: 'Role does not exist in the system!',
                 success: false,
             }

@@ -16,6 +16,7 @@ import { SpecialityModule } from './speciality/speciality.module';
 import { ProductSpecialityModule } from './product-speciality/product-speciality.module';
 
 import { AppService } from './app.service';
+import { RateModule } from './rate/rate.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { AppService } from './app.service';
     CategoryModule,
     AssetModule,
     ProductModule,
+    RateModule,
     SpecialityModule,
     ProductSpecialityModule
   ],

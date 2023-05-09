@@ -200,15 +200,15 @@ model product_speciality {
 }
 
 model rate {
-  id            Int       @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   product_id    Int
   user_id       Int
-  title         String?   @db.VarChar(255)
-  stars         Int?
-  cmt_datetime  DateTime  @default(now()) @db.Timestamp(0)
-  context       String    @db.Text
-  created_date  DateTime? @db.Timestamp(0)
-  modified_date DateTime? @db.Timestamp(0)
+  title         String   @db.VarChar(255)
+  stars         Float    @default(0)
+  cmt_datetime  DateTime @default(now())
+  content       String
+  created_date  DateTime @default(now())
+  modified_date DateTime @updatedAt
   created_by    Int?
   modified_by   Int?
 
