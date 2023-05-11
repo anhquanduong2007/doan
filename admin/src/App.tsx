@@ -23,6 +23,7 @@ const App = () => {
             <Route path='products'>
               <Route index element={<Products />} />
               <Route path='create' element={<ProductCreate />} />
+              <Route path='edit/:id' element={<ProductCreate />} />
             </Route>
           </Route>
           <Route path='settings'>
