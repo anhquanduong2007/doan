@@ -44,6 +44,14 @@ const Header = () => {
     setMobileOpenMenu(false)
   }, [pathname])
 
+  React.useEffect(() => {
+    if (isShowLogin) {
+      window.document.body.style.overflow = 'hidden'
+    } else {
+      window.document.body.style.overflow = 'auto'
+    }
+  }, [isShowLogin])
+
   return (
     <>
       <header className={pathname != '/' ? `sticky shadow lg:fixed top-0 bg-white z-50 w-full transition duration-200 ${show}` : `sticky shadow lg:fixed lg:shadow-none top-0 bg-white lg:bg-transparent z-50 w-full transition duration-200 ${show}`}>
