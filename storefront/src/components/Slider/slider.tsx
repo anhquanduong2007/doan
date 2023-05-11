@@ -30,8 +30,8 @@ const Slider = () => {
         spaceBetween={50}
         slidesPerView={1}
         navigation
-        onSlideChange={() => console.log('slide change')}
-        onSwiper={(swiper) => console.log(swiper)}
+        // onSlideChange={() => console.log('slide change')}
+        // onSwiper={(swiper) => console.log(swiper)}
       >
         {
           dataSlider && dataSlider.map((item, index) => {

@@ -27,7 +27,7 @@ const Card = () => {
   ]
   return (
     <Layout>
-      <div className="flex flex-row flex-wrap gap-4 justify-between items-center mt-5">
+      <div className="flex flex-row flex-wrap gap-4 justify-center items-center mt-5">
         {
           dataCard.map((item, index) => {
             return (

@@ -4,7 +4,7 @@ import Card from '../../components/Card';
 import Layout from '../../components/Layout'
 import CardProduct from '../../components/CardProduct';
 
-const Home = () => {
+const HomePage = () => {
 
   return (
     <>
@@ -34,4 +34,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

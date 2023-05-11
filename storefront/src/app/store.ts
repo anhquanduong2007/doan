@@ -1,11 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit';
 import counterSlice from '../features/counter/counterSlice';
 // ...
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+const counterReducer = persistReducer(persistConfig, counterSlice)
 
 export const store = configureStore({
   reducer: {
-    counter: counterSlice,
+    counter: counterReducer,
   },
+  middleware: [thunk],
+  devTools: process.env.NODE_ENV !== 'production'
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
