@@ -521,4 +521,90 @@ export class ProductService {
             }
         }
     }
+
+    // ** Product favorite **
+    public async addProductFavorite() {
+        try {
+
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async listProductFavorite() {
+        try {
+
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async removeProductFavorite() {
+        try {
+
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async bulkRemoveProductFavorite() {
+        try {
+
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    // ** Cart **
+    public async addProductToCard() {
+        try {
+
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async removeProductFromCard() {
+        try {
+
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async listProductFromCard() {
+        try {
+
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
 }
