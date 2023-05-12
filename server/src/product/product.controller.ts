@@ -2,10 +2,9 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, Que
 import { Response, Request } from 'express';
 import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
-import { ProductCreateDto, ProductUpdateDto } from './dto';
+import { OptionBulkCreateDto, OptionCreateDto, ProductCreateDto, ProductUpdateDto, ProductVariantCreateDto } from './dto';
 import { ProductService } from './product.service';
 import { PaginationDto } from 'src/common/dto';
-
 
 @Controller('product')
 export class ProductController {
@@ -15,9 +14,9 @@ export class ProductController {
 
     @Post("create")
     @Permission(Permissions.CreateProduct)
-    async createBrand(@Req() req: Request, @Body() dto: ProductCreateDto, @Res() res: Response) {
+    async createProduct(@Req() req: Request, @Body() dto: ProductCreateDto, @Res() res: Response) {
         const userId = req.user['userId']
-        const response = await this.productService.create(dto, userId)
+        const response = await this.productService.productCreate(dto, userId)
         res.json({ response })
     }
 
@@ -28,25 +27,80 @@ export class ProductController {
         res.json({ response })
     }
 
-    @Delete("delete/:id")
-    @Permission(Permissions.DeleteProduct)
-    async deleteProduct(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const response = await this.productService.delete(id)
-        res.json({ response })
-    }
-
     @Get()
     @Permission(Permissions.ReadProduct)
-    async getCategories(@Query() pagination: PaginationDto, @Res() res: Response) {
+    async getProducts(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.productService.products(pagination);
         return res.json({ response });
     }
 
-    @Put("update/:id")
-    @Permission(Permissions.UpdateProduct)
-    async editCategory(@Req() req: Request, @Body() dto: ProductUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    @Get("variant/:id")
+    @Permission(Permissions.ReadProduct)
+    async getProductVariant(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.productService.productVariant(id)
+        res.json({ response })
+    }
+
+    @Get("variants/:id")
+    @Permission(Permissions.ReadProduct)
+    async getProductVariants(@Query() pagination: PaginationDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.productService.productVariants(pagination,id);
+        return res.json({ response });
+    }
+
+    // @Delete("delete/:id")
+    // @Permission(Permissions.DeleteProduct)
+    // async deleteProduct(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    //     const response = await this.productService.delete(id)
+    //     res.json({ response })
+    // }
+
+
+
+    // @Put("update/:id")
+    // @Permission(Permissions.UpdateProduct)
+    // async editCategory(@Req() req: Request, @Body() dto: ProductUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    //     const userId = req.user['userId']
+    //     const response = await this.productService.update(dto, id, userId)
+    //     res.json({ response })
+    // }
+
+    @Post("option/bulk-create")
+    @Permission(Permissions.CreateProduct)
+    async optionBulkCreate(@Req() req: Request, @Body() dto: OptionBulkCreateDto, @Res() res: Response) {
         const userId = req.user['userId']
-        const response = await this.productService.update(dto, id, userId)
+        const response = await this.productService.optionBulkCreate(dto, userId)
+        res.json({ response })
+    }
+
+    @Post("option/create")
+    @Permission(Permissions.CreateProduct)
+    async optionCreate(@Req() req: Request, @Body() dto: OptionCreateDto, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.optionCreate(dto, userId)
+        res.json({ response })
+    }
+
+    @Post("variant/create")
+    @Permission(Permissions.CreateProduct)
+    async productVariantCreate(@Req() req: Request, @Body() dto: ProductVariantCreateDto, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.productVariantCreate(dto, userId)
+        res.json({ response })
+    }
+
+    @Post("variant/bulk-create")
+    @Permission(Permissions.CreateProduct)
+    async productVariantBulkCreate(@Req() req: Request, @Body() dto: { variants: ProductVariantCreateDto[] }, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.productVariantBulkCreate(dto, userId)
+        res.json({ response })
+    }
+
+    @Delete("variant/delete/:id")
+    @Permission(Permissions.DeleteProduct)
+    async productVariantDelete(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.productService.productVariantDelete(id)
         res.json({ response })
     }
 }

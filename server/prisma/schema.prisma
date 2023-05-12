@@ -31,20 +31,6 @@ model bill {
   @@index([staff_id], map: "fk_bill_user_staff")
 }
 
-model brand {
-  id            Int       @id @default(autoincrement())
-  brand_name    String    @db.VarChar(60)
-  brand_code    String    @unique @db.VarChar(50)
-  content       String?   @db.VarChar(255)
-  active        Int       @default(1)
-  icon          String?   @db.VarChar(255)
-  created_date  DateTime  @default(now())
-  modified_date DateTime  @updatedAt
-  created_by    Int?
-  modified_by   Int?
-  product       product[]
-}
-
 model campaign {
   id              Int               @id @default(autoincrement())
   campaign_name   String            @db.VarChar(255)
@@ -100,55 +86,93 @@ model favorite {
 }
 
 model asset {
-  id                   Int       @id @default(autoincrement())
-  name                 String
-  url                  String
-  width                Int
-  height               Int
-  format               String
-  cloudinary_asset_id  String
-  cloudinary_public_id String
-  created_date         DateTime? @db.Timestamp(0)
-  modified_date        DateTime? @db.Timestamp(0)
-  created_by           Int?
-  modified_by          Int?
-  products             product[]
+  id                    Int                     @id @default(autoincrement())
+  name                  String
+  url                   String
+  width                 Int
+  height                Int
+  format                String
+  cloudinary_asset_id   String
+  cloudinary_public_id  String
+  created_date          DateTime?               @db.Timestamp(0)
+  modified_date         DateTime?               @db.Timestamp(0)
+  created_by            Int?
+  modified_by           Int?
+  product_asset         product_asset[]
+  product_variant_asset product_variant_asset[]
+  product               product[]
+  product_variant       product_variant[]
 }
 
 model product {
-  id                 Int                  @id @default(autoincrement())
-  product_name       String               @db.VarChar(255)
-  sku                String               @unique @db.VarChar(255)
-  price_sell         Decimal?             @default(0) @db.Decimal(18, 2)
-  sale               Int?                 @default(0)
-  price              Decimal?             @default(0) @db.Decimal(18, 2)
-  description        String?
-  category_id        Int
-  brand_id           Int?
-  parent_id          Int?
-  active             Int                  @default(1)
-  quantity           Int?                 @default(0)
-  sold               Int?                 @default(0)
-  rate               Float?               @default(0) @db.Float
-  total_rate         Int?                 @default(0)
-  created_date       DateTime?            @default(now())
-  modified_date      DateTime?            @updatedAt
-  created_by         Int?
-  modified_by        Int?
-  favorite           favorite[]
-  brand              brand?               @relation(fields: [brand_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_product_brand")
-  category           category             @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
-  product            product?             @relation("productToproduct", fields: [parent_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_product_id")
-  other_product      product[]            @relation("productToproduct")
-  product_bill       product_bill[]
-  product_receipt    product_receipt[]
-  product_speciality product_speciality[]
-  asset              asset?               @relation(fields: [asset_id], references: [id])
-  asset_id           Int?
+  id                Int               @id @default(autoincrement())
+  name              String            @db.VarChar(255)
+  description       String?
+  slug              String            @unique @db.VarChar(255)
+  category_id       Int?
+  brand_id          Int?
+  active            Int               @default(1)
+  created_date      DateTime?         @default(now())
+  modified_date     DateTime?         @updatedAt
+  created_by        Int?
+  modified_by       Int?
+  favorite          favorite[]
+  category          category?         @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
+  product_bill      product_bill[]
+  product_receipt   product_receipt[]
+  product_variants  product_variant[]
+  asset_ids         product_asset[]
+  featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
+  featured_asset_id Int?
 
-  @@index([brand_id], map: "fk_product_brand")
   @@index([category_id], map: "fk_product_cate")
-  @@index([parent_id], map: "fk_product_id2")
+}
+
+model product_asset {
+  id         Int     @id @default(autoincrement())
+  product    product @relation(fields: [product_id], references: [id])
+  product_id Int
+  asset      asset   @relation(fields: [asset_id], references: [id])
+  asset_id   Int
+
+  @@unique([asset_id, product_id])
+}
+
+model product_variant_asset {
+  id                 Int             @id @default(autoincrement())
+  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
+  product_variant_id Int
+  asset              asset           @relation(fields: [asset_id], references: [id])
+  asset_id           Int
+
+  @@unique([asset_id, product_variant_id])
+}
+
+model product_variant {
+  id                Int                      @id @default(autoincrement())
+  stock             Int                      @default(0)
+  sku               String                   @unique @db.VarChar(255)
+  price             Int                      @default(0)
+  created_date      DateTime?                @default(now())
+  modified_date     DateTime?                @updatedAt
+  created_by        Int?
+  modified_by       Int?
+  product_options   product_variant_option[]
+  product           product?                 @relation(fields: [product_id], references: [id])
+  product_id        Int?
+  asset_ids         product_variant_asset[]
+  featured_asset    asset?                   @relation(fields: [featured_asset_id], references: [id])
+  featured_asset_id Int?
+}
+
+model product_variant_option {
+  id                 Int             @id @default(autoincrement())
+  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
+  product_variant_id Int
+  product_option     product_option  @relation(fields: [product_option_id], references: [id])
+  product_option_id  Int
+
+  @@unique([product_option_id, product_variant_id])
 }
 
 model product_bill {
@@ -186,17 +210,6 @@ model product_receipt {
 
   @@unique([product_id, receipt_id], map: "unique_product_receipt")
   @@index([receipt_id], map: "fk_receipt_product")
-}
-
-model product_speciality {
-  id            Int        @id @default(autoincrement())
-  speciality_id Int
-  product_id    Int
-  speciality    speciality @relation(fields: [speciality_id], references: [id], onUpdate: Restrict, map: "fk_product_speciality")
-  product       product    @relation(fields: [product_id], references: [id], onUpdate: Restrict, map: "fk_speciality_product")
-
-  @@unique([speciality_id, product_id], map: "unique_speciality")
-  @@index([product_id], map: "fk_speciality_product")
 }
 
 model rate {
@@ -253,22 +266,22 @@ model role {
   users_role    users_role[]
 }
 
-model speciality {
-  id                 Int                  @id @default(autoincrement())
-  type_name          String               @db.VarChar(50)
-  type_number        Int
-  description        String               @db.VarChar(100)
-  type_code          String               @db.VarChar(50)
-  type               String?              @db.VarChar(45)
-  active             Int
-  position           Int?
-  created_date       DateTime?            @db.Timestamp(0)
-  modified_date      DateTime?            @db.Timestamp(0)
-  created_by         Int?
-  modified_by        Int?
-  product_speciality product_speciality[]
+model product_option {
+  id               Int                      @id @default(autoincrement())
+  name             OptionName
+  value            String
+  created_date     DateTime                 @default(now())
+  modified_date    DateTime                 @updatedAt
+  created_by       Int?
+  modified_by      Int?
+  product_variants product_variant_option[]
+}
 
-  @@unique([type_name, type_number], map: "unique_speciality")
+enum OptionName {
+  Size     @map("size")
+  Color    @map("color")
+  Material @map("material")
+  Style    @map("style")
 }
 
 model users {
