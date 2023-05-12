@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Logger } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
@@ -11,6 +11,8 @@ import { UserModule } from './user/user.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { CategoryModule } from './category/category.module';
 import { AssetModule } from './asset/asset.module';
+import { ProductModule } from './product/product.module';
+import { AppService } from './app.service';
 import { RateModule } from './rate/rate.module';
 
 @Module({
@@ -28,6 +30,7 @@ import { RateModule } from './rate/rate.module';
     CampaignModule,
     CategoryModule,
     AssetModule,
+    ProductModule,
     RateModule,
   ],
   controllers: [],
@@ -35,7 +38,9 @@ import { RateModule } from './rate/rate.module';
     {
       provide: APP_GUARD,
       useClass: AccessTokenGuard
-    }
+    },
+    AppService,
+    Logger
   ],
 })
 export class AppModule { }
