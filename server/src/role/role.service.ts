@@ -60,6 +60,9 @@ export class RoleService {
                         success: false,
                     }
                 }
+                await this.prisma.users_role.deleteMany({
+                    where: { role_id: id }
+                })
                 return {
                     code: 200,
                     message: 'Delete successfully!',

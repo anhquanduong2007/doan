@@ -1,24 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ErrorValidateResponse } from 'src/types';
-
-export interface RoleType {
-    code: string
-    created_at: string
-    description: string
-    id: number
-    permissions: string[]
-    updated_at: string
-}
+import { Role } from 'src/types';
 
 interface RoleState {
     create: {
-        result: RoleType | ErrorValidateResponse | null;
+        result: Role | null;
         loading: boolean;
         error: boolean;
     },
     list: {
         result: {
-            roles: Array<RoleType>
+            roles: Array<Role>
             skip: number
             take: number
             total: number
@@ -28,17 +19,17 @@ interface RoleState {
         error: boolean;
     },
     delete: {
-        result: RoleType | null;
+        result: Role | null;
         loading: boolean;
         error: boolean;
     },
     update: {
-        result: RoleType | ErrorValidateResponse | null;
+        result: Role | null;
         loading: boolean;
         error: boolean;
     },
     single: {
-        result: RoleType | null;
+        result: Role | null;
         loading: boolean;
         error: boolean;
     }
@@ -99,8 +90,9 @@ export const roleSlice = createSlice({
             state.list.result = action.payload;
             state.list.error = false
         },
-        getListRoleFailed: (state) => {
+        getListRoleFailed: (state, action) => {
             state.list.loading = false;
+            state.list.result = action.payload
             state.list.error = true;
         },
         // ** Delete role
@@ -112,8 +104,9 @@ export const roleSlice = createSlice({
             state.delete.result = action.payload;
             state.delete.error = false
         },
-        deleteRoleFailed: (state) => {
+        deleteRoleFailed: (state, action) => {
             state.delete.loading = false;
+            state.delete.result = action.payload;
             state.delete.error = true;
         },
         // ** Update role
@@ -139,8 +132,9 @@ export const roleSlice = createSlice({
             state.single.result = action.payload;
             state.single.error = false
         },
-        getRoleFailed: (state) => {
+        getRoleFailed: (state, action) => {
             state.single.loading = false;
+            state.single.result = action.payload;
             state.single.error = true;
         },
     },

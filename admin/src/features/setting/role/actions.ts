@@ -1,6 +1,6 @@
 import { AppDispatch } from "src/app/store";
 import { Inotification } from 'src/common';
-import type { Axios } from "axios";
+import type { AxiosInstance } from "axios";
 import {
     getListRoleFailed,
     getListRoleStart,
@@ -14,42 +14,67 @@ import {
     getRoleStart,
     getRoleSuccess,
     getRoleFailed,
-    RoleType,
     updateRoleStart,
     updateRoleSuccess,
     updateRoleFailed
 } from "./roleSlice";
-import { Pagination } from "src/types";
+import { Pagination, Role } from "src/types";
 import { IAxiosResponse } from "src/types/axiosResponse";
+import { NavigateFunction } from "react-router-dom";
+import { MessageApi } from "antd/lib/message";
+import { UseFormSetError } from "react-hook-form";
+import { FormValuesRole } from "src/components/Settings/Roles/create-update";
 
-export type GetListRoleParams = {
-    dispatch: AppDispatch,
-    axiosClient: Axios,
-    pagination: Pagination
+type CreateRoleParams = Omit<GetListRoleParams, "pagination"> & {
+    role: RoleCreate,
+    setError: UseFormSetError<FormValuesRole>,
+    message: MessageApi
 }
 
-export type DeleteRoleParams = Omit<GetListRoleParams, "pagination"> & { id: number }
-
-export type CreateRoleParams = Omit<GetListRoleParams, "pagination"> & { role: Role }
-
-export type GetRoleParams = DeleteRoleParams
-
-export type UpdateRoleParams = GetRoleParams & { role: Role }
-
-export type Role = {
-    code: string
+export type RoleCreate = {
+    role_code: string
+    role_name: string
     description?: string
     permissions: string[]
 }
 
-export const getListRole = async ({ pagination, dispatch, axiosClient }: GetListRoleParams) => {
-    const { skip, take } = pagination;
-    dispatch(getListRoleStart());
+interface GetListRoleParams {
+    dispatch: AppDispatch,
+    axiosClientJwt: AxiosInstance,
+    pagination: Pagination,
+    navigate: NavigateFunction
+}
+
+export type DeleteRoleParams = Omit<GetListRoleParams, "pagination">
+    & {
+        id: number,
+        setIsModalOpen: (open: boolean) => void,
+        setRefresh: (refresh: boolean) => void,
+        refresh: boolean,
+        message: MessageApi
+    }
+
+export type GetRoleParams = Omit<GetListRoleParams, "pagination"> & { id: number }
+
+
+interface UpdateRoleParams extends CreateRoleParams {
+    id: number
+}
+
+
+
+export const getListRole = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListRoleParams) => {
     try {
-        const res: any = await axiosClient.get('/admin/role/list', {
+        const { skip, take } = pagination;
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(getListRoleStart());
+        const res: IAxiosResponse<Role> = await axiosClientJwt.get('/role', {
             params: {
                 take,
                 skip,
+            },
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
         });
         if (res?.response?.code === 200 && res?.response?.success) {
@@ -57,109 +82,203 @@ export const getListRole = async ({ pagination, dispatch, axiosClient }: GetList
                 dispatch(getListRoleSuccess(res.response.data));
             }, 1000);
         }
-    } catch (error) {
-        dispatch(getListRoleFailed());
-        Inotification({
-            type: 'error',
-            message: 'Something went wrong!'
-        })
+    } catch (error: any) {
+        dispatch(getListRoleFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
     }
 }
 
-export const deleteRole = async ({ id, dispatch, axiosClient }: DeleteRoleParams) => {
-    dispatch(deleteRoleStart());
+export const deleteRole = async ({ id, dispatch, axiosClientJwt, navigate, message, refresh, setIsModalOpen, setRefresh }: DeleteRoleParams) => {
+
     try {
-        const res: IAxiosResponse<RoleType> = await axiosClient.delete(`/admin/role/delete/${id}`);
+        dispatch(deleteRoleStart());
+        const accessToken = localStorage.getItem("accessToken")
+        const res: IAxiosResponse<Role> = await axiosClientJwt.delete(`/role/delete/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteRoleSuccess(res.response.data));
+                message.success('Delete role successfully!')
+                setIsModalOpen(false)
+                setRefresh(!refresh)
             }, 1000);
-        } else if (res?.response?.code === 406 && !res?.response?.success) {
-            dispatch(deleteRoleFailed());
+        } else if (res?.response?.code === 404 && !res?.response?.success) {
+            dispatch(deleteRoleFailed(null));
             Inotification({
                 type: 'error',
                 message: res?.response?.message || 'Something went wrong!'
             })
+            setTimeout(function () {
+                setIsModalOpen(false)
+            }, 1000)
+        } else {
+            dispatch(deleteRoleFailed(null));
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+            setTimeout(function () {
+                setIsModalOpen(false)
+            }, 1000)
         }
-    } catch (error) {
-        dispatch(deleteRoleFailed());
-        Inotification({
-            type: 'error',
-            message: 'Something went wrong!'
-        })
+    } catch (error: any) {
+        dispatch(deleteRoleFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
     }
 }
 
-export const createRole = async ({ role, dispatch, axiosClient }: CreateRoleParams) => {
-    const { code, permissions, description } = role
-    dispatch(createRoleStart());
+export const createRole = async ({ role, dispatch, axiosClientJwt, navigate, message, setError }: CreateRoleParams) => {
     try {
-        const res: any = await axiosClient.post(`/admin/role/create`, {
-            code,
+        const { role_code, role_name, permissions, description } = role
+        dispatch(createRoleStart());
+        const accessToken = localStorage.getItem("accessToken")
+        const res: any = await axiosClientJwt.post(`/role/create`, {
+            role_code,
+            role_name,
             permissions,
             description
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
         });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createRoleSuccess(res.response.data));
+                message.success('Create role successfully!');
+                navigate("/settings/roles")
+            }, 1000);
+        } else if (res?.response?.code === 400 && !res?.response?.success) {
+            dispatch(createRoleFailed(null));
+            setError(res?.response?.fieldError as keyof FormValuesRole, { message: res?.response?.message })
+        } else {
+            dispatch(createRoleFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(createRoleFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
             }, 1000);
         } else {
-            dispatch(createRoleFailed({
-                fieldError: res.response.fieldError,
-                message: res.response.message
-            }));
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
         }
-    } catch (error) {
-        dispatch(createRoleFailed(null));
-        Inotification({
-            type: 'error',
-            message: 'Something went wrong!'
-        })
     }
 }
 
-export const getSingleRole = async ({ axiosClient, dispatch, id }: GetRoleParams) => {
-    dispatch(getRoleStart());
+export const getSingleRole = async ({ axiosClientJwt, dispatch, id, navigate }: GetRoleParams) => {
     try {
-        const res: IAxiosResponse<RoleType> = await axiosClient.get(`admin/role/single/${id}`);
+        dispatch(getRoleStart());
+        const accessToken = localStorage.getItem("accessToken")
+        const res: IAxiosResponse<Role> = await axiosClientJwt.get(`/role/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(getRoleSuccess(res.response.data));
             }, 1000);
+        } else {
+            dispatch(getRoleFailed(null));
         }
-    } catch (error) {
-        dispatch(getRoleFailed());
-        Inotification({
-            type: 'error',
-            message: 'Something went wrong!'
-        })
+    } catch (error: any) {
+        dispatch(getRoleFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
     }
 }
 
-export const updateRole = async ({ axiosClient, dispatch, id, role }: UpdateRoleParams) => {
-    const { code, permissions, description } = role
-    dispatch(updateRoleStart());
+export const updateRole = async ({ axiosClientJwt, dispatch, id, role, message, navigate, setError }: UpdateRoleParams) => {
     try {
-        const res: IAxiosResponse<RoleType> = await axiosClient.put(`admin/role/update/${id}`, {
-            code,
+        dispatch(updateRoleStart());
+        const { role_code, permissions, description, role_name } = role
+        const accessToken = localStorage.getItem("accessToken")
+        const res: IAxiosResponse<Role> = await axiosClientJwt.put(`/role/update/${id}`, {
+            role_code,
+            role_name,
             permissions,
             description
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
         });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updateRoleSuccess(res.response.data));
+                message.success('Update role successfully!');
+                navigate("/settings/roles")
+            }, 1000);
+        } else if (res?.response?.code === 400 && !res?.response?.success) {
+            dispatch(updateRoleFailed(null));
+            setError(res?.response?.fieldError as keyof FormValuesRole, { message: res?.response?.message })
+        } else {
+            dispatch(updateRoleFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(updateRoleFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
             }, 1000);
         } else {
-            dispatch(updateRoleFailed({
-                fieldError: res.response.fieldError,
-                message: res.response.message
-            }));
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
         }
-    } catch (error) {
-        dispatch(updateRoleFailed(null));
-        Inotification({
-            type: 'error',
-            message: 'Something went wrong!'
-        })
     }
 }

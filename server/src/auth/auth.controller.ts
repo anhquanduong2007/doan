@@ -11,9 +11,9 @@ export class AuthController {
     constructor(private readonly authService: AuthService) { }
 
     @Post('/register')
-    @Permission(Permissions.CreateUser)
-    async createUser(@Body() dto: RegisterDto, @Res() res: Response) {
-        const response = await this.authService.register(dto);
+    @Permission(Permissions.CreateAdministrator)
+    async createAdministrator(@Body() dto: RegisterDto, @Res() res: Response) {
+        const response = await this.authService.registerAdministrator(dto);
         return res.json({ response });
     }
 

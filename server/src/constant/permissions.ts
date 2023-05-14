@@ -10,21 +10,16 @@ export enum Permissions {
   CreateCustomer = 'CreateCustomer',
   DeleteCustomer = 'DeleteCustomer',
   UpdateCustomer = 'UpdateCustomer',
-  // User
-  CreateUser = 'CreateUser',
-  ReadUser = 'ReadUser',
-  DeleteUser = 'DeleteUser',
-  UpdateUser = 'UpdateUser',
+  // Administrator
+  CreateAdministrator = 'CreateAdministrator',
+  ReadAdministrator = 'ReadAdministrator',
+  DeleteAdministrator = 'DeleteAdministrator',
+  UpdateAdministrator = 'UpdateAdministrator',
   // Role
-  ReadRole = 'UpdateAdministrator',
-  CreateRole = 'UpdateAdministrator',
-  DeleteRole = 'UpdateAdministrator',
-  UpdateRole = 'UpdateAdministrator',
-  // Brand
-  ReadBrand = 'ReadBrand',
-  DeleteBrand = 'DeleteBrand',
-  UpdateBrand = 'UpdateBrand',
-  CreateBrand = 'CreateBrand',
+  ReadRole = 'UpdateRole',
+  CreateRole = 'UpdateRole',
+  DeleteRole = 'UpdateRole',
+  UpdateRole = 'UpdateRole',
   // Campaign
   ReadCampaign = 'ReadCampaign',
   DeleteCampaign = 'DeleteCampaign',
@@ -45,4 +40,9 @@ export enum Permissions {
   DeleteRate = 'DeleteRate',
   UpdateRate = 'UpdateRate',
   CreateRate = 'CreateRate',
+  // Promotion
+  ReadPromotion = 'ReadPromotion',
+  DeletePromotion = 'DeletePromotion',
+  UpdatePromotion = 'UpdatePromotion',
+  CreatePromotion = 'CreatePromotion',
 }
