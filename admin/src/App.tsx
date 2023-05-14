@@ -3,37 +3,64 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  useNavigate,
 } from 'react-router-dom';
-import Dashboard from './components/Dashboard/dashboard';
-import User from './components/User';
-import { HomePage, NotFoundPage, LoginPage } from './pages';
-import Products from 'src/pages/Catalog/Products/list';
-import ProductCreate from 'src/pages/Catalog/Products/create';
-import Roles from 'src/pages/Settings/Roles/list';
-import RoleCreateUpdate from 'src/pages/Settings/Roles/create-update';
+import HomePage from './pages/Home';
+import NotFoundPage from './pages/NotFound';
+import LoginPage from './pages/Login';
+import ProductListPage from 'src/pages/Catalog/Products/list';
+import ProductCreatePage from 'src/pages/Catalog/Products/create';
+import AdministratorListPage from 'src/pages/Settings/Administrators/list';
+import RoleListPage from 'src/pages/Settings/Roles/list';
+import RoleCreateUpdatePage from 'src/pages/Settings/Roles/create-update';
 
+interface ProtectRouteProps {
+  children: React.ReactNode
+}
+
+const ProtectRoute = ({ children }: ProtectRouteProps) => {
+  const accessToken = localStorage.getItem("accessToken")
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    if (!accessToken) {
+      navigate('/login')
+    }
+  }, [accessToken])
+
+  return (
+    <React.Fragment>
+      {children}
+    </React.Fragment>
+  )
+}
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path='*' element={<NotFoundPage />} />
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/' element={<HomePage />} >
-          <Route path='catalog'>
-            <Route path='products'>
-              <Route index element={<Products />} />
-              <Route path='create' element={<ProductCreate />} />
+      <ProtectRoute>
+        <Routes>
+          <Route path='*' element={<NotFoundPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/' element={<HomePage />} >
+            <Route path='catalog'>
+              <Route path='products'>
+                <Route index element={<ProductListPage />} />
+                <Route path='create' element={<ProductCreatePage />} />
+              </Route>
+            </Route>
+            <Route path='settings'>
+              <Route path='administrators'>
+                <Route index element={<AdministratorListPage />} />
+              </Route>
+              <Route path='roles'>
+                <Route index element={<RoleListPage />} />
+                <Route path='create' element={<RoleCreateUpdatePage />} />
+                <Route path='update/:id' element={<RoleCreateUpdatePage />} />
+              </Route>
             </Route>
           </Route>
-          <Route path='settings'>
-            <Route path='roles'>
-              <Route index element={<Roles />} />
-              <Route path='create' element={<RoleCreateUpdate />} />
-              <Route path='update/:id' element={<RoleCreateUpdate />} />
-            </Route>
-          </Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </ProtectRoute>
     </BrowserRouter>
   );
 };

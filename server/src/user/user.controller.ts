@@ -1,5 +1,5 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Query, Res, Put } from '@nestjs/common';
-import { Response } from 'express';
+import { Body, Controller, Get, Param, ParseIntPipe, Query, Res, Put, Req } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { UserService } from './user.service';
 import { AssignRolesToUserDto } from './dto';
 import { PaginationDto } from 'src/common/dto';
@@ -17,10 +17,12 @@ export class UserController {
         return res.json({ response });
     }
 
-    @Get()
+    @Get('administrators')
     @Permission(Permissions.ReadUser)
-    async getList(@Query() pagination: PaginationDto, @Res() res: Response) {
-        const response = await this.userAdminService.users(pagination);
+    async administrators(@Req() req: Request, @Query() pagination: PaginationDto, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.userAdminService.administrators(pagination, userId);
         return res.json({ response });
     }
+
 }

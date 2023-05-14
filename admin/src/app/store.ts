@@ -1,9 +1,9 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authSlice from 'src/features/auth/authSlice';
-import userSlice from 'src/features/user/userSlice';
 import assetSlice from 'src/features/catalog/asset/assetSlice';
 import roleSlice from 'src/features/setting/role/roleSlice';
 import productSlice from 'src/features/catalog/product/productSlice';
+import administratorSlice from 'src/features/setting/administrator/administratorSlice';
 
 import {
   persistStore,
@@ -25,10 +25,10 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authSlice,
-  user: userSlice,
   asset: assetSlice,
   role: roleSlice,
-  product: productSlice
+  product: productSlice,
+  administrator: administratorSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
