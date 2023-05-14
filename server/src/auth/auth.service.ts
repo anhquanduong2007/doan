@@ -20,7 +20,7 @@ export class AuthService {
         private config: ConfigService,
     ) { }
 
-    public async register(input: RegisterDto): Promise<IResponse<users>> {
+    public async registerAdministrator(input: RegisterDto): Promise<IResponse<users>> {
         try {
             const {
                 active,
@@ -69,6 +69,7 @@ export class AuthService {
                 data: user
             }
         } catch (error) {
+            console.log(error)
             return {
                 code: 500,
                 message: "An error occurred in the system!",

@@ -13,6 +13,7 @@ import ProductCreatePage from 'src/pages/Catalog/Products/create';
 import AdministratorListPage from 'src/pages/Settings/Administrators/list';
 import RoleListPage from 'src/pages/Settings/Roles/list';
 import RoleCreateUpdatePage from 'src/pages/Settings/Roles/create-update';
+import AdministratorCreateUpdatePage from './pages/Settings/Administrators/create-update';
 
 interface ProtectRouteProps {
   children: React.ReactNode
@@ -51,6 +52,8 @@ const App = () => {
             <Route path='settings'>
               <Route path='administrators'>
                 <Route index element={<AdministratorListPage />} />
+                <Route path='create' element={<AdministratorCreateUpdatePage />} />
+                <Route path='update/:id' element={<AdministratorCreateUpdatePage />} />
               </Route>
               <Route path='roles'>
                 <Route index element={<RoleListPage />} />

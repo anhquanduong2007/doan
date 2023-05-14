@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Card, Col, Divider, Modal, Row, Space, Switch, Table } from 'antd';
+import { Breadcrumb, Button, Card, Col, Divider, Modal, Row, Space, Switch, Table, message } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import {
@@ -9,7 +9,7 @@ import {
 import { Flex } from '@chakra-ui/react';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { getListAdministrator } from 'src/features/setting/administrator/action';
+import { deleteAdministrator, getListAdministrator } from 'src/features/setting/administrator/action';
 import type { ColumnsType } from 'antd/es/table';
 
 interface DataType {
@@ -88,7 +88,7 @@ const AdministratorList = () => {
     const [skip, setSkip] = useState<number>(0)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [administratorDelete, setAdministratorDelete] = useState<{ id: number, email: string }>()
-    const [refresh, setRefresh] = useState({})
+    const [refresh, setRefresh] = useState<boolean>(false)
 
     // ** Third party
     const navigate = useNavigate()
@@ -130,22 +130,16 @@ const AdministratorList = () => {
     }
 
     const handleOk = async () => {
-        // await deleteRole({
-        //     axiosClient,
-        //     dispatch,
-        //     id: roleDelete?.id!
-        // })
-        // if (store.delete.error) {
-        //     setTimeout(function () {
-        //         setIsModalOpen(false)
-        //     }, 1000)
-        // } else {
-        //     setTimeout(function () {
-        //         message.success('Delete role successfully!');
-        //         setIsModalOpen(false)
-        //         setRefresh({})
-        //     }, 1000)
-        // }
+        await deleteAdministrator({
+            axiosClientJwt,
+            dispatch,
+            navigate,
+            id: administratorDelete?.id!,
+            refresh,
+            setIsModalOpen,
+            setRefresh,
+            message
+        })
     };
 
     const handleCancel = () => {
@@ -187,7 +181,7 @@ const AdministratorList = () => {
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered >
+            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
                 <p>Do you want to delete this administrator (<span style={{ fontWeight: "bold" }}>{administratorDelete?.email}</span>) ?</p>
             </Modal>
         </Fragment>
