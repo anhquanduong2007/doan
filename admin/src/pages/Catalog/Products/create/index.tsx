@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import ProductCreate from 'src/components/Catalog/Products/create';
 
-const Main = () => {
+const ProductCreatePage = () => {
     return (
         <Fragment>
             <ProductCreate />
@@ -9,4 +9,4 @@ const Main = () => {
     );
 };
 
-export default Main;
+export default ProductCreatePage;

@@ -4,6 +4,7 @@ import { AssignRolesToUserDto } from './dto';
 import { IResponse } from 'src/common/types';
 import { PaginationDto } from 'src/common/dto';
 import { users } from '@prisma/client';
+import { truncate } from 'lodash';
 
 @Injectable()
 export class UserService {
@@ -66,7 +67,6 @@ export class UserService {
                 success: false,
             }
         } catch (error) {
-            console.log(error)
             return {
                 code: 500,
                 message: "An error occurred in the system!",
@@ -75,14 +75,54 @@ export class UserService {
         }
     }
 
-    public async users(input: PaginationDto): Promise<IResponse<{ users: users[], totalPage: number, skip: number, take: number, total: number }>> {
+    // ** Administrators
+    public async administrators(input: PaginationDto, userId: number): Promise<IResponse<{ administrators: Omit<users, "hashed_rt" | "password">[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
             const { skip, take, search } = input;
-            const [totalRecord, users] = await this.prisma.$transaction([
-                this.prisma.users.count(),
+            const customerRole = this.prisma.role.findUnique({
+                where: { role_code: "customer" }
+            })
+            const [totalRecord, administrators] = await this.prisma.$transaction([
+                this.prisma.users.count({
+                    where: {
+                        NOT: {
+                            id: userId
+                        },
+                        users_role: {
+                            none: {
+                                role_id: (await customerRole).id
+                            }
+                        }
+                    },
+                }),
                 this.prisma.users.findMany({
                     take: take || 10,
                     skip: skip || 0,
+                    where: {
+                        NOT: {
+                            id: userId
+                        },
+                        users_role: {
+                            none: {
+                                role_id: (await customerRole).id
+                            }
+                        },
+
+                    },
+                    select: {
+                        email: true,
+                        id: true,
+                        first_name: true,
+                        last_name: true,
+                        gender: true,
+                        date_of_birth: true,
+                        phone: true,
+                        active: true,
+                        created_date: true,
+                        modified_date: true,
+                        created_by: true,
+                        modified_by: true
+                    }
                 }),
             ])
             return {
@@ -90,14 +130,20 @@ export class UserService {
                 success: true,
                 message: "Success!",
                 data: {
-                    users,
+                    administrators,
                     totalPage: take ? Math.ceil(totalRecord / take) : Math.ceil(totalRecord / 10),
                     total: totalRecord,
                     skip: skip || 0,
                     take: take || 10
                 }
             }
-        } catch (error) { }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
     }
 
 }

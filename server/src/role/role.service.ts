@@ -140,24 +140,26 @@ export class RoleService {
                 where: { id }
             })
             if (role) {
-                const isRoleCodeExist = await this.prisma.role.findFirst({
-                    where: {
-                        AND: [
-                            { role_code },
-                            {
-                                NOT: [
-                                    { id }
-                                ]
-                            }
-                        ]
-                    },
-                })
-                if (isRoleCodeExist) {
-                    return {
-                        code: 400,
-                        success: false,
-                        message: 'Role code already exist!',
-                        fieldError: "role_code",
+                if (role_code) {
+                    const isRoleCodeExist = await this.prisma.role.findFirst({
+                        where: {
+                            AND: [
+                                { role_code },
+                                {
+                                    NOT: [
+                                        { id }
+                                    ]
+                                }
+                            ]
+                        },
+                    })
+                    if (isRoleCodeExist) {
+                        return {
+                            code: 400,
+                            success: false,
+                            message: 'Role code already exist!',
+                            fieldError: "role_code",
+                        }
                     }
                 }
                 return {

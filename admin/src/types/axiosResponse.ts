@@ -1,8 +1,10 @@
 export interface IAxiosResponse<T> {
     response: {
-        code: number,
+        code: number
         success: boolean
-        data: T,
+        data: T
+        access_token?: string
+        refresh_token?: string
         fieldError?: string
         message?: string
     }
