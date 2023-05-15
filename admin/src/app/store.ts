@@ -19,6 +19,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import promotionSlice from 'src/features/promotion/promotionSlice';
 
 
 const persistConfig = {
@@ -35,7 +36,8 @@ const rootReducer = combineReducers({
   administrator: administratorSlice,
   customer: customerSlice,
   address: addressSlice,
-  category: categorySlice
+  category: categorySlice,
+  promotion: promotionSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

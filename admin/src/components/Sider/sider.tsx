@@ -104,9 +104,9 @@ const SiderBar = () => {
                         key: "promotions",
                         icon: <TagOutlined />,
                         label: "Promotions",
-                        className: location.pathname === "/promotions" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "/marketing/promotions" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/promotions')
+                            navigate('/marketing/promotions')
                         }
                     },
                 ]

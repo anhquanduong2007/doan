@@ -310,3 +310,16 @@ model users_role {
   @@unique([user_id, role_id], map: "unique_speciality")
   @@index([role_id], map: "fk_role_users")
 }
+
+model promotion {
+  id            Int      @id @default(autoincrement())
+  created_date  DateTime @default(now())
+  modified_date DateTime @updatedAt
+  starts_at     DateTime
+  ends_at       DateTime
+  coupon_code   String   @unique @db.VarChar(100)
+  name          String   @db.VarChar(255)
+  active        Int      @default(1)
+  limit         Int      @default(0)
+  discount      Int      @default(0)
+}
