@@ -4,6 +4,8 @@ import assetSlice from 'src/features/catalog/asset/assetSlice';
 import roleSlice from 'src/features/setting/role/roleSlice';
 import productSlice from 'src/features/catalog/product/productSlice';
 import administratorSlice from 'src/features/setting/administrator/administratorSlice';
+import customerSlice from 'src/features/customer/customerSlice';
+import addressSlice from 'src/features/address/addressSlice';
 
 import {
   persistStore,
@@ -28,7 +30,9 @@ const rootReducer = combineReducers({
   asset: assetSlice,
   role: roleSlice,
   product: productSlice,
-  administrator: administratorSlice
+  administrator: administratorSlice,
+  customer: customerSlice,
+  address: addressSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

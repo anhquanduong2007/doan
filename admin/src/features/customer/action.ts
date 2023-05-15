@@ -1,21 +1,21 @@
 import { AppDispatch } from "src/app/store";
 import {
-    getListAdministratorStart,
-    getListAdministratorSuccess,
-    getListAdministratorFailed,
-    deleteAdministratorStart,
-    deleteAdministratorSuccess,
-    deleteAdministratorFailed,
-    getAdministratorStart,
-    getAdministratorSuccess,
-    getAdministratorFailed,
-    createAdministratorStart,
-    createAdministratorSuccess,
-    createAdministratorFailed,
-    updateAdministratorStart,
-    updateAdministratorSuccess,
-    updateAdministratorFailed
-} from "./administratorSlice";
+    getListCustomerStart,
+    getListCustomerSuccess,
+    getListCustomerFailed,
+    deleteCustomerStart,
+    deleteCustomerSuccess,
+    deleteCustomerFailed,
+    getCustomerStart,
+    getCustomerSuccess,
+    getCustomerFailed,
+    createCustomerStart,
+    createCustomerSuccess,
+    createCustomerFailed,
+    updateCustomerStart,
+    updateCustomerSuccess,
+    updateCustomerFailed
+} from "./customerSlice";
 import { Inotification } from 'src/common';
 import { AxiosInstance } from "axios";
 import { Pagination } from "src/types";
@@ -24,16 +24,15 @@ import { User } from "src/types/user";
 import { NavigateFunction } from "react-router-dom";
 import { MessageApi } from "antd/lib/message";
 import { UseFormSetError } from "react-hook-form";
-import { FormValuesAdministrator } from "src/components/Settings/Administrators/create-update";
+import { FormValuesCustomer } from "src/components/Customers/create-update";
 
-
-type CreateAdministratorParams = Omit<GetListAdministratorParams, "pagination"> & {
-    administrator: AdministratorCreate,
-    setError: UseFormSetError<FormValuesAdministrator>,
+type CreateCustomerParams = Omit<GetListCustomerParams, "pagination"> & {
+    customer: CustomerCreate,
+    setError: UseFormSetError<FormValuesCustomer>,
     message: MessageApi
 }
 
-interface AdministratorCreate {
+interface CustomerCreate {
     password: string
     first_name: string
     last_name: string
@@ -44,28 +43,24 @@ interface AdministratorCreate {
     active: number
 }
 
-interface AdministratorCreateUpdate extends Omit<AdministratorCreate, "password"> {
-    role_ids: number[]
-}
-
-interface UpdateAdministratorParams {
+interface UpdateCustomerParams {
     id: number
-    administrator: AdministratorCreateUpdate,
-    setError: UseFormSetError<Omit<FormValuesAdministrator, "password">>,
+    customer: Omit<CustomerCreate, "password">,
+    setError: UseFormSetError<Omit<FormValuesCustomer, "password">>,
     message: MessageApi
     dispatch: AppDispatch,
     axiosClientJwt: AxiosInstance,
     navigate: NavigateFunction
 }
 
-interface GetListAdministratorParams {
+interface GetListCustomerParams {
     dispatch: AppDispatch,
     axiosClientJwt: AxiosInstance,
     pagination: Pagination,
     navigate: NavigateFunction
 }
 
-export type DeleteAdministratorParams = Omit<GetListAdministratorParams, "pagination">
+export type DeleteCustomerParams = Omit<GetListCustomerParams, "pagination">
     & {
         id: number,
         setIsModalOpen: (open: boolean) => void,
@@ -74,14 +69,14 @@ export type DeleteAdministratorParams = Omit<GetListAdministratorParams, "pagina
         message: MessageApi
     }
 
-export type GetAdministratorParams = Omit<GetListAdministratorParams, "pagination"> & { id: number }
+export type GetCustomerParams = Omit<GetListCustomerParams, "pagination"> & { id: number }
 
-export const getListAdministrator = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListAdministratorParams) => {
+export const getListCustomer = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListCustomerParams) => {
     try {
         const { skip, take } = pagination;
         const accessToken = localStorage.getItem("accessToken")
-        dispatch(getListAdministratorStart());
-        const res: IAxiosResponse<User> = await axiosClientJwt.get('/user/administrators', {
+        dispatch(getListCustomerStart());
+        const res: IAxiosResponse<User> = await axiosClientJwt.get('/user/customers', {
             params: {
                 take,
                 skip,
@@ -92,13 +87,13 @@ export const getListAdministrator = async ({ pagination, dispatch, axiosClientJw
         });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                dispatch(getListAdministratorSuccess(res.response.data));
+                dispatch(getListCustomerSuccess(res.response.data));
             }, 1000)
         } else {
-            dispatch(deleteAdministratorFailed(null));
+            dispatch(deleteCustomerFailed(null));
         }
     } catch (error: any) {
-        dispatch(getListAdministratorFailed(null));
+        dispatch(getListCustomerFailed(null));
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
@@ -116,9 +111,9 @@ export const getListAdministrator = async ({ pagination, dispatch, axiosClientJw
     }
 }
 
-export const deleteAdministrator = async ({ id, dispatch, axiosClientJwt, navigate, message, refresh, setIsModalOpen, setRefresh }: DeleteAdministratorParams) => {
+export const deleteCustomer = async ({ id, dispatch, axiosClientJwt, navigate, message, refresh, setIsModalOpen, setRefresh }: DeleteCustomerParams) => {
     try {
-        dispatch(deleteAdministratorStart());
+        dispatch(deleteCustomerStart());
         const accessToken = localStorage.getItem("accessToken")
         const res: IAxiosResponse<User> = await axiosClientJwt.delete(`/user/delete/${id}`, {
             headers: {
@@ -127,20 +122,20 @@ export const deleteAdministrator = async ({ id, dispatch, axiosClientJwt, naviga
         });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                dispatch(deleteAdministratorSuccess(res.response.data))
-                message.success('Delete administrator successfully!')
+                dispatch(deleteCustomerSuccess(res.response.data))
+                message.success('Delete customer successfully!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
         } else {
-            dispatch(deleteAdministratorFailed(null));
+            dispatch(deleteCustomerFailed(null));
             setTimeout(function () {
                 setIsModalOpen(false)
             }, 1000)
 
         }
     } catch (error: any) {
-        dispatch(deleteAdministratorFailed(null));
+        dispatch(deleteCustomerFailed(null));
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
@@ -159,47 +154,12 @@ export const deleteAdministrator = async ({ id, dispatch, axiosClientJwt, naviga
     }
 }
 
-export const getAdministrator = async ({ id, dispatch, axiosClientJwt, navigate }: GetAdministratorParams) => {
+export const createCustomer = async ({ customer, axiosClientJwt, dispatch, navigate, setError, message }: CreateCustomerParams) => {
     try {
+        const { active, email, first_name, last_name, date_of_birth, gender, phone, password } = customer;
         const accessToken = localStorage.getItem("accessToken")
-        dispatch(getAdministratorStart());
-        const res: IAxiosResponse<User> = await axiosClientJwt.get(`/user/administrator/${id}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
-        if (res?.response?.code === 200 && res?.response?.success) {
-            setTimeout(function () {
-                dispatch(getAdministratorSuccess(res.response.data));
-            }, 1000)
-        } else {
-            dispatch(getAdministratorFailed(null));
-        }
-    } catch (error: any) {
-        dispatch(getAdministratorFailed(null));
-        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
-            Inotification({
-                type: 'error',
-                message: 'You do not have permission to perform this action!'
-            })
-            setTimeout(function () {
-                navigate('/')
-            }, 1000);
-        } else {
-            Inotification({
-                type: 'error',
-                message: 'Something went wrong!'
-            })
-        }
-    }
-}
-
-export const createAdministrator = async ({ administrator, axiosClientJwt, dispatch, navigate, setError, message }: CreateAdministratorParams) => {
-    try {
-        const { active, email, first_name, last_name, date_of_birth, gender, phone, password } = administrator;
-        const accessToken = localStorage.getItem("accessToken")
-        dispatch(createAdministratorStart());
-        const res: IAxiosResponse<User> = await axiosClientJwt.post('/auth/register', {
+        dispatch(createCustomerStart());
+        const res: IAxiosResponse<User> = await axiosClientJwt.post('/auth/customer/register', {
             active,
             email,
             first_name,
@@ -215,18 +175,18 @@ export const createAdministrator = async ({ administrator, axiosClientJwt, dispa
         });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                dispatch(createAdministratorSuccess(res.response.data));
-                message.success('Create administrator successfully!');
-                navigate("/settings/administrators")
+                dispatch(createCustomerSuccess(res.response.data));
+                message.success('Create customer successfully!');
+                navigate("/customers")
             }, 1000)
         } else if (res?.response?.code === 400 && !res?.response?.success) {
-            dispatch(createAdministratorFailed(null));
-            setError(res?.response?.fieldError as keyof FormValuesAdministrator, { message: res?.response?.message })
+            dispatch(createCustomerFailed(null));
+            setError(res?.response?.fieldError as keyof FormValuesCustomer, { message: res?.response?.message })
         } else {
-            dispatch(createAdministratorFailed(null));
+            dispatch(createCustomerFailed(null));
         }
     } catch (error: any) {
-        dispatch(createAdministratorFailed(null));
+        dispatch(createCustomerFailed(null));
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
@@ -244,13 +204,48 @@ export const createAdministrator = async ({ administrator, axiosClientJwt, dispa
     }
 }
 
-export const updateAdministrator = async ({ administrator, axiosClientJwt, dispatch, navigate, setError, message, id }: UpdateAdministratorParams) => {
+export const getCustomer = async ({ id, dispatch, axiosClientJwt, navigate }: GetCustomerParams) => {
     try {
-        const { active, email, first_name, last_name, date_of_birth, gender, phone, role_ids } = administrator;
         const accessToken = localStorage.getItem("accessToken")
-        dispatch(updateAdministratorStart());
-        const [res, assign]: [IAxiosResponse<User>, IAxiosResponse<{}>] = await Promise.all([
-            await axiosClientJwt.put(`/user/administrator/update/${id}`, {
+        dispatch(getCustomerStart());
+        const res: IAxiosResponse<User> = await axiosClientJwt.get(`/user/customer/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(getCustomerSuccess(res.response.data));
+            }, 1000)
+        } else {
+            dispatch(getCustomerFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(getCustomerFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
+    }
+}
+
+export const updateCustomer = async ({ customer, axiosClientJwt, dispatch, navigate, setError, message, id }: UpdateCustomerParams) => {
+    try {
+        const { active, email, first_name, last_name, date_of_birth, gender, phone } = customer;
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(updateCustomerStart());
+        const [res]: [IAxiosResponse<User>] = await Promise.all([
+            await axiosClientJwt.put(`/user/customer/update/${id}`, {
                 active,
                 email,
                 first_name,
@@ -263,27 +258,21 @@ export const updateAdministrator = async ({ administrator, axiosClientJwt, dispa
                     Authorization: `Bearer ${accessToken}`
                 }
             }),
-            await axiosClientJwt.put(`/user/assign-roles-to-user/${id}`, { role_ids }, {
-                headers: {
-                    Authorization: `Bearer ${accessToken}`
-                }
-            })
-
         ])
-        if (res?.response?.code === 200 && res?.response?.success && assign?.response?.code === 200 && assign?.response?.success) {
+        if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                dispatch(updateAdministratorSuccess(res.response.data));
-                message.success('Update administrator successfully!');
-                navigate("/settings/administrators")
+                dispatch(updateCustomerSuccess(res.response.data));
+                message.success('Update customer successfully!');
+                navigate("/customers")
             }, 1000)
         } else if (res?.response?.code === 400 && !res?.response?.success) {
-            dispatch(updateAdministratorFailed(null));
-            setError(res?.response?.fieldError as keyof Omit<FormValuesAdministrator, "password">, { message: res?.response?.message })
+            dispatch(updateCustomerFailed(null));
+            setError(res?.response?.fieldError as keyof Omit<FormValuesCustomer, "password">, { message: res?.response?.message })
         } else {
-            dispatch(updateAdministratorFailed(null));
+            dispatch(updateCustomerFailed(null));
         }
     } catch (error: any) {
-        dispatch(updateAdministratorFailed(null));
+        dispatch(updateCustomerFailed(null));
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
@@ -300,3 +289,5 @@ export const updateAdministrator = async ({ administrator, axiosClientJwt, dispa
         }
     }
 }
+
+

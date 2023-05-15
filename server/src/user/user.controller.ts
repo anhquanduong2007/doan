@@ -25,10 +25,10 @@ export class UserController {
         return res.json({ response });
     }
 
-    @Delete('administrator/delete/:id')
+    @Delete('delete/:id')
     @Permission(Permissions.DeleteAdministrator)
-    async deleteAdministrator(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const response = await this.userAdminService.deleteAdministrator(id);
+    async deleteUser(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.userAdminService.delete(id);
         return res.json({ response });
     }
 
@@ -46,4 +46,24 @@ export class UserController {
         return res.json({ response });
     }
 
+    @Get('customers')
+    @Permission(Permissions.ReadCustomer)
+    async customers(@Query() pagination: PaginationDto, @Res() res: Response) {
+        const response = await this.userAdminService.customers(pagination);
+        return res.json({ response });
+    }
+
+    @Get('customer/:id')
+    @Permission(Permissions.ReadCustomer)
+    async getCustomer(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.userAdminService.customer(id);
+        return res.json({ response });
+    }
+
+    @Put('customer/update/:id')
+    @Permission(Permissions.UpdateCustomer)
+    async updateCustomer(@Body() dto: UserUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.userAdminService.updateCustomer(id, dto);
+        return res.json({ response });
+    }
 }
