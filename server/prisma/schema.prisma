@@ -50,7 +50,7 @@ model address {
   created_date             DateTime @default(now())
   modified_date            DateTime @updatedAt
   street_line_1            String   @db.VarChar(255)
-  street_line_2            String   @db.VarChar(255)
+  street_line_2            String?   @db.VarChar(255)
   city                     String   @db.VarChar(255)
   province                 String   @db.VarChar(255)
   postal_code              String   @db.VarChar(255)

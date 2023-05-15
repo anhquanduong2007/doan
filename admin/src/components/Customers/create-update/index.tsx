@@ -12,6 +12,8 @@ import { createCustomer, getCustomer, updateCustomer } from "src/features/custom
 import {
     PlusCircleOutlined
 } from '@ant-design/icons';
+import Address from "./Address"
+import AddressModal from "./AddressModal"
 
 export type FormValuesCustomer = {
     email: string
@@ -19,11 +21,6 @@ export type FormValuesCustomer = {
     last_name: string
     password: string
     phone: string
-    street_line_1: string
-    street_line_2: string
-    city: string
-    province: string
-    postal_code: string
 };
 
 const dateFormat = 'YYYY/MM/DD';
@@ -35,6 +32,8 @@ const CustomerCreateUpdate = () => {
     const [dateOfBirth, setDateOfBirth] = useState<string>()
     const [addressModal, setAddressModal] = useState<boolean>(false)
     const [mode, setMode] = useState<boolean>(false)
+    const [refresh, setRefresh] = useState<boolean>(false)
+    const [updateAddress, setUpdateAddress] = useState<number>()
 
     // ** Third party
     const navigate = useNavigate()
@@ -47,11 +46,6 @@ const CustomerCreateUpdate = () => {
             password: '',
             last_name: '',
             phone: '',
-            street_line_1: '',
-            street_line_2: '',
-            city: '',
-            province: '',
-            postal_code: '',
         }
     });
 
@@ -84,7 +78,7 @@ const CustomerCreateUpdate = () => {
                 navigate
             })
         }
-    }, [id])
+    }, [id, refresh])
 
     useEffect(() => {
         if (id && !customer.single.loading && customer.single.result) {
@@ -106,10 +100,6 @@ const CustomerCreateUpdate = () => {
     const handleChangeGender = (value: number) => {
         setGender(value)
     };
-
-    const handleOk = () => {
-
-    }
 
     const onSubmit = async (data: FormValuesCustomer) => {
         if (id) {
@@ -291,7 +281,36 @@ const CustomerCreateUpdate = () => {
                                 {
                                     id && (
                                         <Form.Item>
-                                            <Button style={{ textTransform: "uppercase" }} type="primary" icon={<PlusCircleOutlined />} onClick={() => setAddressModal(true)}>Create new address</Button>
+                                            <Button style={{ textTransform: "uppercase" }} type="primary" icon={<PlusCircleOutlined />} onClick={() => {
+                                                setAddressModal(true)
+                                                setMode(false)
+                                            }}>Create new address</Button>
+                                        </Form.Item>
+                                    )
+                                }
+                                {
+                                    id && (
+                                        <Form.Item>
+                                            <Row gutter={[12, 12]}>
+                                                {
+                                                    !customer.single.loading && customer.single.result && (
+                                                        customer.single.result.address.map((address, index) => {
+                                                            return (
+                                                                <Col span={8} style={{ display: "flex" }} key={index}>
+                                                                    <Address
+                                                                        address={address}
+                                                                        setRefresh={setRefresh}
+                                                                        refresh={refresh}
+                                                                        setUpdateAddress={setUpdateAddress}
+                                                                        setMode={setMode}
+                                                                        setAddressModal={setAddressModal}
+                                                                    />
+                                                                </Col>
+                                                            )
+                                                        })
+                                                    )
+                                                }
+                                            </Row>
                                         </Form.Item>
                                     )
                                 }
@@ -300,100 +319,14 @@ const CustomerCreateUpdate = () => {
                     </Card>
                 </Col>
             </Row>
-            <Modal title="Create new address" open={addressModal} onOk={handleOk} onCancel={() => setAddressModal(false)} centered>
-                <Form layout="vertical">
-                    <Form.Item label="Street line 1">
-                        <Controller
-                            name="street_line_1"
-                            control={control}
-                            render={({ field }) => {
-                                return (
-                                    <div>
-                                        <Input {...field} />
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Street line 2">
-                        <Controller
-                            name="street_line_2"
-                            control={control}
-                            render={({ field }) => {
-                                return (
-                                    <div>
-                                        <Input {...field} />
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="City">
-                        <Controller
-                            name="city"
-                            control={control}
-                            render={({ field }) => {
-                                return (
-                                    <div>
-                                        <Input {...field} />
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Province">
-                        <Controller
-                            name="province"
-                            control={control}
-                            render={({ field }) => {
-                                return (
-                                    <div>
-                                        <Input {...field} />
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Postal code">
-                        <Controller
-                            name="postal_code"
-                            control={control}
-                            render={({ field }) => {
-                                return (
-                                    <div>
-                                        <Input {...field} />
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Country">
-                        <Select
-                            defaultValue="lucy"
-                            // onChange={handleChange}
-                            options={[
-                                {
-                                    value: 'jack',
-                                    label: 'Jack',
-                                },
-                                {
-                                    value: 'lucy',
-                                    label: 'Lucy',
-                                },
-                                {
-                                    value: 'disabled',
-                                    disabled: true,
-                                    label: 'Disabled',
-                                },
-                                {
-                                    value: 'Yiminghe',
-                                    label: 'yiminghe',
-                                },
-                            ]}
-                        />
-                    </Form.Item>
-                </Form>
-            </Modal>
+            {id && (<AddressModal
+                addressModal={addressModal}
+                setAddressModal={setAddressModal}
+                mode={mode}
+                updateAddress={updateAddress as number}
+                refresh={refresh}
+                setRefresh={setRefresh}
+            />)}
         </Fragment>
     )
 }

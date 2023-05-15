@@ -33,7 +33,7 @@ export class RoleController {
         return res.json({ response });
     }
 
-    @Get('')
+    @Get()
     @Permission(Permissions.ReadRole)
     async getRoles(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.roleService.roles(pagination);

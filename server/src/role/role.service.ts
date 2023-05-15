@@ -100,7 +100,7 @@ export class RoleService {
                 }
             }
             return {
-                code: 400,
+                code: 404,
                 message: 'Role does not exist in the system!',
                 success: false,
             }
