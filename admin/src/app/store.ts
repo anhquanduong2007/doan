@@ -16,6 +16,7 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import customerSlice from 'src/features/customer/customerSlice';
 
 const persistConfig = {
   key: 'root',
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
   asset: assetSlice,
   role: roleSlice,
   product: productSlice,
-  administrator: administratorSlice
+  administrator: administratorSlice,
+  customer: customerSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

@@ -45,6 +45,21 @@ model campaign {
   campaign_detail campaign_detail[]
 }
 
+model address {
+  id                       Int      @id @default(autoincrement())
+  created_date             DateTime @default(now())
+  modified_date            DateTime @updatedAt
+  street_line_1            String   @db.VarChar(255)
+  street_line_2            String   @db.VarChar(255)
+  city                     String   @db.VarChar(255)
+  province                 String   @db.VarChar(255)
+  postal_code              String   @db.VarChar(255)
+  country                  String   @db.VarChar(255)
+  default_shipping_address Boolean  @default(false)
+  users                    users?   @relation(fields: [users_id], references: [id])
+  users_id                 Int?
+}
+
 model campaign_detail {
   id          Int      @id @default(autoincrement())
   product_id  Json?
@@ -306,6 +321,7 @@ model users {
   receipt_receipt_user_idTousers     receipt[]    @relation("receipt_user_idTousers")
   receipt_receipt_supplier_idTousers receipt[]    @relation("receipt_supplier_idTousers")
   users_role                         users_role[]
+  address                            address[]
 }
 
 model users_role {

@@ -146,7 +146,6 @@ const AdministratorList = () => {
         setIsModalOpen(false);
     };
 
-    console.log(store)
     return (
         <Fragment>
             <Row gutter={[0, 16]}>

@@ -163,7 +163,7 @@ const RoleList = () => {
                         <Breadcrumb.Item>
                             <Link to='/'>Home</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>Assets</Breadcrumb.Item>
+                        <Breadcrumb.Item>Roles</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>

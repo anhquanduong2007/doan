@@ -1,55 +1,63 @@
 import { Box, Flex } from "@chakra-ui/react"
 import autoAnimate from "@formkit/auto-animate"
-import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Switch, message } from "antd"
+import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Switch, message } from "antd"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "src/app/hooks"
 import { createAxiosJwt } from "src/helper/axiosInstance"
 import type { DatePickerProps } from 'antd';
-import { createAdministrator, getAdministrator, updateAdministrator } from "src/features/setting/administrator/action"
 import moment from 'moment';
-import { getListRole } from "src/features/setting/role/actions"
+import { createCustomer, getCustomer, updateCustomer } from "src/features/customer/action"
+import {
+    PlusCircleOutlined
+} from '@ant-design/icons';
 
-export type FormValuesAdministrator = {
+export type FormValuesCustomer = {
     email: string
     first_name: string
     last_name: string
     password: string
     phone: string
+    street_line_1: string
+    street_line_2: string
+    city: string
+    province: string
+    postal_code: string
 };
-
-interface ItemProps {
-    label: string;
-    value: number;
-}
 
 const dateFormat = 'YYYY/MM/DD';
 
-const AdministratorCreateUpdate = () => {
+const CustomerCreateUpdate = () => {
     // ** State
     const [active, setActive] = useState<number>(1)
     const [gender, setGender] = useState<number>(0)
-    const [dateOfBirth, setDateOfBirth] = useState<string>('')
-    const [roles, setRoles] = useState<number[]>([])
+    const [dateOfBirth, setDateOfBirth] = useState<string>()
+    const [addressModal, setAddressModal] = useState<boolean>(false)
+    const [mode, setMode] = useState<boolean>(false)
 
     // ** Third party
     const navigate = useNavigate()
     const params = useParams()
     const { id } = params
-    const { control, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormValuesAdministrator>({
+    const { control, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormValuesCustomer>({
         defaultValues: {
             email: '',
             first_name: '',
             password: '',
             last_name: '',
-            phone: ''
+            phone: '',
+            street_line_1: '',
+            street_line_2: '',
+            city: '',
+            province: '',
+            postal_code: '',
         }
     });
 
+
     // ** Variables
-    const administrator = useAppSelector((state) => state.administrator);
-    const role = useAppSelector((state) => state.role);
+    const customer = useAppSelector((state) => state.customer);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
 
@@ -69,16 +77,7 @@ const AdministratorCreateUpdate = () => {
 
     useEffect(() => {
         if (id) {
-            getListRole({
-                axiosClientJwt,
-                dispatch,
-                navigate,
-                pagination: {
-                    skip: 0,
-                    take: 999
-                }
-            })
-            getAdministrator({
+            getCustomer({
                 axiosClientJwt,
                 dispatch,
                 id: +id,
@@ -88,32 +87,18 @@ const AdministratorCreateUpdate = () => {
     }, [id])
 
     useEffect(() => {
-        if (id && !administrator.single.loading && administrator.single.result) {
-            setValue("email", administrator.single.result.email)
-            setValue("first_name", administrator.single.result.first_name)
-            setValue("last_name", administrator.single.result.last_name)
-            setValue("phone", administrator.single.result.phone)
-            setActive(administrator.single.result.active)
-            setDateOfBirth(administrator.single.result.date_of_birth)
-            setGender(administrator.single.result.gender)
-            const roles = administrator.single.result.users_role.map((role) => role.role_id)
-            setRoles(roles)
+        if (id && !customer.single.loading && customer.single.result) {
+            setValue("email", customer.single.result.email)
+            setValue("first_name", customer.single.result.first_name)
+            setValue("last_name", customer.single.result.last_name)
+            setValue("phone", customer.single.result.phone)
+            setActive(customer.single.result.active)
+            setDateOfBirth(customer.single.result.date_of_birth)
+            setGender(customer.single.result.gender)
         }
-    }, [id, administrator.single.loading, administrator.single.result])
+    }, [id, customer.single.loading, customer.single.result])
 
     // ** Function handle
-    const dataRolesRender = (): ItemProps[] => {
-        if (!role.list.loading && role.list.result) {
-            return role.list.result.roles.map((role) => {
-                return {
-                    label: role.role_name,
-                    value: role.id,
-                }
-            })
-        }
-        return []
-    }
-
     const onChangeDatePicker: DatePickerProps['onChange'] = (date, _dateString) => {
         setDateOfBirth(date?.toISOString() as string)
     };
@@ -122,10 +107,14 @@ const AdministratorCreateUpdate = () => {
         setGender(value)
     };
 
-    const onSubmit = async (data: FormValuesAdministrator) => {
+    const handleOk = () => {
+
+    }
+
+    const onSubmit = async (data: FormValuesCustomer) => {
         if (id) {
-            await updateAdministrator({
-                administrator: {
+            await updateCustomer({
+                customer: {
                     active,
                     email: data.email,
                     first_name: data.first_name,
@@ -133,7 +122,6 @@ const AdministratorCreateUpdate = () => {
                     date_of_birth: dateOfBirth,
                     gender,
                     phone: data.phone,
-                    role_ids: roles
                 },
                 axiosClientJwt,
                 dispatch,
@@ -143,8 +131,8 @@ const AdministratorCreateUpdate = () => {
                 setError
             })
         } else {
-            await createAdministrator({
-                administrator: {
+            await createCustomer({
+                customer: {
                     active,
                     email: data.email,
                     first_name: data.first_name,
@@ -173,7 +161,7 @@ const AdministratorCreateUpdate = () => {
                             <Link to='/'>Home</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/settings/administrators'>Administrators</Link>
+                            <Link to='/customers'>Customers</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>{id ? 'Update' : 'Create'}</Breadcrumb.Item>
                     </Breadcrumb>
@@ -188,9 +176,9 @@ const AdministratorCreateUpdate = () => {
                                         <Box as="span" ml={2} fontWeight="semibold">Active</Box>
                                     </Flex>
                                     {
-                                        id && administrator.update.loading ?
+                                        id && customer.update.loading ?
                                             <Button type="primary" loading>Updating...</Button> :
-                                            administrator.create.loading ?
+                                            customer.create.loading ?
                                                 <Button type="primary" loading>Creating...</Button> :
                                                 id ? <Button htmlType="submit" type="primary">Update</Button> :
                                                     <Button htmlType="submit" type="primary">Create</Button>
@@ -302,17 +290,8 @@ const AdministratorCreateUpdate = () => {
                                 </Form.Item>
                                 {
                                     id && (
-                                        <Form.Item label="Roles">
-                                            <Select
-                                                mode="multiple"
-                                                placeholder='Select roles...'
-                                                value={roles}
-                                                loading={role.list.loading}
-                                                onChange={(roles: number[]) => {
-                                                    setRoles(roles);
-                                                }}
-                                                options={dataRolesRender()}
-                                            />
+                                        <Form.Item>
+                                            <Button style={{ textTransform: "uppercase" }} type="primary" icon={<PlusCircleOutlined />} onClick={() => setAddressModal(true)}>Create new address</Button>
                                         </Form.Item>
                                     )
                                 }
@@ -321,8 +300,102 @@ const AdministratorCreateUpdate = () => {
                     </Card>
                 </Col>
             </Row>
+            <Modal title="Create new address" open={addressModal} onOk={handleOk} onCancel={() => setAddressModal(false)} centered>
+                <Form layout="vertical">
+                    <Form.Item label="Street line 1">
+                        <Controller
+                            name="street_line_1"
+                            control={control}
+                            render={({ field }) => {
+                                return (
+                                    <div>
+                                        <Input {...field} />
+                                    </div>
+                                )
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Street line 2">
+                        <Controller
+                            name="street_line_2"
+                            control={control}
+                            render={({ field }) => {
+                                return (
+                                    <div>
+                                        <Input {...field} />
+                                    </div>
+                                )
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label="City">
+                        <Controller
+                            name="city"
+                            control={control}
+                            render={({ field }) => {
+                                return (
+                                    <div>
+                                        <Input {...field} />
+                                    </div>
+                                )
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Province">
+                        <Controller
+                            name="province"
+                            control={control}
+                            render={({ field }) => {
+                                return (
+                                    <div>
+                                        <Input {...field} />
+                                    </div>
+                                )
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Postal code">
+                        <Controller
+                            name="postal_code"
+                            control={control}
+                            render={({ field }) => {
+                                return (
+                                    <div>
+                                        <Input {...field} />
+                                    </div>
+                                )
+                            }}
+                        />
+                    </Form.Item>
+                    <Form.Item label="Country">
+                        <Select
+                            defaultValue="lucy"
+                            // onChange={handleChange}
+                            options={[
+                                {
+                                    value: 'jack',
+                                    label: 'Jack',
+                                },
+                                {
+                                    value: 'lucy',
+                                    label: 'Lucy',
+                                },
+                                {
+                                    value: 'disabled',
+                                    disabled: true,
+                                    label: 'Disabled',
+                                },
+                                {
+                                    value: 'Yiminghe',
+                                    label: 'yiminghe',
+                                },
+                            ]}
+                        />
+                    </Form.Item>
+                </Form>
+            </Modal>
         </Fragment>
     )
 }
 
-export default AdministratorCreateUpdate
+export default CustomerCreateUpdate
