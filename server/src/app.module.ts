@@ -7,7 +7,6 @@ import { AccessTokenGuard } from './common/guard';
 import { RoleModule } from './role/role.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
-import { CampaignModule } from './campaign/campaign.module';
 import { CategoryModule } from './category/category.module';
 import { AssetModule } from './asset/asset.module';
 import { ProductModule } from './product/product.module';
@@ -26,7 +25,6 @@ import { AddressModule } from './address/address.module';
     RoleModule,
     AuthModule,
     UserModule,
-    CampaignModule,
     CategoryModule,
     AssetModule,
     ProductModule,
