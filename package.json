@@ -9,7 +9,7 @@
     "storefront"
   ],
   "scripts": {
-    "dev": "concurrently \"cd admin && yarn start\" \"cd server && yarn start:dev\" \"cd storefront && yarn start\"",
+    "dev": "concurrently yarn:dev:*",
     "dev:server": "cd server && yarn start:dev",
     "dev:admin": "cd admin && yarn start",
     "dev:storefront": "cd storefront && yarn start",

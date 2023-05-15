@@ -31,26 +31,12 @@ model bill {
   @@index([staff_id], map: "fk_bill_user_staff")
 }
 
-model campaign {
-  id              Int               @id @default(autoincrement())
-  campaign_name   String            @db.VarChar(255)
-  content         String?           @db.VarChar(255)
-  start_day       DateTime
-  end_day         DateTime
-  active          Int               @default(1)
-  created_date    DateTime          @default(now())
-  modified_date   DateTime          @updatedAt
-  created_by      Int?
-  modified_by     Int?
-  campaign_detail campaign_detail[]
-}
-
 model address {
   id                       Int      @id @default(autoincrement())
   created_date             DateTime @default(now())
   modified_date            DateTime @updatedAt
   street_line_1            String   @db.VarChar(255)
-  street_line_2            String?   @db.VarChar(255)
+  street_line_2            String?  @db.VarChar(255)
   city                     String   @db.VarChar(255)
   province                 String   @db.VarChar(255)
   postal_code              String   @db.VarChar(255)
@@ -58,16 +44,6 @@ model address {
   default_shipping_address Boolean  @default(false)
   users                    users?   @relation(fields: [users_id], references: [id])
   users_id                 Int?
-}
-
-model campaign_detail {
-  id          Int      @id @default(autoincrement())
-  product_id  Json?
-  campaign_id Int
-  discount    Int?
-  campaign    campaign @relation(fields: [campaign_id], references: [id], onUpdate: Restrict, map: "fk_campaign_detail")
-
-  @@index([campaign_id], map: "fk_campaign_detail")
 }
 
 model category {
