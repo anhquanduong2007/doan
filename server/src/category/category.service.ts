@@ -13,10 +13,22 @@ export class CategoryService {
 
     public async create(input: CategoryCreateDto, userId: number): Promise<IResponse<category>> {
         try {
-            const { active, category_code, category_name, description } = input
-            const isExistingCategoryCode = await this.prisma.category.findUnique({
-                where: { category_code }
-            })
+            const { active, category_code, category_name, description, parent_id } = input
+            const [isValidCategory, isExistingCategoryCode] = await Promise.all([
+                ...parent_id ? [this.prisma.category.findUnique({
+                    where: { id: parent_id }
+                })] : [],
+                this.prisma.category.findUnique({
+                    where: { category_code }
+                })
+            ])
+            if (!isValidCategory && parent_id) {
+                return {
+                    code: 404,
+                    success: false,
+                    message: 'Category does not exist in the system!',
+                }
+            }
             if (isExistingCategoryCode) {
                 return {
                     code: 400,
@@ -36,6 +48,7 @@ export class CategoryService {
                         description,
                         category_code,
                         created_by: userId,
+                        parent_id,
                         modified_by: userId
                     }
                 })
@@ -55,6 +68,14 @@ export class CategoryService {
                 where: { id }
             })
             if (category) {
+                await this.prisma.category.updateMany({
+                    where: {
+                        parent_id: id
+                    },
+                    data: {
+                        parent_id: null
+                    }
+                })
                 return {
                     code: 200,
                     message: 'Success',
@@ -109,10 +130,17 @@ export class CategoryService {
         try {
             const { skip, take } = input;
             const [totalRecord, categories] = await this.prisma.$transaction([
-                this.prisma.category.count(),
+                this.prisma.category.count({
+                    where: {
+                        parent_id: null
+                    }
+                }),
                 this.prisma.category.findMany({
                     take: take || 10,
                     skip: skip || 0,
+                    where: {
+                        parent_id: null
+                    }
                 }),
             ])
             return {
@@ -138,29 +166,31 @@ export class CategoryService {
 
     public async update(input: CategoryUpdateDto, id: number, userId: number): Promise<IResponse<category>> {
         try {
-            const { active, category_code, category_name, description } = input
+            const { active, category_code, category_name, description, parent_id } = input
             const category = await this.prisma.category.findUnique({
                 where: { id }
             })
             if (category) {
-                const isExistingCategoryCode = await this.prisma.category.findFirst({
-                    where: {
-                        AND: [
-                            { category_code },
-                            {
-                                NOT: [
-                                    { id }
-                                ]
-                            }
-                        ]
-                    },
-                })
-                if (isExistingCategoryCode) {
-                    return {
-                        code: 400,
-                        success: false,
-                        fieldError: "category_code",
-                        message: 'Category code already exists!',
+                if (category_code) {
+                    const isExistingCategoryCode = await this.prisma.category.findFirst({
+                        where: {
+                            AND: [
+                                { category_code },
+                                {
+                                    NOT: [
+                                        { id }
+                                    ]
+                                }
+                            ]
+                        },
+                    })
+                    if (isExistingCategoryCode) {
+                        return {
+                            code: 400,
+                            success: false,
+                            fieldError: "category_code",
+                            message: 'Category code already exists!',
+                        }
                     }
                 }
                 return {
@@ -172,6 +202,7 @@ export class CategoryService {
                             ...category_code && { category_code },
                             ...category_name && { category_name },
                             ...description && { description },
+                            ...parent_id && { parent_id },
                             active,
                             modified_by: userId
                         },
@@ -193,40 +224,29 @@ export class CategoryService {
         }
     }
 
-    public async setCategoryParent(input: SetCategoryParentDto, id: number, userId: number): Promise<IResponse<category>> {
+    public async categoriesChildren(id: number): Promise<IResponse<category[]>> {
         try {
-            const { parent_id } = input
-            const category = await this.prisma.category.findUnique({
-                where: { id }
-            })
-            if (category) {
-                const isExistingCategoryParent = await this.prisma.category.findUnique({
-                    where: { id: parent_id }
-                })
-                if (!isExistingCategoryParent) {
-                    return {
-                        code: 404,
-                        message: 'Category parent does not exist in the system!',
-                        success: false,
-                    }
-                }
+            const [category] = await Promise.all([
+                this.prisma.category.findUnique({
+                    where: { id }
+                }),
+            ])
+            if (!category) {
                 return {
-                    code: 200,
-                    message: 'Success',
-                    success: true,
-                    data: await this.prisma.category.update({
-                        data: {
-                            parent_id,
-                            modified_by: userId
-                        },
-                        where: { id }
-                    })
+                    code: 404,
+                    success: false,
+                    message: 'Category does not exist in the system!',
                 }
             }
             return {
-                code: 404,
-                message: 'Category does not exist in the system!',
-                success: false,
+                code: 200,
+                success: true,
+                message: "Successfully!",
+                data: await this.prisma.category.findMany({
+                    where: {
+                        parent_id: id
+                    }
+                })
             }
         } catch (error) {
             return {
@@ -237,7 +257,7 @@ export class CategoryService {
         }
     }
 
-    public async removeCategoryParent(id: number, userId: number): Promise<IResponse<category>> {
+    public async removeCategoryParent(id: number, userId?: number): Promise<IResponse<category>> {
         try {
             const category = await this.prisma.category.findUnique({
                 where: { id }

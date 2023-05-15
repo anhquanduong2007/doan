@@ -47,9 +47,9 @@ const SiderBar = () => {
                         key: "categories",
                         icon: <FolderOpenOutlined />,
                         label: "Categories",
-                        className: location.pathname === "/categories" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "catalog/categories" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/categories')
+                            navigate('catalog/categories')
                         }
                     },
                     {

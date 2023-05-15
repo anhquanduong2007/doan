@@ -50,7 +50,7 @@ model category {
   id             Int        @id @default(autoincrement())
   category_name  String     @db.VarChar(255)
   category_code  String     @unique @db.VarChar(255)
-  description    String?    @db.VarChar(255)
+  description    String?
   parent_id      Int?
   active         Int        @default(1)
   created_date   DateTime?  @default(now())

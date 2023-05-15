@@ -139,8 +139,7 @@ const CustomerCreateUpdate = () => {
                 message
             })
         }
-
-    };
+    }
 
     return (
         <Fragment>

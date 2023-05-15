@@ -90,7 +90,7 @@ export const getListCustomer = async ({ pagination, dispatch, axiosClientJwt, na
                 dispatch(getListCustomerSuccess(res.response.data));
             }, 1000)
         } else {
-            dispatch(deleteCustomerFailed(null));
+            dispatch(getListCustomerFailed(null));
         }
     } catch (error: any) {
         dispatch(getListCustomerFailed(null));

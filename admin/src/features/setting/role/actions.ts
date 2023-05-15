@@ -61,8 +61,6 @@ interface UpdateRoleParams extends CreateRoleParams {
     id: number
 }
 
-
-
 export const getListRole = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListRoleParams) => {
     try {
         const { skip, take } = pagination;
@@ -102,7 +100,6 @@ export const getListRole = async ({ pagination, dispatch, axiosClientJwt, naviga
 }
 
 export const deleteRole = async ({ id, dispatch, axiosClientJwt, navigate, message, refresh, setIsModalOpen, setRefresh }: DeleteRoleParams) => {
-
     try {
         dispatch(deleteRoleStart());
         const accessToken = localStorage.getItem("accessToken")
