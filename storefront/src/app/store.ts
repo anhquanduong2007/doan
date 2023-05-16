@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterSlice from '../features/counter/counterSlice';
+import authSlice from '../features/auth/authSlice';
 // ...
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
@@ -8,13 +8,14 @@ import thunk from 'redux-thunk';
 const persistConfig = {
   key: 'root',
   storage,
+  whitelist: ['login']
 }
 
-const counterReducer = persistReducer(persistConfig, counterSlice)
+const authReducer = persistReducer(persistConfig, authSlice)
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    auth: authReducer,
   },
   middleware: [thunk],
   devTools: process.env.NODE_ENV !== 'production'
