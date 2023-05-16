@@ -1,26 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AuthLoginResponse } from 'src/types';
+import { User } from 'src/types/user';
 
 interface AuthState {
   login: {
-    currentUser: AuthLoginResponse | null;
-    isFetching: boolean;
+    result: User | null;
+    loading: boolean;
     error: boolean;
   },
   logout: {
-    isFetching: boolean,
-    error: boolean
+    loading: boolean;
+    error: boolean;
   }
 }
 
 const initialState: AuthState = {
   login: {
-    currentUser: null,
-    isFetching: false,
+    result: null,
+    loading: false,
     error: false
   },
   logout: {
-    isFetching: false,
+    loading: false,
     error: false
   }
 } as AuthState;
@@ -30,27 +30,28 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     loginStart: (state) => {
-      state.login.isFetching = true;
+      state.login.loading = true;
     },
     loginSuccess: (state, action) => {
-      state.login.isFetching = false;
-      state.login.currentUser = action.payload;
+      state.login.loading = false;
+      state.login.result = action.payload;
       state.login.error = false
     },
-    loginFailed: (state) => {
-      state.login.isFetching = false;
+    loginFailed: (state, action) => {
+      state.login.loading = false;
+      state.login.result = action.payload;
       state.login.error = true;
     },
     logOutStart: (state) => {
-      state.logout.isFetching = true;
+      state.logout.loading = true;
     },
     logOutSuccess: (state) => {
-      state.logout.isFetching = false;
-      state.login.currentUser = null;
+      state.logout.loading = false;
+      state.login.result = null;
       state.logout.error = false
     },
     logOutFailed: (state) => {
-      state.logout.isFetching = false;
+      state.logout.loading = false;
       state.logout.error = true;
     }
   },

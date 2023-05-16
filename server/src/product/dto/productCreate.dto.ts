@@ -1,49 +1,34 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max, IsNumber, IsArray } from 'class-validator';
 
 export class ProductCreateDto {
     @IsString()
     @IsNotEmpty()
-    product_name: string;
-
-    @IsString()
-    @IsNotEmpty()
-    sku: string;
-
-    @IsNumber()
-    @IsOptional()
-    price_sell: number
-
-    @IsNumber()
-    @IsOptional()
-    sale: number
-
-    @IsNumber()
-    @IsOptional()
-    price: number
+    name: string;
 
     @IsString()
     @IsOptional()
     description: string
 
-    @IsNumber()
+    @IsString()
     @IsNotEmpty()
+    slug: string
+
+    @IsNumber()
+    @IsOptional()
     category_id: number
 
     @IsNumber()
     @IsOptional()
-    brand_id: number
+    featured_asset_id: number
 
-    @IsNumber()
+    @IsArray()
     @IsOptional()
-    asset_id: number
-
+    @IsNumber({}, { each: true })
+    asset_ids: number[]
+    
     @IsInt()
     @Min(0)
     @Max(1)
     @IsOptional()
     active: number;
-
-    @IsNumber()
-    @IsOptional()
-    quantity: number;
 }

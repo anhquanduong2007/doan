@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import Products from 'src/components/Catalog/Products/list';
 
-const Main = () => {
+const ProductListPage = () => {
     return (
         <Fragment>
             <Products />
@@ -9,4 +9,4 @@ const Main = () => {
     );
 };
 
-export default Main;
+export default ProductListPage;

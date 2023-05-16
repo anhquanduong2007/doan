@@ -60,6 +60,9 @@ export class RoleService {
                         success: false,
                     }
                 }
+                await this.prisma.users_role.deleteMany({
+                    where: { role_id: id }
+                })
                 return {
                     code: 200,
                     message: 'Delete successfully!',
@@ -97,7 +100,7 @@ export class RoleService {
                 }
             }
             return {
-                code: 400,
+                code: 404,
                 message: 'Role does not exist in the system!',
                 success: false,
             }
@@ -140,24 +143,26 @@ export class RoleService {
                 where: { id }
             })
             if (role) {
-                const isRoleCodeExist = await this.prisma.role.findFirst({
-                    where: {
-                        AND: [
-                            { role_code },
-                            {
-                                NOT: [
-                                    { id }
-                                ]
-                            }
-                        ]
-                    },
-                })
-                if (isRoleCodeExist) {
-                    return {
-                        code: 400,
-                        success: false,
-                        message: 'Role code already exist!',
-                        fieldError: "role_code",
+                if (role_code) {
+                    const isRoleCodeExist = await this.prisma.role.findFirst({
+                        where: {
+                            AND: [
+                                { role_code },
+                                {
+                                    NOT: [
+                                        { id }
+                                    ]
+                                }
+                            ]
+                        },
+                    })
+                    if (isRoleCodeExist) {
+                        return {
+                            code: 400,
+                            success: false,
+                            message: 'Role code already exist!',
+                            fieldError: "role_code",
+                        }
                     }
                 }
                 return {

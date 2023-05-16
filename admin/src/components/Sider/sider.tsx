@@ -44,12 +44,12 @@ const SiderBar = () => {
                         }
                     },
                     {
-                        key: "collections",
+                        key: "categories",
                         icon: <FolderOpenOutlined />,
-                        label: "Collections",
-                        className: location.pathname === "/categories" ? "ant-menu-item-selected" : "",
+                        label: "Categories",
+                        className: location.pathname === "catalog/categories" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/categories')
+                            navigate('catalog/categories')
                         }
                     },
                     {
@@ -104,9 +104,9 @@ const SiderBar = () => {
                         key: "promotions",
                         icon: <TagOutlined />,
                         label: "Promotions",
-                        className: location.pathname === "/promotions" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "/marketing/promotions" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/promotions')
+                            navigate('/marketing/promotions')
                         }
                     },
                 ]

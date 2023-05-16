@@ -1,7 +1,6 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { Observable } from 'rxjs';
 import { Permissions } from 'src/constant';
 import { PERMISSIONS_KEY } from '../decorator';
 
@@ -20,6 +19,9 @@ export class AccessTokenGuard extends AuthGuard('jwt') {
             return true;
         }
         const baseGuardResult = await super.canActivate(context);
+        if (!permissions.length) {
+            return true;
+        }
         if (baseGuardResult) {
             const { user } = context.switchToHttp().getRequest();
             if (user.permissions.includes("SuperAdmin")) {

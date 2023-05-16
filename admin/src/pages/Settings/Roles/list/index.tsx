@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import RoleList from 'src/components/Settings/Roles/list';
 
-const Main = () => {
+const RoleListPage = () => {
     return (
         <Fragment>
             <RoleList />
@@ -9,4 +9,4 @@ const Main = () => {
     );
 };
 
-export default Main;
+export default RoleListPage;
