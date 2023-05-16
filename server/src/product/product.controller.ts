@@ -28,7 +28,7 @@ export class ProductController {
     }
 
     @Get()
-    @Permission(Permissions.ReadProduct)
+    @Permission(Permissions.ReadProduct, Permissions.Anonymous)
     async getProducts(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.productService.products(pagination);
         return res.json({ response });
@@ -44,7 +44,7 @@ export class ProductController {
     @Get("variants/:id")
     @Permission(Permissions.ReadProduct)
     async getProductVariants(@Query() pagination: PaginationDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const response = await this.productService.productVariants(pagination,id);
+        const response = await this.productService.productVariants(pagination, id);
         return res.json({ response });
     }
 

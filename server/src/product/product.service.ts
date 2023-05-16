@@ -392,7 +392,6 @@ export class ProductService {
             }
         }
     }
-
     public async productVariantCreate(input: ProductVariantCreateDto, userId: number): Promise<IResponse<product_variant>> {
         try {
             const { option_ids, price, product_id, sku, stock } = input
