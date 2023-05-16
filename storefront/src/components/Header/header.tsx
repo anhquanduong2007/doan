@@ -9,7 +9,7 @@ import Logo from "../../assets/logo/logo-01.png";
 
 import "./header.scss";
 import { useSelector } from "react-redux";
-import { Button, Card, CardBody, CardFooter, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerHeader, DrawerOverlay, Heading, Image, Stack, Text, useDisclosure, useToast } from "@chakra-ui/react";
+import { Button, Card, CardBody, CardFooter, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Heading, Image, Stack, Text, useDisclosure, useToast } from "@chakra-ui/react";
 
 const Header = () => {
   const [mobileOpenMenu, setMobileOpenMenu] = React.useState(false)
@@ -186,13 +186,13 @@ const Header = () => {
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader className="font-bold uppercase" borderBottomWidth='1px'>your cart</DrawerHeader>
-          <DrawerBody marginTop={'30px'}>
+          <DrawerBody marginTop={'30px'} display='flex' flexDirection='column' gap='20px' height='500px' overflowY='auto'>
             <Card
               direction={{ base: 'column', sm: 'row' }}
-              overflow='hidden'
               variant='outline'
               border='none'
               borderRadius='none'
+              flexShrink='0'
               gap='0 20px'
             >
               <Image
@@ -215,13 +215,70 @@ const Header = () => {
                     <p>Price: 2</p>
                   </div>
                   <div className="flex flex-col justify-between items-end">
-                    <Trash2 size={20} className="cursor-pointer transition duration-150 hover:text-primary"/>
+                    <Trash2 size={20} className="cursor-pointer transition duration-150 hover:text-primary" />
                     <p> x $12.2</p>
                   </div>
                 </CardBody>
               </Stack>
             </Card>
+            <Card
+              direction={{ base: 'column', sm: 'row' }}
+              variant='outline'
+              border='none'
+              borderRadius='none'
+              flexShrink='0'
+              gap='0 20px'
+            >
+              <Image
+                objectFit='cover'
+                width={{ base: '100%', sm: '80px' }}
+                height={{ base: '100%', sm: '100px' }}
+                display={'flex'}
+                flexShrink={'0'}
+                src='https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60'
+                alt='Caffe Latte'
+              />
+              <Stack padding='0px' width='100%'>
+                <CardBody padding={'0px'} display='flex' flexDirection='row' justifyContent='space-between'>
+                  <div className="flex flex-col justify-between">
+                    <div className="flex flex-col">
+                      <Link to={'/'} className="font-bold transition duration-150 hover:text-primary">The perfect latte</Link>
+                      <p className="text-[#666] text-sm">Red / L</p>
+                      <p>Quantity: 2</p>
+                    </div>
+                    <p>Price: 2</p>
+                  </div>
+                  <div className="flex flex-col justify-between items-end">
+                    <Trash2 size={20} className="cursor-pointer transition duration-150 hover:text-primary" />
+                    <p> x $12.2</p>
+                  </div>
+                </CardBody>
+              </Stack>
+            </Card>
+            
+            
           </DrawerBody>
+          <DrawerFooter display='flex' flexDirection='column'>
+            <div className="w-full flex flex-col gap-5">
+              <p className="font-bold text-left">Total: $12.22</p>
+              <div className="flex justify-center gap-4 pb-14" >
+                <Button
+                  className="w-[50%] !bg-primary text-white uppercase hover:!bg-[#5866c9]"
+                  variant='solid'
+                  isLoading={false}
+                >
+                  View Cart
+                </Button>
+                <Button
+                  className="w-[50%] !bg-primary text-white uppercase hover:!bg-[#5866c9]"
+                  variant='solid'
+                  isLoading={false}
+                >
+                  Checkout
+                </Button>
+              </div>
+            </div>
+          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </>
