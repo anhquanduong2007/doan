@@ -138,7 +138,8 @@ export class UserService {
                         created_date: true,
                         modified_date: true,
                         created_by: true,
-                        modified_by: true
+                        modified_by: true,
+                        user_info_payment_id: true
                     }
                 }),
             ])
@@ -180,6 +181,7 @@ export class UserService {
                     modified_date: true,
                     created_by: true,
                     modified_by: true,
+                    user_info_payment_id: true,
                     users_role: {
                         select: {
                             role_id: true
@@ -266,6 +268,7 @@ export class UserService {
                             modified_date: true,
                             created_by: true,
                             modified_by: true,
+                            user_info_payment_id: true,
                             users_role: {
                                 select: {
                                     role_id: true
@@ -320,6 +323,7 @@ export class UserService {
                         email: true,
                         id: true,
                         first_name: true,
+                        user_info_payment_id: true,
                         last_name: true,
                         gender: true,
                         date_of_birth: true,
@@ -370,6 +374,7 @@ export class UserService {
                     modified_date: true,
                     created_by: true,
                     modified_by: true,
+                    user_info_payment_id: true,
                     address: {
                         select: {
                             city: true,
@@ -464,6 +469,7 @@ export class UserService {
                             created_date: true,
                             modified_date: true,
                             created_by: true,
+                            user_info_payment_id: true,
                             modified_by: true,
                             address: {
                                 select: {
