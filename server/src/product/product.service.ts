@@ -66,6 +66,22 @@ export class ProductService {
             const product = await this.prisma.product.findUnique({
                 where: { id },
                 include: {
+                    product_variants: {
+                        include: {
+                            product_options: {
+                                select: {
+                                    product_option: {
+                                        select: {
+                                            value: true,
+                                            id: true,
+                                            name: true
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    },
                     featured_asset: true,
                     asset_ids: {
                         include: {
@@ -444,8 +460,8 @@ export class ProductService {
             const skus = await this.prisma.$transaction(
                 variants.map((variant) => this.prisma.product_variant.findUnique({ where: { sku: variant.sku } }))
             )
-            const isSkuNotExist = skus.some(el => el === null);
-            if (!isSkuNotExist) {
+            const isSkuNotExist = skus.some(el => el !== null);
+            if (isSkuNotExist) {
                 return {
                     code: 400,
                     success: false,

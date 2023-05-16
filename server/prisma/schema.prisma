@@ -239,4 +239,5 @@ model orders {
   id            Int      @id @default(autoincrement())
   created_date  DateTime @default(now())
   modified_date DateTime @updatedAt
+  payment       Boolean  @default(false)
 }
