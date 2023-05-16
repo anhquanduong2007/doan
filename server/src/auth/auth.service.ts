@@ -20,7 +20,7 @@ export class AuthService {
         private config: ConfigService,
     ) { }
 
-    public async register(input: RegisterDto): Promise<IResponse<users>> {
+    public async registerAdministrator(input: RegisterDto): Promise<IResponse<users>> {
         try {
             const {
                 active,
@@ -58,6 +58,7 @@ export class AuthService {
                 },
             });
             delete user.password
+            delete user.hashed_rt
             const tokens = await this.getTokens(user.id, user.email);
             await this.updateRtHash(user.id, tokens.refresh_token);
             return {
@@ -68,6 +69,7 @@ export class AuthService {
                 data: user
             }
         } catch (error) {
+            console.log(error)
             return {
                 code: 500,
                 message: "An error occurred in the system!",
@@ -108,7 +110,7 @@ export class AuthService {
         try {
             const { email, password } = input;
             const user = await this.prisma.users.findUnique({
-                where: { email: email }
+                where: { email: email },
             })
             if (!user) {
                 return {
@@ -129,6 +131,48 @@ export class AuthService {
             }
             const tokens = await this.getTokens(user.id, user.email);
             await this.updateRtHash(user.id, tokens.refresh_token);
+            delete user.password
+            delete user.hashed_rt
+            return {
+                code: 200,
+                success: true,
+                message: 'Success!',
+                ...tokens,
+                data: user
+            };
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    async refreshTokens(userId: number, rt: string): Promise<IResponse<{}>> {
+        try {
+            const user = await this.prisma.users.findUnique({
+                where: {
+                    id: userId,
+                },
+            })
+            if (!user || !user.hashed_rt) {
+                return {
+                    code: 400,
+                    success: false,
+                    message: "Access Denied!"
+                }
+            }
+            const rtMatches = await argon2.verify(user.hashed_rt, rt);
+            if (!rtMatches) {
+                return {
+                    code: 400,
+                    success: false,
+                    message: "Access Denied!"
+                }
+            }
+            const tokens = await this.getTokens(user.id, user.email);
+            await this.updateRtHash(user.id, tokens.refresh_token);
             return {
                 code: 200,
                 success: true,
@@ -145,7 +189,72 @@ export class AuthService {
         }
     }
 
-    protected async updateRtHash(userId: number, rt: string): Promise<void> {
+    public async registerCustomer(input: RegisterDto): Promise<IResponse<users>> {
+        try {
+            const {
+                active,
+                date_of_birth,
+                email,
+                first_name,
+                gender,
+                last_name,
+                password,
+                phone,
+            } = input;
+            const [isExistingUser, customerRole] = await Promise.all([
+                await this.prisma.users.findUnique({
+                    where: { email },
+                }),
+                await this.prisma.role.findUnique({ where: { role_code: 'customer' } })
+            ])
+
+            if (isExistingUser) {
+                return {
+                    code: 400,
+                    success: false,
+                    message: 'Duplicated email!',
+                    fieldError: 'email',
+                };
+            }
+            const hashedPassword = await argon2.hash(password);
+            const customer = await this.prisma.users.create({
+                data: {
+                    email,
+                    ...(phone && { phone }),
+                    ...date_of_birth && { date_of_birth },
+                    ...first_name && { first_name },
+                    gender,
+                    ...last_name && { last_name },
+                    password: hashedPassword,
+                    active,
+                    users_role: {
+                        createMany: {
+                            data: [{ role_id: customerRole.id }]
+                        }
+                    }
+
+                },
+            });
+            delete customer.password
+            const tokens = await this.getTokens(customer.id, customer.email);
+            await this.updateRtHash(customer.id, tokens.refresh_token);
+            return {
+                code: 200,
+                success: true,
+                message: 'Success!',
+                ...tokens,
+                data: customer
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    private async updateRtHash(userId: number, rt: string): Promise<void> {
         const hash = await argon2.hash(rt);
         await this.prisma.users.update({
             where: {
@@ -157,7 +266,7 @@ export class AuthService {
         });
     }
 
-    protected async getTokens(userId: number, email: string): Promise<Tokens> {
+    private async getTokens(userId: number, email: string): Promise<Tokens> {
         const jwtPayload: JwtPayload = {
             userId,
             email,

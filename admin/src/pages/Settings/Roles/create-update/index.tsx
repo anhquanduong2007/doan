@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import RoleCreateUpdate from 'src/components/Settings/Roles/create-update';
 
-const Main = () => {
+const RoleCreateUpdatePage = () => {
     return (
         <Fragment>
             <RoleCreateUpdate />
@@ -9,4 +9,4 @@ const Main = () => {
     );
 };
 
-export default Main;
+export default RoleCreateUpdatePage;

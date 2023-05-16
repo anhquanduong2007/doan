@@ -4,7 +4,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { getListAsset } from 'src/features/catalog/asset/actions';
 import { createAxiosClient } from 'src/helper/axiosInstance';
-import AssetSkeleton from '../../Assets/list/AssetSkeleton';
+// import AssetSkeleton from '../../Assets/list/AssetSkeleton';
 
 interface AssetItemProps {
     title: string
@@ -98,9 +98,10 @@ const ProductAssetCreate = () => {
                 return <AssetItem key={index} title={asset.name} url={asset.url} />
             })
         }
-        return Array.from(Array(take), (_item, index) => {
-            return <AssetSkeleton key={index} height="200px" span={6} />
-        })
+        // return Array.from(Array(take), (_item, index) => {
+        //     return <AssetSkeleton key={index} height="200px" span={6} />
+        // })
+        return []
     }
 
     return (

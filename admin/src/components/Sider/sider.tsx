@@ -44,21 +44,21 @@ const SiderBar = () => {
                         }
                     },
                     {
-                        key: "collections",
+                        key: "categories",
                         icon: <FolderOpenOutlined />,
-                        label: "Collections",
-                        className: location.pathname === "/categories" ? "ant-menu-item-selected" : "",
+                        label: "Categories",
+                        className: location.pathname === "catalog/categories" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/categories')
+                            navigate('catalog/categories')
                         }
                     },
                     {
                         key: "assets",
                         icon: <PictureOutlined />,
                         label: "Assets",
-                        className: location.pathname === "/assets" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "catalog/assets" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/assets')
+                            navigate('catalog/assets')
                         }
                     },
                 ]
@@ -104,9 +104,9 @@ const SiderBar = () => {
                         key: "promotions",
                         icon: <TagOutlined />,
                         label: "Promotions",
-                        className: location.pathname === "/promotions" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "/marketing/promotions" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/promotions')
+                            navigate('/marketing/promotions')
                         }
                     },
                 ]

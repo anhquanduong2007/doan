@@ -10,22 +10,22 @@ export class RegisterDto {
     password: string;
 
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     first_name: string;
 
     @IsString()
-    @IsOptional()
+    @IsNotEmpty()
     last_name: string;
 
     @IsInt()
     @Min(0)
-    @Max(1)
+    @Max(2)
     @IsOptional()
     gender: number;
 
     @IsString()
     @IsOptional()
-    date_of_birth: string 
+    date_of_birth: string
 
     @IsString()
     @IsEmail()

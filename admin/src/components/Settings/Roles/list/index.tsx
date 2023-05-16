@@ -4,7 +4,7 @@ import { Link, NavigateFunction } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import type { ColumnsType } from 'antd/es/table';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { createAxiosClient } from 'src/helper/axiosInstance';
+import { createAxiosJwt } from 'src/helper/axiosInstance';
 import { deleteRole, getListRole } from 'src/features/setting/role/actions';
 import {
     EditOutlined,
@@ -15,8 +15,9 @@ import {
 interface DataType {
     key: number;
     id: number;
-    description: string;
-    code: string;
+    role_name: string;
+    role_code: string;
+    description: string
     permissions: string[];
 }
 
@@ -27,14 +28,19 @@ const columns = (
     navigate: NavigateFunction
 ): ColumnsType<DataType> => [
         {
-            title: 'Description',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'Name',
+            dataIndex: 'role_name',
+            key: 'name',
         },
         {
             title: 'Code',
-            dataIndex: 'code',
+            dataIndex: 'role_code',
             key: 'code',
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
         },
         {
             title: 'Permissions',
@@ -66,7 +72,7 @@ const columns = (
             title: 'Action',
             key: 'action',
             render: (_, record) => {
-                if (record.code === "superadmin") {
+                if (record.role_code === "superadmin" || record.role_code === "customer") {
                     return null
                 }
                 return (
@@ -77,7 +83,7 @@ const columns = (
                             setRoleDelete({
                                 ...roleDelete,
                                 id: record.id,
-                                code: record.code
+                                code: record.role_code
                             })
                         }} />
                     </Space>
@@ -92,15 +98,15 @@ const RoleList = () => {
     const [skip, setSkip] = useState<number>(0)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [roleDelete, setRoleDelete] = useState<{ id: number, code: string }>()
-    const [refresh, setRefresh] = useState({})
+    const [refresh, setRefresh] = useState<boolean>(false)
 
     // ** Third party
     const navigate = useNavigate()
 
     // ** Variables
-    const store = useAppSelector((state) => state.role);
+    const role = useAppSelector((state) => state.role);
     const dispatch = useAppDispatch();
-    const axiosClient = createAxiosClient();
+    const axiosClientJwt = createAxiosJwt();
 
     // ** Effect
     useEffect(() => {
@@ -109,20 +115,22 @@ const RoleList = () => {
                 skip,
                 take
             },
-            axiosClient,
+            axiosClientJwt,
             dispatch,
+            navigate
         })
     }, [skip, take, refresh])
 
     // ** Function handle
     const dataRender = (): DataType[] => {
-        if (!store.list.loading && store.list.result) {
-            return store.list.result.roles.map((role, index: number) => {
+        if (!role.list.loading && role.list.result) {
+            return role.list.result.roles.map((role, index: number) => {
                 return {
                     key: index,
                     id: role.id,
                     description: role.description,
-                    code: role.code,
+                    role_code: role.role_code,
+                    role_name: role.role_name,
                     permissions: role.permissions,
                 }
             })
@@ -132,21 +140,15 @@ const RoleList = () => {
 
     const handleOk = async () => {
         await deleteRole({
-            axiosClient,
+            axiosClientJwt,
             dispatch,
+            message,
+            navigate,
+            refresh,
+            setIsModalOpen,
+            setRefresh,
             id: roleDelete?.id!
         })
-        if (store.delete.error) {
-            setTimeout(function () {
-                setIsModalOpen(false)
-            }, 1000)
-        } else {
-            setTimeout(function () {
-                message.success('Delete role successfully!');
-                setIsModalOpen(false)
-                setRefresh({})
-            }, 1000)
-        }
     };
 
     const handleCancel = () => {
@@ -161,7 +163,7 @@ const RoleList = () => {
                         <Breadcrumb.Item>
                             <Link to='/'>Home</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>Assets</Breadcrumb.Item>
+                        <Breadcrumb.Item>Roles</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -181,13 +183,13 @@ const RoleList = () => {
                         <Divider />
                         <Col span={24}>
                             <Card>
-                                <Table bordered columns={columns(setIsModalOpen, roleDelete, setRoleDelete, navigate)} dataSource={dataRender()} loading={store.list.loading} />
+                                <Table bordered columns={columns(setIsModalOpen, roleDelete, setRoleDelete, navigate)} dataSource={dataRender()} loading={role.list.loading} />
                             </Card>
                         </Col>
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
+            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={role.delete.loading}>
                 <p>Do you want to delete this role (<span style={{ fontWeight: "bold" }}>{roleDelete?.code}</span>) ?</p>
             </Modal>
         </Fragment>

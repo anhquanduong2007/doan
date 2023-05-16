@@ -1,9 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import authSlice from 'src/features/auth/authSlice';
-import userSlice from 'src/features/user/userSlice';
 import assetSlice from 'src/features/catalog/asset/assetSlice';
 import roleSlice from 'src/features/setting/role/roleSlice';
 import productSlice from 'src/features/catalog/product/productSlice';
+import administratorSlice from 'src/features/setting/administrator/administratorSlice';
+import customerSlice from 'src/features/customer/customerSlice';
+import addressSlice from 'src/features/address/addressSlice';
+import categorySlice from 'src/features/catalog/category/categorySlice';
 
 import {
   persistStore,
@@ -16,6 +19,8 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
+import promotionSlice from 'src/features/promotion/promotionSlice';
+
 
 const persistConfig = {
   key: 'root',
@@ -25,10 +30,14 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authSlice,
-  user: userSlice,
   asset: assetSlice,
   role: roleSlice,
-  product: productSlice
+  product: productSlice,
+  administrator: administratorSlice,
+  customer: customerSlice,
+  address: addressSlice,
+  category: categorySlice,
+  promotion: promotionSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

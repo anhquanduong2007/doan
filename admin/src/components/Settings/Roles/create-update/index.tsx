@@ -1,13 +1,13 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Breadcrumb, Button, Card, Col, Divider, Input, Row, message } from 'antd';
-import React, { Fragment, useEffect, useState } from 'react';
+import autoAnimate from '@formkit/auto-animate';
+import { Breadcrumb, Button, Card, Col, Divider, Form, Input, Row, message } from 'antd';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { createRole, getSingleRole, updateRole } from 'src/features/setting/role/actions';
-import { createAxiosClient } from 'src/helper/axiosInstance';
-import { ErrorValidateResponse } from 'src/types';
+import { createAxiosJwt } from 'src/helper/axiosInstance';
 
 interface PermissionType {
     title: string
@@ -22,9 +22,9 @@ const permissions: PermissionType[] = [
         permissions: ["ReadProduct", "CreateProduct", "DeleteProduct", "UpdateProduct"]
     },
     {
-        title: "Collection",
-        description: "Grants permissions on Collection",
-        permissions: ["ReadCollection", "CreateCollection", "DeleteCollection", "UpdateCollection"]
+        title: "Category",
+        description: "Grants permissions on Category",
+        permissions: ["ReadCategory", "CreateCategory", "DeleteCategory", "UpdateCategory"]
     },
     {
         title: "Asset",
@@ -51,17 +51,24 @@ const permissions: PermissionType[] = [
         description: "Grants permissions on Role",
         permissions: ["ReadRole", "CreateRole", "DeleteRole", "UpdateRole"]
     },
+    {
+        title: "Rate",
+        description: "Grants permissions on Rate",
+        permissions: ["ReadRate", "CreateRate", "DeleteRate", "UpdateRate"]
+    },
 
 ]
 
-interface FormValues  {
+export interface FormValuesRole {
+    role_name: string
+    role_code: string,
     description: string
-    code: string,
 }
 
-const defaultValues: FormValues = {
+const defaultValues: FormValuesRole = {
     description: '',
-    code: '',
+    role_code: '',
+    role_name: '',
     ...permissions.map((permission) => {
         return permission.permissions
     }).flat(1).reduce((prewPermiss, currentPermiss) => {
@@ -73,7 +80,6 @@ const defaultValues: FormValues = {
 }
 const RoleCreateUpdate = () => {
     // ** State
-    const [isSubmited, setIsSubmited] = useState<boolean>(false)
 
     // ** Third party
     const navigate = useNavigate()
@@ -82,17 +88,26 @@ const RoleCreateUpdate = () => {
 
     // ** Variables
     const { id } = params
-    const store = useAppSelector((state) => state.role);
+    const role = useAppSelector((state) => state.role);
     const dispatch = useAppDispatch();
-    const axiosClient = createAxiosClient();
+    const axiosClientJwt = createAxiosJwt();
 
-    console.log(store)
+
+    // ** Ref
+    const roleNameErrorRef = useRef(null);
+    const roleCodeErrorRef = useRef(null);
 
     // ** Effect
     useEffect(() => {
+        roleNameErrorRef.current && autoAnimate(roleNameErrorRef.current);
+        roleCodeErrorRef.current && autoAnimate(roleCodeErrorRef.current);
+    }, [parent])
+
+    useEffect(() => {
         if (id) {
             getSingleRole({
-                axiosClient,
+                axiosClientJwt,
+                navigate,
                 dispatch,
                 id: +id
             })
@@ -100,73 +115,51 @@ const RoleCreateUpdate = () => {
     }, [id])
 
     useEffect(() => {
-        if (id && !store.single.loading && store.single.result) {
-            setValue("code", store.single.result.code)
-            setValue("description", store.single.result.description)
-            store.single.result.permissions.forEach((permission) => {
+        if (id && !role.single.loading && role.single.result) {
+            setValue("role_name", role.single.result.role_name)
+            setValue("role_code", role.single.result.role_code)
+            setValue("description", role.single.result.description)
+            role.single.result.permissions.forEach((permission) => {
+                // @ts-ignore: Unreachable code error
                 setValue(permission, true)
             })
         }
-    }, [id, store.single.loading, store.single.result])
-
-    useEffect(() => {
-        // ** Create role
-        if (!store.create.loading && isSubmited && !id && !store.create.error) {
-            setIsSubmited(false)
-            navigate('/settings/roles')
-            message.success('Create role successfully!');
-        }
-        // ** Update role
-        if (!store.update.loading && isSubmited && id && !store.update.error) {
-            setIsSubmited(false)
-            navigate('/settings/roles')
-            message.success('Update role successfully!');
-        }
-        // ** Error when create role
-        if (!store.create.loading && isSubmited && !id && store.create.error) {
-            const error = { ...store.create.result } as ErrorValidateResponse
-            setError(error.fieldError, { message: error.message })
-        }
-        // ** Error when update role
-        if (!store.update.loading && isSubmited && id && store.update.error) {
-            const error = { ...store.update.result } as ErrorValidateResponse
-            setError(error.fieldError, { message: error.message })
-        }
-    }, [
-        store.create.loading,
-        store.create.error,
-        store.update.loading,
-        store.update.error,
-        isSubmited,
-        id,
-    ])
+    }, [id, role.single.loading, role.single.result])
 
     // ** Function handle
-    const onSubmit = (data: any) => {
+    const onSubmit = (data: FormValuesRole) => {
+        // @ts-ignore: Unreachable code error
         const permissions = Object.keys(data).filter(key => data[key] === true)
         if (id) {
             updateRole({
-                axiosClient,
+                axiosClientJwt,
                 dispatch,
+                message,
+                navigate,
+                setError,
                 id: +id,
                 role: {
-                    code: data.code,
+                    role_code: data.role_code,
+                    role_name: data.role_name,
                     permissions,
                     description: data.description
                 }
             })
         } else {
             createRole({
-                axiosClient,
+                axiosClientJwt,
                 dispatch,
                 role: {
-                    code: data.code,
+                    role_code: data.role_code,
+                    role_name: data.role_name,
                     permissions,
                     description: data.description
-                }
+                },
+                message,
+                navigate,
+                setError
             })
         }
-        setIsSubmited(true)
     };
 
     return (
@@ -184,14 +177,14 @@ const RoleCreateUpdate = () => {
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <Form onFinish={handleSubmit(onSubmit)} layout='vertical'>
                         <Row>
                             <Col span={24}>
                                 <Flex justifyContent="flex-end" alignItems="center">
                                     {
-                                        id && store.update.loading ?
+                                        id && role.update.loading ?
                                             <Button type="primary" loading>Updating...</Button> :
-                                            store.create.loading ?
+                                            role.create.loading ?
                                                 <Button type="primary" loading>Creating...</Button> :
                                                 id ? <Button htmlType="submit" type="primary">Update</Button> :
                                                     <Button htmlType="submit" type="primary">Create</Button>
@@ -201,49 +194,50 @@ const RoleCreateUpdate = () => {
                             <Divider />
                             <Col span={24}>
                                 <Card>
-                                    <Box mb={4}>
-                                        <Box as="label" htmlFor='description' mr={2} cursor="pointer" fontWeight="bold">Description</Box>
+                                    <Form.Item label="Role name">
+                                        <Controller
+                                            name="role_name"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={roleNameErrorRef}>
+                                                        <Input {...field} placeholder="Eg: superadmin" />
+                                                        {errors?.role_name ? <Box as="div" mt={1} textColor="red.600">{errors.role_name?.type === 'required' ? "Please input your role name!" : errors.role_name.message}</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Role code">
+                                        <Controller
+                                            name="role_code"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={roleCodeErrorRef}>
+                                                        <Input {...field} placeholder="Eg: superadmin" />
+                                                        {errors?.role_code ? <Box as="div" mt={1} textColor="red.600">{errors.role_code?.type === 'required' ? "Please input your role code!" : errors.role_code.message}</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Description">
                                         <Controller
                                             name="description"
                                             control={control}
-                                            render={({ field: { value, ...other } }) => {
+                                            render={({ field }) => {
                                                 return (
-                                                    <Box mt={1}>
-                                                        <Input
-                                                            id='description'
-                                                            value={value || ''}
-                                                            {...other}
-                                                            placeholder='Description'
-                                                        />
-                                                    </Box>
+                                                    <div>
+                                                        <Input.TextArea {...field} />
+                                                    </div>
                                                 )
                                             }}
                                         />
-                                    </Box>
-                                    <Box mb={4}>
-                                        <Box as="label" mr={2} cursor="pointer" fontWeight="bold" htmlFor='code'>Code</Box>
-                                        <Controller
-                                            name="code"
-                                            control={control}
-                                            rules={{ required: true }}
-                                            render={({ field: { value, ...other } }) => {
-                                                return (
-                                                    <Box mt={1}>
-                                                        <Input
-                                                            id='code'
-                                                            status={errors?.code ? 'error' : ''}
-                                                            value={value || ''}
-                                                            {...other}
-                                                            placeholder='Code'
-                                                        />
-                                                        {errors?.code ? <Box as="p" mt={1} textColor="red.600">{errors.code?.type === 'required' ? "This field is required!" : errors.code.message}</Box> : null}
-                                                    </Box>
-                                                )
-                                            }}
-                                        />
-                                    </Box>
-                                    <div>
-                                        <Box mb={4} fontWeight="bold">Permissions</Box>
+                                    </Form.Item>
+                                    <Form.Item label="Permissions">
                                         {permissions.map((permission, index: number) => {
                                             return (
                                                 <Row key={index}>
@@ -259,7 +253,7 @@ const RoleCreateUpdate = () => {
                                                             { padding: "16px", border: "1px solid #f2f3f5", borderRight: "unset", borderTop: "unset" }}
                                                     >
                                                         <Flex justifyContent="space-around" alignItems="center" height="100%">
-                                                            {permission.permissions.map((item, index: number) => {
+                                                            {permission.permissions.map((item: any, index: number) => {
                                                                 return (
                                                                     <Flex justifyContent="center" alignItems="center" key={index}>
                                                                         <Controller
@@ -289,11 +283,11 @@ const RoleCreateUpdate = () => {
                                                 </Row>
                                             )
                                         })}
-                                    </div>
+                                    </Form.Item>
                                 </Card>
                             </Col>
                         </Row>
-                    </form>
+                    </Form>
                 </Col>
             </Row>
         </Fragment>

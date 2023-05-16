@@ -49,12 +49,11 @@ export class CategoryController {
         return res.json({ response });
     }
 
-    @Put("set-category-parent/:id")
-    @Permission(Permissions.UpdateCategory)
-    async setCategoryParent(@Req() req: Request, @Body() dto: SetCategoryParentDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const userId = req.user['userId']
-        const response = await this.categoryService.setCategoryParent(dto, id, userId)
-        res.json({ response })
+    @Get('children/:id')
+    @Permission(Permissions.ReadCategory)
+    async categoriesChildren(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.categoryService.categoriesChildren(id);
+        return res.json({ response });
     }
 
     @Put("remove-category-parent/:id")

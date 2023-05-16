@@ -1,46 +1,35 @@
 import axios from 'axios';
 import queryString from "query-string";
 import jwtDecode, { JwtPayload } from "jwt-decode";
-import { AuthLoginResponse } from 'src/types';
-import { AppDispatch } from 'src/app/store';
+import { IAxiosResponse } from 'src/types/axiosResponse';
 
-const refreshToken = async () => {
-    try {
-        const res = await axios.post('http://localhost:3030/auth/refreshToken', {
-            withCredentials: true,
-        })
-        return res?.data
-    } catch (error) {
-        console.log(error)
-    }
-}
-export const createAxiosJwt = (user: AuthLoginResponse, dispatch: AppDispatch, stateSuccess: Function) => {
+export const createAxiosJwt = () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
     const newInstance = axios.create({
         baseURL: import.meta.env.VITE_BACKEND_URL,
         headers: {
             "content-type": "application/json",
         },
-        withCredentials: true,
         paramsSerializer: (params) => queryString.stringify(params),
     });
     newInstance.interceptors.request.use(
         async (config) => {
             let date = new Date();
-            const decoedToken: JwtPayload = jwtDecode(user?.response?.accessToken);
+            const decoedToken: JwtPayload = jwtDecode(accessToken || '');
+            const axiosClient = createAxiosClient();
             if (decoedToken?.exp && decoedToken?.exp < date.getTime() / 1000) {
-                const data = await refreshToken();
-                const refreshUser = {
-                    ...user,
-                    response: {
-                        ...user.response,
-                        accessToken: data?.response?.accessToken
+                const res: IAxiosResponse<{}> = await axiosClient.post(`${import.meta.env.VITE_BACKEND_URL}auth/refreshToken`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${refreshToken}`
                     }
-                }
-                dispatch(stateSuccess(refreshUser));
+                })
                 if (!config?.headers) {
                     throw new Error(`Expected 'config' and 'config.headers' not to be undefined`);
                 }
-                config.headers.Authorization = `Bearer ${data?.accessToken}`;
+                localStorage.setItem("accessToken", res?.response?.access_token as string)
+                localStorage.setItem("refreshToken", res?.response?.refresh_token as string)
+                config.headers.Authorization = `Bearer ${res?.response?.access_token}`;
             }
             return config;
         },
@@ -68,7 +57,6 @@ export const createAxiosClient = () => {
         headers: {
             "content-type": "application/json",
         },
-        // withCredentials: true,
         paramsSerializer: (params) => queryString.stringify(params),
     });
     newInstance.interceptors.request.use(
