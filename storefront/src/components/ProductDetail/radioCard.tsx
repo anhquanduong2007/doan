@@ -2,7 +2,7 @@ import { Box, HStack, useRadio, useRadioGroup } from '@chakra-ui/react'
 import React from 'react'
 
 export const RadioCard = (props) => {
-  const { type } = props
+  const { type, valueSelect } = props
   const { getInputProps, getRadioProps } = useRadio(props)
 
   const input = getInputProps()
@@ -29,7 +29,7 @@ export const RadioCard = (props) => {
                 boxShadow: 'inset 0px 0px 0px 1px #717fe0'
               }}
               _focus={{
-                boxShadow: 'outline',
+                boxShadow: 'none'
               }}
               px={4}
               py={4}
@@ -50,7 +50,7 @@ export const RadioCard = (props) => {
                 borderColor: '#717fe0',
               }}
               _focus={{
-                boxShadow: 'outline',
+                boxShadow: 'none',
               }}
               px={4}
               py={1}
@@ -65,10 +65,11 @@ export const RadioCard = (props) => {
 }
 
 const RadioButtonCard = (props: any) => {
-  const { options, type } = props
+  const { options, type, valueSelect, onChangeRadio } = props
+  console.log('valueSelect', valueSelect)
   const { getRootProps, getRadioProps } = useRadioGroup({
     name: 'framework',
-    onChange: console.log,
+    onChange: onChangeRadio,
   })
 
   const group = getRootProps()
@@ -78,7 +79,7 @@ const RadioButtonCard = (props: any) => {
       {options.map((value: string) => {
         const radio = getRadioProps({ value })
         return (
-          <RadioCard key={value} {...radio} type={type}>
+          <RadioCard key={value} {...radio} type={type} valueSelect={valueSelect}>
             {type === 'size' ? value : null}
           </RadioCard>
         )

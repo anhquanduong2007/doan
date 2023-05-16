@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
 import Layout from '../Layout/layout'
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Scrollbar, A11y, EffectFade, Autoplay } from 'swiper';
-
+import { useForm, Controller } from "react-hook-form"
 
 import './productDetail.css'
 import Product1 from '../../assets/product-01.jpg'
@@ -12,7 +12,7 @@ import Product2 from '../../assets/product-02.jpg'
 import Product3 from '../../assets/product-03.jpg'
 import Product4 from '../../assets/product-04.jpg'
 import formatMoney from 'src/shared/utils/formatMoney';
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Divider, HStack, Input, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, useNumberInput, useRadio, useRadioGroup } from '@chakra-ui/react';
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Divider, FormControl, HStack, Input, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, useNumberInput, useRadio, useRadioGroup } from '@chakra-ui/react';
 import RadioButtonCard from './radioCard';
 import { ChevronRight, Heart } from 'react-feather';
 
@@ -42,6 +42,25 @@ const ProductDetail = () => {
 
   const favouriteProduct = () => {
     setIsFavourite(!isFavourite)
+  }
+
+  const defaultValues = {
+    color: undefined,
+    size: undefined,
+    quantity: undefined,
+  }
+
+  const {
+    control,
+    setValue,
+    register,
+    setError,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({ defaultValues })
+
+  const onSubmit = (data: { color: string, size: string, quantity: number }) => {
+    console.log('data add to cart', data)
   }
 
   return (
@@ -81,8 +100,8 @@ const ProductDetail = () => {
                 `
               }
             }}
-            onSlideChange={() => console.log('slide change')}
-            onSwiper={(swiper) => console.log(swiper)}
+            // onSlideChange={() => console.log('slide change')}
+            // onSwiper={(swiper) => console.log(swiper)}
           >
             {
               dataSlider && dataSlider.map((item, index) => {
@@ -105,32 +124,46 @@ const ProductDetail = () => {
             <p className='font-bold text-xl'>Lightweight Jacket</p>
             <p className='font-bold'>${formatMoney(12345)}</p>
             <p className='text-[#666]'>Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.</p>
-            <div className='flex flex-col gap-2'>
-              <p className='font-semibold'>Color</p>
-              <RadioButtonCard options={optionsColor} type='color' />
-            </div>
-            <div className='flex flex-col gap-2'>
-              <p className='font-semibold'>Size</p>
-              <RadioButtonCard options={optionsSize} type='size' />
-            </div>
-            <div className='flex flex-col gap-2'>
-              <p className='font-semibold'>Quantity</p>
-              <HStack maxW='320px'>
-                <Button {...dec}>-</Button>
-                <Input {...input} width={'60px'} />
-                <Button {...inc}>+</Button>
-              </HStack>
-            </div>
+            <form >
+              <div className='flex flex-col gap-2'>
+                <p className='font-semibold'>Color</p>
+                <RadioButtonCard options={optionsColor} type='color' />
+              </div>
+              <div className='flex flex-col gap-2'>
+                <p className='font-semibold'>Size</p>
+                <FormControl>
+                  <Controller
+                    name='size'
+                    control={control}
+                    render={({ field: { value, onChange } }) => (
+                      <Fragment>
+                        <RadioButtonCard options={optionsSize} valueSelect={value} onChangeRadio={onChange} type='size' />
+                      </Fragment>
+                    )}
+                  />
+                </FormControl>
+              </div>
+              <div className='flex flex-col gap-2'>
+                <p className='font-semibold'>Quantity</p>
+                <HStack maxW='320px'>
+                  <Button {...dec}>-</Button>
+                  <Input {...input} width={'60px'} />
+                  <Button {...inc}>+</Button>
+                </HStack>
+              </div>
+            
             <div className='flex flex-row items-center gap-5 mt-2'>
               <Button
                 className='!bg-primary text-white uppercase hover:!bg-[#5866c9]'
                 variant='solid'
                 isLoading={false}
+                onClick={handleSubmit(onSubmit)}
               >
-                Add to card
+                Add to cart
               </Button>
               <Heart size={24} className={isFavourite ? `cursor-pointer fill-pink stroke-pink` : `cursor-pointer`} onClick={() => favouriteProduct()} />
             </div>
+            </form>
           </div>
         </div>
       </div>
