@@ -1,38 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-export interface AssetType {
-    cloudinary_asset_id: string
-    cloudinary_public_id: string
-    created_at: string
-    format: string
-    height: number
-    id: number
-    name: string
-    updated_at: string
-    url: string
-    width: number
-}
-
+import { Asset } from 'src/types/asset';
 
 interface AssetState {
     list: {
         result: {
-            assets: Array<AssetType>
+            assets: Array<Asset>
             skip: number
             take: number
             total: number
             totalPage: number
         } | null;
-        loading: boolean;
-        error: boolean;
-    }
-    update: {
-        result: any;
-        loading: boolean;
-        error: boolean;
-    }
-    single: {
-        result: any;
         loading: boolean;
         error: boolean;
     }
@@ -45,16 +22,6 @@ interface AssetState {
 
 const initialState: AssetState = {
     list: {
-        result: null,
-        loading: false,
-        error: false
-    },
-    update: {
-        result: null,
-        loading: false,
-        error: false
-    },
-    single: {
         result: null,
         loading: false,
         error: false
@@ -79,22 +46,11 @@ export const assetSlice = createSlice({
             state.list.result = action.payload;
             state.list.error = false
         },
-        getListAssetFailed: (state) => {
+        getListAssetFailed: (state, action) => {
             state.list.loading = false;
+            state.list.result = action.payload;
+
             state.list.error = true;
-        },
-        // ** Get asset
-        getAssetStart: (state) => {
-            state.single.loading = true;
-        },
-        getAssetSuccess: (state, action) => {
-            state.single.loading = false;
-            state.single.result = action.payload;
-            state.single.error = false
-        },
-        getAssetFailed: (state) => {
-            state.single.loading = false;
-            state.single.error = true;
         },
         // ** Delete asset
         deleteAssetStart: (state) => {
@@ -105,22 +61,10 @@ export const assetSlice = createSlice({
             state.delete.result = action.payload;
             state.delete.error = false
         },
-        deleteAssetFailed: (state) => {
+        deleteAssetFailed: (state, action) => {
             state.delete.loading = false;
+            state.delete.result = action.payload;
             state.delete.error = true;
-        },
-        // ** Update asset
-        updateAssetStart: (state) => {
-            state.update.loading = true
-        },
-        updateAssetSuccess: (state, action) => {
-            state.update.loading = false;
-            state.update.result = action.payload;
-            state.update.error = false
-        },
-        updateAssetFailed: (state) => {
-            state.update.loading = false;
-            state.update.error = true;
         },
     },
 });
@@ -132,12 +76,6 @@ export const {
     deleteAssetStart,
     deleteAssetSuccess,
     deleteAssetFailed,
-    getAssetStart,
-    getAssetSuccess,
-    getAssetFailed,
-    updateAssetStart,
-    updateAssetSuccess,
-    updateAssetFailed
 } = assetSlice.actions;
 
 export default assetSlice.reducer;

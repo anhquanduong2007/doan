@@ -3,7 +3,6 @@ import { AssetService } from './asset.service';
 import { Response, Request } from 'express';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { PaginationDto } from 'src/common/dto';
-import { AssetUpdateDto } from './dto';
 import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
 
@@ -33,14 +32,6 @@ export class AssetController {
     @Permission(Permissions.DeleteAsset)
     async delete(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.assetService.delete(id);
-        return res.json({ response });
-    }
-
-    @Put('/update/:id')
-    @Permission(Permissions.UpdateAsset)
-    async update(@Req() req: Request, @Body() dto: AssetUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const userId = req.user['userId']
-        const response = await this.assetService.update(dto, id, userId);
         return res.json({ response });
     }
 

@@ -20,6 +20,7 @@ import CategoryListPage from './pages/Catalog/Categories/list';
 import CategoryCreateUpdatePage from './pages/Catalog/Categories/create-update';
 import PromotionListPage from './pages/Marketing/Promotions/list';
 import PromotionCreateUpdatePage from './pages/Marketing/Promotions/create-update';
+import AssetsPage from './pages/Catalog/Assets';
 
 interface ProtectRouteProps {
   children: React.ReactNode
@@ -58,6 +59,9 @@ const App = () => {
                 <Route index element={<CategoryListPage />} />
                 <Route path='create' element={<CategoryCreateUpdatePage />} />
                 <Route path='update/:id' element={<CategoryCreateUpdatePage />} />
+              </Route>
+              <Route path='assets'>
+                <Route index element={<AssetsPage />} />
               </Route>
             </Route>
             <Route path='customers'>
