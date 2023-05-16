@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AddProductVariantToCardDto, OptionCreateDto, ProductCreateDto, ProductVariantCreateDto } from './dto';
+import { AddProductVariantToCartDto, OptionCreateDto, ProductCreateDto, ProductVariantCreateDto } from './dto';
 import { IResponse } from 'src/common/types';
 import { cart, product, product_option, product_variant } from '@prisma/client';
 import { PaginationDto } from 'src/common/dto';
@@ -587,7 +587,7 @@ export class ProductService {
     }
 
     // ** Cart **
-    public async addProductVariantToCard(input: AddProductVariantToCardDto, customerId: number, productVariantId: number): Promise<IResponse<cart>> {
+    public async addProductVariantToCart(input: AddProductVariantToCartDto, customerId: number, productVariantId: number): Promise<IResponse<cart>> {
         try {
             const { quantity } = input
             const productVariant = await this.prisma.product_variant.findUnique({
@@ -628,7 +628,7 @@ export class ProductService {
         }
     }
 
-    public async removeProductVariantFromCard(customerId: number, productVariantId: number): Promise<IResponse<{}>> {
+    public async removeProductVariantFromCart(customerId: number, productVariantId: number): Promise<IResponse<{}>> {
         try {
             const isProductVariantExistInCard = await this.prisma.cart.findFirst({
                 where: {
@@ -663,7 +663,7 @@ export class ProductService {
         }
     }
 
-    public async updateProductVariantInCard(input: AddProductVariantToCardDto, customerId: number, productVariantId: number): Promise<IResponse<{}>> {
+    public async updateProductVariantInCart(input: AddProductVariantToCartDto, customerId: number, productVariantId: number): Promise<IResponse<{}>> {
         try {
             const { quantity } = input
             const productVariant = await this.prisma.product_variant.findUnique({
@@ -722,7 +722,7 @@ export class ProductService {
         }
     }
 
-    public async getListProductVariantFromCard(input: PaginationDto, customerId: number): Promise<IResponse<{ carts: cart[], totalPage: number, skip: number, take: number, total: number }>> {
+    public async getListProductVariantFromCart(input: PaginationDto, customerId: number): Promise<IResponse<{ carts: cart[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
             const { skip, take } = input;
             const [totalRecord, carts] = await this.prisma.$transaction([

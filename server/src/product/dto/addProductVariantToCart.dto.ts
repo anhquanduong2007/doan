@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional } from "class-validator"
 
-export class AddProductVariantToCardDto {
+export class AddProductVariantToCartDto {
     @IsNumber()
     @IsOptional()
     quantity: number
