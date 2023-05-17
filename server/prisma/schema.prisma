@@ -7,30 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model bill {
-  id                         Int            @id @default(autoincrement())
-  code                       String?        @db.VarChar(45)
-  user_id                    Int?
-  bill_date                  DateTime?      @db.Timestamp(0)
-  total_price                Decimal?       @default(0.00) @db.Decimal(18, 2)
-  delivery_time              DateTime?      @db.Timestamp(0)
-  status                     Int?           @default(-1)
-  staff_id                   Int?
-  note                       String?        @db.VarChar(255)
-  payment                    Int?
-  address                    String?        @db.Text
-  created_date               DateTime?      @db.Timestamp(0)
-  modified_date              DateTime?      @db.Timestamp(0)
-  created_by                 Int?
-  modified_by                Int?
-  users_bill_user_idTousers  users?         @relation("bill_user_idTousers", fields: [user_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_bill_user")
-  users_bill_staff_idTousers users?         @relation("bill_staff_idTousers", fields: [staff_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_bill_user_staff")
-  product_bill               product_bill[]
-
-  @@unique([user_id, bill_date], map: "unique_bill")
-  @@index([staff_id], map: "fk_bill_user_staff")
-}
-
 model address {
   id                       Int      @id @default(autoincrement())
   created_date             DateTime @default(now())
@@ -109,8 +85,6 @@ model product {
   modified_by       Int?
   favorite          favorite[]
   category          category?         @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
-  product_bill      product_bill[]
-  product_receipt   product_receipt[]
   product_variants  product_variant[]
   asset_ids         product_asset[]
   featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
@@ -166,43 +140,6 @@ model product_variant_option {
   @@unique([product_option_id, product_variant_id])
 }
 
-model product_bill {
-  id            Int       @id @default(autoincrement())
-  product_id    Int?
-  bill_id       Int?
-  price_sell    Decimal?  @db.Decimal(18, 2)
-  quantity      Int
-  total_price   Decimal?  @db.Decimal(18, 2)
-  status        Int?      @default(0)
-  created_date  DateTime? @db.Timestamp(0)
-  modified_date DateTime? @db.Timestamp(0)
-  created_by    Int?
-  modified_by   Int?
-  bill          bill?     @relation(fields: [bill_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_bill_product")
-  product       product?  @relation(fields: [product_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_prodcut_bill")
-
-  @@unique([product_id, bill_id], map: "unique_product_bill")
-  @@index([bill_id], map: "fk_bill_product")
-}
-
-model product_receipt {
-  id            Int       @id @default(autoincrement())
-  product_id    Int?
-  receipt_id    Int?
-  price_entry   Decimal?  @db.Decimal(18, 2)
-  quantity      Int
-  total_price   Decimal?  @db.Decimal(18, 2)
-  created_date  DateTime? @db.Timestamp(0)
-  modified_date DateTime? @db.Timestamp(0)
-  created_by    Int?
-  modified_by   Int?
-  product       product?  @relation(fields: [product_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_prodcut_receipt")
-  receipt       receipt?  @relation(fields: [receipt_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_receipt_product")
-
-  @@unique([product_id, receipt_id], map: "unique_product_receipt")
-  @@index([receipt_id], map: "fk_receipt_product")
-}
-
 model rate {
   id            Int      @id @default(autoincrement())
   product_id    Int
@@ -220,28 +157,6 @@ model rate {
 
   @@unique([product_id, user_id, cmt_datetime], map: "unique_comments")
   @@index([user_id], map: "fk_users_cmt")
-}
-
-model receipt {
-  id                               Int               @id @default(autoincrement())
-  code                             String?           @db.VarChar(45)
-  user_id                          Int
-  receipt_date                     DateTime          @default(now()) @db.Timestamp(0)
-  received_date                    DateTime?         @db.Timestamp(0)
-  total_price                      Decimal?          @db.Decimal(18, 2)
-  status                           Int?
-  supplier_id                      Int?
-  note                             String?           @db.VarChar(255)
-  created_date                     DateTime?         @db.Timestamp(0)
-  modified_date                    DateTime?         @db.Timestamp(0)
-  created_by                       Int?
-  modified_by                      Int?
-  product_receipt                  product_receipt[]
-  users_receipt_user_idTousers     users             @relation("receipt_user_idTousers", fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_receipt_user")
-  users_receipt_supplier_idTousers users?            @relation("receipt_supplier_idTousers", fields: [supplier_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_receipt_user_supplier_id")
-
-  @@unique([user_id, receipt_date], map: "unique_receipt")
-  @@index([supplier_id], map: "fk_receipt_user_supplier_id")
 }
 
 model role {
@@ -276,28 +191,24 @@ enum OptionName {
 }
 
 model users {
-  id                                 Int          @id @default(autoincrement())
-  hashed_rt                          String?
-  password                           String       @db.VarChar(255)
-  first_name                         String?      @db.VarChar(255)
-  last_name                          String?      @db.VarChar(255)
-  gender                             Int          @default(0)
-  date_of_birth                      DateTime?
-  email                              String       @unique @db.VarChar(125)
-  phone                              String?      @db.VarChar(10)
-  active                             Int          @default(1)
-  created_date                       DateTime     @default(now())
-  modified_date                      DateTime     @updatedAt
-  created_by                         Int?
-  modified_by                        Int?
-  bill_bill_user_idTousers           bill[]       @relation("bill_user_idTousers")
-  bill_bill_staff_idTousers          bill[]       @relation("bill_staff_idTousers")
-  favorite                           favorite[]
-  rate                               rate[]
-  receipt_receipt_user_idTousers     receipt[]    @relation("receipt_user_idTousers")
-  receipt_receipt_supplier_idTousers receipt[]    @relation("receipt_supplier_idTousers")
-  users_role                         users_role[]
-  address                            address[]
+  id            Int          @id @default(autoincrement())
+  hashed_rt     String?
+  password      String       @db.VarChar(255)
+  first_name    String?      @db.VarChar(255)
+  last_name     String?      @db.VarChar(255)
+  gender        Int          @default(0)
+  date_of_birth DateTime?
+  email         String       @unique @db.VarChar(125)
+  phone         String?      @db.VarChar(10)
+  active        Int          @default(1)
+  created_date  DateTime     @default(now())
+  modified_date DateTime     @updatedAt
+  created_by    Int?
+  modified_by   Int?
+  favorite      favorite[]
+  rate          rate[]
+  users_role    users_role[]
+  address       address[]
 }
 
 model users_role {
@@ -322,4 +233,11 @@ model promotion {
   active        Int      @default(1)
   limit         Int      @default(0)
   discount      Int      @default(0)
+}
+
+model orders {
+  id            Int      @id @default(autoincrement())
+  created_date  DateTime @default(now())
+  modified_date DateTime @updatedAt
+  payment       Boolean  @default(false)
 }

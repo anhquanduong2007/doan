@@ -9,7 +9,8 @@
     "storefront"
   ],
   "scripts": {
-    "dev": "concurrently yarn:dev:*",
+    "docker:up": "docker-compose -f docker-compose.yaml up -d && sleep 5",
+    "dev": "yarn docker:up && concurrently yarn:dev:*",
     "dev:server": "cd server && yarn start:dev",
     "dev:admin": "cd admin && yarn start",
     "dev:storefront": "cd storefront && yarn start",

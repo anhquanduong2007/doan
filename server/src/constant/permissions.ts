@@ -1,4 +1,5 @@
 export enum Permissions {
+  Anonymous = 'Anonymous',
   SuperAdmin = 'SuperAdmin',
   // Product
   ReadProduct = 'ReadProduct',

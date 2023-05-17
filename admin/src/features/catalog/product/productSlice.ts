@@ -8,7 +8,12 @@ export interface ProductType {
     name: string
     slug: string
     description: string
-    enabled: boolean
+    active: boolean
+}
+
+export interface ProductOptionType {
+    name: string
+    value: Array<string>
 }
 
 interface ProductState {
@@ -17,6 +22,11 @@ interface ProductState {
         loading: boolean;
         error: boolean;
     },
+    createProductOption: {
+        result: any;
+        loading: boolean;
+        error: boolean;
+    }
 }
 
 const initialState: ProductState = {
@@ -25,6 +35,11 @@ const initialState: ProductState = {
         loading: false,
         error: false,
     },
+    createProductOption: {
+        result: null,
+        loading: false,
+        error: false,
+    }
 } as ProductState;
 
 export const productSlice = createSlice({
@@ -45,13 +60,30 @@ export const productSlice = createSlice({
             state.createProduct.result = action.payload;
             state.createProduct.error = true;
         },
-    },
+         // ** Create product option
+        createProductOptionStart: (state) => {
+            // state.createProductOption.loading = true;
+        },
+        // createProductOptionSuccess: (state, action) => {
+        //     // state.createProductOption.loading = false;
+        //     // state.createProductOption.result = action.payload;
+        //     // state.createProductOption.error = false
+        // },
+        // createProductOptionFailed: (state, action) => {
+        //     // state.createProductOption.loading = false;
+        //     // state.createProductOption.result = action.payload;
+        //     // state.createProductOption.error = true;
+        // },
+    }
 });
 
 export const {
     createProductStart,
     createProductSuccess,
-    createProductFailed
+    createProductFailed,
+    createProductOptionStart
+    // createProductOptionSuccess,
+    // createProductOptionFailed
 } = productSlice.actions;
 
 export default productSlice.reducer;

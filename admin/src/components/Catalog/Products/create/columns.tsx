@@ -5,6 +5,7 @@
 import React, { Fragment } from 'react';
 import { Input, InputNumber } from 'antd';
 import { Controller } from "react-hook-form";
+import { Text } from '@chakra-ui/react';
 
 interface DataType {
     sku: JSX.Element;
@@ -18,6 +19,12 @@ export const columns = () => [
         dataIndex: 'sku',
         key: 'sku',
         render: (sku: JSX.Element) => sku
+    },
+    {
+        title: 'Variant',
+        dataIndex: 'variant',
+        key: 'variant',
+        render: (variant: JSX.Element) => variant
     },
     {
         title: 'Price',
@@ -42,7 +49,7 @@ export const data = ({ control, errors, variantItem }): DataType[] => {
                     key={index}
                     name="sku"
                     control={control}
-                    rules={{ required: true }}
+                    // rules={{ required: true }}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>
@@ -60,12 +67,26 @@ export const data = ({ control, errors, variantItem }): DataType[] => {
                     }}
                 />
             ),
+            variant: (
+                <Controller
+                name="variant"
+                key={index}
+                control={control}
+                render={({ field: { value, ...other } }) => {
+                    return (
+                        <Fragment>
+                           <Text>123</Text>
+                        </Fragment>
+                    )
+                }}
+            />
+            ),
             price: (
                 <Controller
                     name="price"
                     key={index}
                     control={control}
-                    rules={{ required: true }}
+                    // rules={{ required: true }}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>

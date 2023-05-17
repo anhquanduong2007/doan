@@ -20,14 +20,14 @@ import {
   message,
 } from "antd";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useWatch } from "react-hook-form";
 import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import type { ColumnsType } from "antd/es/table";
 import { columns, data } from "./columns";
 import { default as ProductCreateBasic } from "./ProductCreate";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { createAxiosClient } from "src/helper/axiosInstance";
-import { createProduct } from "src/features/catalog/product/actions";
+import { createProduct, createProductOption } from "src/features/catalog/product/actions";
 import ProductAssetCreate from "./ProductAssetCreate";
 import { ErrorValidateResponse } from "src/types";
 import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
@@ -40,10 +40,11 @@ import {
   ResourceItem,
   Icon,
   Thumbnail,
-  Tooltip
+  Tooltip,
 } from "@shopify/polaris";
 import { DragHandleMinor } from "@shopify/polaris-icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { set } from "lodash";
 
 const ITEMS = [
   {
@@ -72,7 +73,13 @@ const defaultValues = {
   name: "",
   slug: "",
   description: "",
-  enabled: true,
+  active: true,
+  option: [
+    { optionName: "Size", optionValue: "L" },
+    { optionName: "Size", optionValue: "XL" },
+    { optionName: "Color", optionValue: "Red" },
+    { optionName: "Color", optionValue: "Blue" },
+  ],
 };
 
 function ListItem(props) {
@@ -92,7 +99,7 @@ function ListItem(props) {
             }
           >
             <ResourceItem id={id} url="https://github.com/qw-in">
-              <HorizontalStack  algin="center" blockAlign="center">
+              <HorizontalStack algin="center" blockAlign="center">
                 <div {...provided.dragHandleProps}>
                   <Tooltip content="Drag to reorder list items">
                     <Icon source={DragHandleMinor} color="inkLightest" />
@@ -102,8 +109,10 @@ function ListItem(props) {
                   source={`https://picsum.photos/id/${100 + id}/60/60`}
                   alt={""}
                 />
-                <Text variant="headingMd" as="h2">{title}</Text>
-              </HorizontalStack >
+                <Text variant="headingMd" as="h2">
+                  {title}
+                </Text>
+              </HorizontalStack>
             </ResourceItem>
           </div>
         );
@@ -120,6 +129,7 @@ const ProductCreate: React.FC = () => {
   const [variantItem, setVariantItem] = useState<number[]>([]);
   const [variantItems, setVariantItems] = useState<number[]>([]);
   const [items, setItems] = useState(ITEMS);
+  const [options, setOptions] = useState([]);
 
   // ** Third party
   const navigate = useNavigate();
@@ -131,7 +141,7 @@ const ProductCreate: React.FC = () => {
     setError,
     register,
     trigger,
-    getValues, 
+    getValues,
     watch,
     formState: { errors },
   } = useForm({ defaultValues });
@@ -166,8 +176,13 @@ const ProductCreate: React.FC = () => {
   }, [store.createProduct.loading, isSubmited, store.createProduct.error]);
 
   // ** Function handle
+  // useEffect(() => {
+  //   console.log("variantItems", variantItems);
+  // }, [variantItems, setVariantItems]);
+
   const onSubmit = async (data) => {
-    console.log("🚀 ~ file: index.tsx:165 ~ onSubmit ~ data:", data)
+    console.log("🚀 ~ file: index.tsx:173 ~ onSubmit ~ data:", data);
+    console.log("variantItems", variantItems);
     // await createProduct({
     //     axiosClient,
     //     dispatch,
@@ -175,101 +190,66 @@ const ProductCreate: React.FC = () => {
     //         name: data.name,
     //         description: data.description,
     //         slug: data.slug,
-    //         enabled: data.enabled
+    //         active: 1,
     //     }
     // })
-    const { description, enabled, name, slug, ...options } = data;
-    const optColor = [];
-    const optSize = [];
-    const optMaterial = [];
-    const optStyle = [];
-    Object.keys(options).forEach((option) => {
-      if (option.includes("optionName") && options[option] === "color") {
-        optColor.push(options[`optionValue-${option.slice(-1)}`]);
-      } else if (option.includes("optionName") && options[option] === "size") {
-        optSize.push(options[`optionValue-${option.slice(-1)}`]);
-      } else if (
-        option.includes("optionName") &&
-        options[option] === "material"
-      ) {
-        optMaterial.push(options[`optionValue-${option.slice(-1)}`]);
-      } else {
-        optStyle.push(options[`optionValue-${option.slice(-1)}`]);
-      }
-    });
-    const color = {
-      name: "color",
-      value: [...optColor],
-    };
-    const size = {
-      name: "size",
-      value: [...optSize],
-    };
-    
+    console.log("variantItemsvariantItemsvariantItemsvariantItems", variantItems)
+     await createProductOption({
+        axiosClient,
+        dispatch,
+        options: variantItems
+    })
+
+    // const { description, enabled, name, slug, ...options } = data;
+    // const optColor = [];
+    // const optSize = [];
+    // const optMaterial = [];
+    // const optStyle = [];
+    // Object.keys(options).forEach((option) => {
+    //   if (option.includes("optionName") && options[option] === "color") {
+    //     optColor.push(options[`optionValue-${option.slice(-1)}`]);
+    //   } else if (option.includes("optionName") && options[option] === "size") {
+    //     optSize.push(options[`optionValue-${option.slice(-1)}`]);
+    //   } else if (
+    //     option.includes("optionName") &&
+    //     options[option] === "material"
+    //   ) {
+    //     optMaterial.push(options[`optionValue-${option.slice(-1)}`]);
+    //   } else {
+    //     optStyle.push(options[`optionValue-${option.slice(-1)}`]);
+    //   }
+    // });
+    // const color = {
+    //   name: "color",
+    //   value: [...optColor],
+    // };
+    // const size = {
+    //   name: "size",
+    //   value: [...optSize],
+    // };
   };
 
-  const handleDragEnd = useCallback(({ source, destination }) => {
-    setItems(oldItems => {
-      const newItems = oldItems.slice(); // Duplicate
-      const [temp] = newItems.splice(source.index, 1);
-      newItems.splice(destination.index, 0, temp);
-      return newItems;
-    });
-  }, []);
+  // const handleDragEnd = useCallback(({ source, destination }) => {
+  //   setItems((oldItems) => {
+  //     const newItems = oldItems.slice(); // Duplicate
+  //     const [temp] = newItems.splice(source.index, 1);
+  //     newItems.splice(destination.index, 0, temp);
+  //     return newItems;
+  //   });
+  // }, []);
 
-  // useEffect(() => {
-  //   watch((data) => {
-  //     const { description, enabled, name, slug, ...options } = data;
-  //     const optColor = [];
-  //     const optSize = [];
-  //     const optMaterial = [];
-  //     const optStyle = [];
-  
-  //     Object.keys(options).forEach((option) => {
-  //       if (option.includes("optionName") && options[option] === "color") {
-  //         optColor.push(options[`optionValue-${option.slice(-1)}`]);
-  //       } else if (option.includes("optionName") && options[option] === "size") {
-  //         optSize.push(options[`optionValue-${option.slice(-1)}`]);
-  //       } else if (
-  //         option.includes("optionName") &&
-  //         options[option] === "material"
-  //       ) {
-  //         optMaterial.push(options[`optionValue-${option.slice(-1)}`]);
-  //       } else {
-  //         optStyle.push(options[`optionValue-${option.slice(-1)}`]);
-  //       }
-  //     });
-  //     const color = {
-  //       name: "color",
-  //       value: [...optColor],
-  //     };
-  //     const size = {
-  //       name: "size",
-  //       value: [...optSize],
-  //     };
-  //     setVariantItems({
-  //       size: size,
-  //       color: color,
-  //     })
-  //   })
-  // }, [watch]);
-
-  // useEffect(() => {
-  //   let variant = []
-    
-  //   console.log("variantItems", variantItems)
-  //   if(variantItems.size || variantItems.color) {
-  //     const sizeLength = variantItems.size.value.length;
-  //     const colorLength = variantItems.color.value.length;
-  //     const total = sizeLength * colorLength;
-  //     console.log("🚀 ~ file: index.tsx:262 ~ useEffect ~ total:", total)
-  //     total > 0 ? new Array(total).fill(total).map((_, index) => variant.push(index)) : variant = [];
-  //     console.log("total", total)
-  //     variant.length > 0 && setVariantItem(variant);
-  //     console.log(variant)
-  //     console.log(variantItem)
-  //   }
-  // }, [setVariantItems, variantItems])
+  useEffect(() => {
+    let variant = [];
+    if (variantItems.size || variantItems.color) {
+      const sizeLength = variantItems.size.value.length;
+      const colorLength = variantItems.color.value.length;
+      const total = sizeLength * colorLength;
+      total > 0
+        ? new Array(total).fill(total).map((_, index) => variant.push(index))
+        : (variant = []);
+      variant.length > 0 && setVariantItem(variant);
+    }
+  }, [setVariantItems, variantItems]);
 
   return (
     <Fragment>
@@ -308,8 +288,16 @@ const ProductCreate: React.FC = () => {
                 <Fragment>
                   <Row gutter={[24, 0]}>
                     <Col span={14}>
-                      <ProductCreateBasic control={control} errors={errors} setValue={setValue} />
-                      <ProductOptionsCreate control={control}  register={register} trigger={trigger} getValues={getValues} />
+                      <ProductCreateBasic
+                        control={control}
+                        errors={errors}
+                        setValue={setValue}
+                      />
+                      <ProductOptionsCreate
+                        control={control}
+                        register={register}
+                        setVariantItems={setVariantItems}
+                      />
                     </Col>
                     <Col span={10}>
                       <ProductAssetCreate />
