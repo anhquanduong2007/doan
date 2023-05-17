@@ -28,18 +28,6 @@ const ProductDetail = () => {
   const optionsColor = ['red', 'white', 'blue']
   const optionsSize = ['S', 'M', 'L']
 
-  const { getInputProps, getIncrementButtonProps, getDecrementButtonProps } =
-    useNumberInput({
-      step: 1,
-      defaultValue: 1,
-      min: 1,
-      max: 100,
-    })
-
-  const inc = getIncrementButtonProps()
-  const dec = getDecrementButtonProps()
-  const input = getInputProps()
-
   const favouriteProduct = () => {
     setIsFavourite(!isFavourite)
   }
@@ -47,7 +35,7 @@ const ProductDetail = () => {
   const defaultValues = {
     color: undefined,
     size: undefined,
-    quantity: undefined,
+    quantity: 1,
   }
 
   const {
@@ -71,7 +59,7 @@ const ProductDetail = () => {
         </BreadcrumbItem>
 
         <BreadcrumbItem>
-          <BreadcrumbLink href='#' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>About</BreadcrumbLink>
+          <BreadcrumbLink href='/products' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Products</BreadcrumbLink>
         </BreadcrumbItem>
 
         <BreadcrumbItem isCurrentPage>
@@ -100,8 +88,8 @@ const ProductDetail = () => {
                 `
               }
             }}
-            // onSlideChange={() => console.log('slide change')}
-            // onSwiper={(swiper) => console.log(swiper)}
+          // onSlideChange={() => console.log('slide change')}
+          // onSwiper={(swiper) => console.log(swiper)}
           >
             {
               dataSlider && dataSlider.map((item, index) => {
@@ -124,34 +112,56 @@ const ProductDetail = () => {
             <p className='font-bold text-xl'>Lightweight Jacket</p>
             <p className='font-bold'>${formatMoney(12345)}</p>
             <p className='text-[#666]'>Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.</p>
-            <form >
-              <div className='flex flex-col gap-2'>
-                <p className='font-semibold'>Color</p>
-                <RadioButtonCard options={optionsColor} type='color' />
-              </div>
-              <div className='flex flex-col gap-2'>
-                <p className='font-semibold'>Size</p>
-                <FormControl>
-                  <Controller
-                    name='size'
-                    control={control}
-                    render={({ field: { value, onChange } }) => (
-                      <Fragment>
-                        <RadioButtonCard options={optionsSize} valueSelect={value} onChangeRadio={onChange} type='size' />
-                      </Fragment>
-                    )}
-                  />
-                </FormControl>
-              </div>
-              <div className='flex flex-col gap-2'>
-                <p className='font-semibold'>Quantity</p>
-                <HStack maxW='320px'>
-                  <Button {...dec}>-</Button>
-                  <Input {...input} width={'60px'} />
-                  <Button {...inc}>+</Button>
-                </HStack>
-              </div>
-            
+            {/* <form > */}
+            <div className='flex flex-col gap-2'>
+              <p className='font-semibold'>Color</p>
+              <FormControl>
+                <Controller
+                  name='color'
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Fragment>
+                      <RadioButtonCard options={optionsColor} valueSelect={value} onChangeRadio={onChange} type='color' />
+                    </Fragment>
+                  )}
+                />
+              </FormControl>
+
+            </div>
+            <div className='flex flex-col gap-2'>
+              <p className='font-semibold'>Size</p>
+              <FormControl>
+                <Controller
+                  name='size'
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Fragment>
+                      <RadioButtonCard options={optionsSize} valueSelect={value} onChangeRadio={onChange} type='size' />
+                    </Fragment>
+                  )}
+                />
+              </FormControl>
+            </div>
+            <div className='flex flex-col gap-2'>
+              <p className='font-semibold'>Quantity</p>
+              <FormControl>
+                <Controller
+                  name='quantity'
+                  control={control}
+                  render={({ field: { value, onChange } }) => (
+                    <Fragment>
+                      <HStack maxW='320px'>
+                        <Button onClick={() => setValue('quantity', value - 1)}>-</Button>
+                        <Input width={'60px'} value={value} onChange={(e) => setValue('quantity', parseInt(e.target.value))}/>
+                        <Button onClick={() => setValue('quantity', value + 1)}>+</Button>
+                      </HStack>
+                    </Fragment>
+                  )}
+                />
+              </FormControl>
+
+            </div>
+
             <div className='flex flex-row items-center gap-5 mt-2'>
               <Button
                 className='!bg-primary text-white uppercase hover:!bg-[#5866c9]'
@@ -163,7 +173,7 @@ const ProductDetail = () => {
               </Button>
               <Heart size={24} className={isFavourite ? `cursor-pointer fill-pink stroke-pink` : `cursor-pointer`} onClick={() => favouriteProduct()} />
             </div>
-            </form>
+            {/* </form> */}
           </div>
         </div>
       </div>
