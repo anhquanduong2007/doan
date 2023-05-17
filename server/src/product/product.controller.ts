@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, Que
 import { Response, Request } from 'express';
 import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
-import { OptionBulkCreateDto, OptionCreateDto, ProductCreateDto, ProductUpdateDto, ProductVariantCreateDto } from './dto';
+import { AddProductVariantToCartDto, OptionBulkCreateDto, OptionCreateDto, ProductCreateDto, ProductUpdateDto, ProductVariantCreateDto } from './dto';
 import { ProductService } from './product.service';
 import { PaginationDto } from 'src/common/dto';
 
@@ -12,6 +12,40 @@ export class ProductController {
         private readonly productService: ProductService
     ) { }
 
+    // ** Cart
+    @Get("cart")
+    @Permission()
+    async getListProductVariantFromCard(@Req() req: Request, @Query() pagination: PaginationDto, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.getListProductVariantFromCart(pagination, userId);
+        return res.json({ response });
+    }
+
+    @Post("cart/:id")
+    @Permission()
+    async addProductVariantToCard(@Req() req: Request, @Param('id', ParseIntPipe) id: number, @Body() dto: AddProductVariantToCartDto, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.addProductVariantToCart(dto, userId, id)
+        res.json({ response })
+    }
+
+    @Delete("cart/delete/:id")
+    @Permission()
+    async removeProductVariantFromCard(@Req() req: Request, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.removeProductVariantFromCart(userId, id)
+        res.json({ response })
+    }
+
+    @Put("cart/update/:id")
+    @Permission()
+    async updateProductVariantInCard(@Req() req: Request, @Body() dto: AddProductVariantToCartDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.updateProductVariantInCart(dto, userId, id)
+        res.json({ response })
+    }
+
+    // ** 
     @Post("create")
     @Permission(Permissions.CreateProduct)
     async createProduct(@Req() req: Request, @Body() dto: ProductCreateDto, @Res() res: Response) {
