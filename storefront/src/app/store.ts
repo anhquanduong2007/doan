@@ -1,11 +1,27 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterSlice from '../features/counter/counterSlice';
+import authSlice from '../features/auth/authSlice';
+import productSlice from '../features/product/productSlice';
 // ...
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+  whitelist: ['login']
+}
+
+const authReducer = persistReducer(persistConfig, authSlice)
+const productReducer = persistReducer(persistConfig, productSlice)
 
 export const store = configureStore({
   reducer: {
-    counter: counterSlice,
+    auth: authReducer,
+    product: productReducer
   },
+  middleware: [thunk],
+  devTools: process.env.NODE_ENV !== 'production'
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

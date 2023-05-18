@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { CategoryModule } from './category/category.module';
 import { AssetModule } from './asset/asset.module';
 import { ProductModule } from './product/product.module';
+
 import { AppService } from './app.service';
 import { RateModule } from './rate/rate.module';
 import { AddressModule } from './address/address.module';

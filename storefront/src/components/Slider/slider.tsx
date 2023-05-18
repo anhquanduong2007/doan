@@ -13,6 +13,13 @@ import Slider4 from '../../assets/slider/slide-04.jpg'
 
 import "./slider.scss";
 import { Link } from "react-router-dom";
+
+const PaginationImage = () => {
+  return (
+    <div>adsasdasd</div>
+  )
+}
+
 const Slider = () => {
   const dataSlider = [
     { id: '1', src: Slider1 },
@@ -30,8 +37,19 @@ const Slider = () => {
         spaceBetween={50}
         slidesPerView={1}
         navigation
-        onSlideChange={() => console.log('slide change')}
-        onSwiper={(swiper) => console.log(swiper)}
+        // pagination={{
+        //   clickable: true,
+        //   renderBullet: (index, className) => {
+        //     console.log('index', index)
+        //     // return '<span class="' + className + '">' + (index + 1) + '</span>';
+        //     return `<div style="width: 100px; border: 1px solid;" class=${className}>
+        //       <img src=${Slider1} alt/>
+        //       </div>
+        //       `
+        //   }
+        // }}
+      // onSlideChange={() => console.log('slide change')}
+      // onSwiper={(swiper) => console.log(swiper)}
       >
         {
           dataSlider && dataSlider.map((item, index) => {

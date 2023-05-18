@@ -26,21 +26,23 @@ export class RateService {
           message: 'Product does not exist in the system!',
         };
       }
+      const data = {
+        content,
+        product_id,
+        stars,
+        title,
+        user_id: userId,
+        created_by: userId,
+        modified_by: userId,
+      }
+
       return {
         code: 200,
         message: 'Success',
         success: true,
-        data: await this.prisma.rate.create({
-          data: {
-            content,
-            product_id,
-            stars,
-            title,
-            user_id: userId,
-            created_by: userId,
-            modified_by: userId,
-          },
-        }),
+        // data: await this.prisma.rate.create({
+        //   data
+        // }),
       };
     } catch (error) {
       return {

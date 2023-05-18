@@ -8,4 +8,6 @@ export class PaginationDto {
     take?: number;
 
     search?: string
+
+    active?: number
 }
