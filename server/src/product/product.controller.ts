@@ -45,7 +45,7 @@ export class ProductController {
         res.json({ response })
     }
 
-    // ** 
+    // ** Product
     @Post("create")
     @Permission(Permissions.CreateProduct)
     async createProduct(@Req() req: Request, @Body() dto: ProductCreateDto, @Res() res: Response) {
@@ -68,6 +68,15 @@ export class ProductController {
         return res.json({ response });
     }
 
+    @Put("update/:id")
+    @Permission(Permissions.UpdateProduct)
+    async editCategory(@Req() req: Request, @Body() dto: ProductUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.productService.productUpdate(dto, id, userId)
+        res.json({ response })
+    }
+
+    // ** Product variant
     @Get("variant/:id")
     @Permission(Permissions.ReadProduct)
     async getProductVariant(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
@@ -91,14 +100,8 @@ export class ProductController {
 
 
 
-    // @Put("update/:id")
-    // @Permission(Permissions.UpdateProduct)
-    // async editCategory(@Req() req: Request, @Body() dto: ProductUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-    //     const userId = req.user['userId']
-    //     const response = await this.productService.update(dto, id, userId)
-    //     res.json({ response })
-    // }
 
+    // ** Option
     @Post("option/bulk-create")
     @Permission(Permissions.CreateProduct)
     async optionBulkCreate(@Req() req: Request, @Body() dto: OptionBulkCreateDto, @Res() res: Response) {

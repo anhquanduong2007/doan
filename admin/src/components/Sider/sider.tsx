@@ -72,9 +72,9 @@ const SiderBar = () => {
                         key: "orders",
                         icon: <ShoppingCartOutlined />,
                         label: "Orders",
-                        className: location.pathname === "/orders" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "sales/orders" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/orders')
+                            navigate('sales/orders')
                         }
                     },
                 ]

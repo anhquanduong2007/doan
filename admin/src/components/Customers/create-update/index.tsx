@@ -49,7 +49,6 @@ const CustomerCreateUpdate = () => {
         }
     });
 
-
     // ** Variables
     const customer = useAppSelector((state) => state.customer);
     const dispatch = useAppDispatch();

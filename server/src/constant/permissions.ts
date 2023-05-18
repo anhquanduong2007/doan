@@ -46,4 +46,9 @@ export enum Permissions {
   DeletePromotion = 'DeletePromotion',
   UpdatePromotion = 'UpdatePromotion',
   CreatePromotion = 'CreatePromotion',
+  // Order
+  ReadOrder = 'ReadOrder',
+  DeleteOrder = 'DeleteOrder',
+  UpdateOrder = 'UpdateOrder',
+  CreateOrder = 'CreateOrder',
 }

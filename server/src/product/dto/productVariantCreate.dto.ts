@@ -5,6 +5,10 @@ export class ProductVariantCreateDto {
     @IsOptional()
     stock: number
 
+    @IsNumber()
+    @IsNotEmpty()
+    name: string
+
     @IsString()
     @IsNotEmpty()
     sku: string
@@ -21,5 +25,5 @@ export class ProductVariantCreateDto {
     @IsOptional()
     @IsNumber({}, { each: true })
     option_ids: number[]
-    
+
 }
