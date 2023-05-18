@@ -76,6 +76,13 @@ export class ProductController {
         res.json({ response })
     }
 
+    @Delete("delete/:id")
+    @Permission(Permissions.DeleteProduct)
+    async deleteProduct(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.productService.delete(id)
+        res.json({ response })
+    }
+
     // ** Product variant
     @Get("variant/:id")
     @Permission(Permissions.ReadProduct)
@@ -90,16 +97,6 @@ export class ProductController {
         const response = await this.productService.productVariants(pagination, id);
         return res.json({ response });
     }
-
-    // @Delete("delete/:id")
-    // @Permission(Permissions.DeleteProduct)
-    // async deleteProduct(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-    //     const response = await this.productService.delete(id)
-    //     res.json({ response })
-    // }
-
-
-
 
     // ** Option
     @Post("option/bulk-create")

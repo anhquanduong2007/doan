@@ -86,6 +86,7 @@ model product {
   product_variants  product_variant[]
   featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
   featured_asset_id Int?
+  product_option    product_option[]
 
   @@index([category_id], map: "fk_product_cate")
 }
@@ -159,7 +160,9 @@ model product_option {
   modified_date    DateTime                 @updatedAt
   created_by       Int?
   modified_by      Int?
+  product          product                  @relation(fields: [product_id], references: [id])
   product_variants product_variant_option[]
+  product_id       Int
 }
 
 enum OptionName {

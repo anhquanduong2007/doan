@@ -3,38 +3,19 @@
 // @ts-nocheck
 
 import { Box, Flex } from "@chakra-ui/react";
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { Form, Input, Select } from "antd";
-import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { MinusCircleOutlined } from "@ant-design/icons";
 import Button from "antd-button-color";
-import { Controller, useFieldArray, useWatch } from "react-hook-form";
+import { Controller, useFieldArray } from "react-hook-form";
 
-const ProductOptionsCreate = ({ control, register, setValue, setProductOptions }) => {
-  const { fields, append, remove, insert } = useFieldArray({
+const ProductOptionsCreate = ({ control, register }) => {
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "option",
   });
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-  const optionArray = useWatch({ name: "option", control })
 
-
-
-  // useEffect(() => {
-  //   const out = optionArray?.reduce((a, v) => {
-  //     if(a[v.name]) {
-  //       a[v.name].value = [a[v.name].value, v.value]
-  //     } else {
-  //       a[v.name] = v
-  //     }
-  //     return a
-  //   }, {})
-  //   out && setProductOptions(Object?.values(out))
-  // }, [])
-  
-  
   return (
     <Fragment>
       <Box mb={3}>
@@ -66,9 +47,7 @@ const ProductOptionsCreate = ({ control, register, setValue, setProductOptions }
                         <Select style={{ width: 120 }} value={value} {...other}>
                           <Select.Option value="Size">Size</Select.Option>
                           <Select.Option value="Color">Color</Select.Option>
-                          <Select.Option value="Material">
-                            Material
-                          </Select.Option>
+                          <Select.Option value="Material">Material</Select.Option>
                           <Select.Option value="Style">Style</Select.Option>
                         </Select>
                       </Box>
@@ -96,7 +75,6 @@ const ProductOptionsCreate = ({ control, register, setValue, setProductOptions }
             </Flex>
           );
         })}
-
         <Button
           onClick={() => {
             append({ name: "", value: "" });

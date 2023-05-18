@@ -177,7 +177,7 @@ const Customers = () => {
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={customer.delete.loading}>
+            <Modal title="Delete customer" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={customer.delete.loading}>
                 <p>Do you want to delete this customer (<span style={{ fontWeight: "bold" }}>{customerDelete?.email}</span>) ?</p>
             </Modal>
         </Fragment>

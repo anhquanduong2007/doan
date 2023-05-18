@@ -59,6 +59,7 @@ export class ProductService {
                 include: {
                     product_variants: {
                         include: {
+                            featured_asset: true,
                             product_options: {
                                 select: {
                                     product_option: {
@@ -97,34 +98,48 @@ export class ProductService {
             }
         }
     }
-    // public async delete(id: number): Promise<IResponse<product>> {
-    //     try {
-    //         const product = await this.prisma.product.findUnique({
-    //             where: { id }
-    //         })
-    //         if (product) {
-    //             return {
-    //                 code: 200,
-    //                 message: 'Success',
-    //                 success: true,
-    //                 data: await this.prisma.product.delete({
-    //                     where: { id }
-    //                 })
-    //             }
-    //         }
-    //         return {
-    //             code: 404,
-    //             message: 'Product does not exist in the system!',
-    //             success: false,
-    //         }
-    //     } catch (error) {
-    //         return {
-    //             code: 500,
-    //             message: "An error occurred in the system!",
-    //             success: false,
-    //         }
-    //     }
-    // }
+    public async delete(id: number): Promise<IResponse<product>> {
+        try {
+            const product = await this.prisma.product.findUnique({
+                where: { id },
+                select: {
+                    product_variants: {
+                        select: {
+                            id: true
+                        }
+                    }
+                }
+            })
+            if (product) {
+                await Promise.all([
+                    this.prisma.$transaction(product.product_variants.map((product_variant) => this.prisma.product_variant_option.deleteMany({ where: { product_variant_id: product_variant.id } }))),
+                ])
+                await Promise.all([
+                    this.prisma.product_variant.deleteMany({ where: { product_id: id } }),
+                    this.prisma.product_option.deleteMany({ where: { product_id: id } }),
+                ])
+                return {
+                    code: 200,
+                    message: 'Success',
+                    success: true,
+                    data: await this.prisma.product.delete({
+                        where: { id }
+                    })
+                }
+            }
+            return {
+                code: 404,
+                message: 'Product does not exist in the system!',
+                success: false,
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
 
     public async products(input: PaginationDto): Promise<IResponse<{ products: product[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
@@ -304,6 +319,7 @@ export class ProductService {
                     return {
                         name: option.name,
                         value: v,
+                        product_id: option.product_id
                     }
                 })
             }).flat(1)
@@ -317,6 +333,7 @@ export class ProductService {
                             name: opt.name,
                             value: opt.value,
                             created_by: userId,
+                            product_id: opt.product_id,
                             modified_by: userId
                         }
                     }))
@@ -333,7 +350,7 @@ export class ProductService {
 
     public async optionCreate(input: OptionCreateDto, userId: number): Promise<IResponse<product_option>> {
         try {
-            const { name, value } = input
+            const { name, value, product_id } = input
             return {
                 code: 200,
                 success: true,
@@ -342,6 +359,7 @@ export class ProductService {
                     data: {
                         name,
                         value,
+                        product_id,
                         created_by: userId,
                         modified_by: userId
                     }

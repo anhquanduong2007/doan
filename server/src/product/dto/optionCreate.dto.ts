@@ -1,5 +1,5 @@
 import { OptionName } from "@prisma/client"
-import { IsArray, IsEnum, IsNotEmpty } from "class-validator"
+import { IsArray, IsEnum, IsNotEmpty, IsNumber } from "class-validator"
 
 export class OptionCreateDto {
     @IsEnum(OptionName)
@@ -8,4 +8,8 @@ export class OptionCreateDto {
 
     @IsArray()
     value: string
+
+    @IsNumber()
+    @IsNotEmpty()
+    product_id: number
 }

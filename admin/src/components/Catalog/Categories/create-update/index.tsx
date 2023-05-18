@@ -230,6 +230,12 @@ const CategoryCreateUpdate = () => {
                                         ]}
                                     />
                                 </Form.Item>
+                                {id && (
+                                    <Form.Item label="Children categories">
+                                        <CategoriesChildren />
+                                    </Form.Item>
+                                )}
+
                                 {/* <Form.Item label="Products">
                                     <Select
                                         loading={category.list.loading}
@@ -247,7 +253,7 @@ const CategoryCreateUpdate = () => {
                                 </Form.Item> */}
                             </Col>
                         </Form>
-                        {id && <CategoriesChildren />}
+
                     </Card>
                 </Col>
             </Row>

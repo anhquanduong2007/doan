@@ -204,292 +204,134 @@ const ProductCreate: React.FC = () => {
       options: options,
     });
 
-    // getValues.map((item, index) => {
-    //   setValue(`variant[${index}].price`, item.price);
-    //   setValue(`variant[${index}].stock`, item.stock);
-    //   setValue(`variant[${index}].sku`, item.sku);
-    // });
-    // console.log("");
-    // setCreateProductStatus(true);
-  };
-
-  //  let variant = [];
-  // if (variantItems.size || variantItems.color) {
-  //   const sizeLength = variantItems.size.value.length;
-  //   const colorLength = variantItems.color.value.length;
-  //   const total = sizeLength * colorLength;
-  //   total > 0
-  //     ? new Array(total).fill(total).map((_, index) => variant.push(index))
-  //     : (variant = []);
-  //   variant.length > 0 && setVariantItem(variant);
-  //   }
-
-  useEffect(() => {
-    if (!store.createProduct.loading && store.createProduct.result) {
-      const { id } = store.createProduct.result;
-      let abc = [];
-      if (
-        !store.createProductOption.loading &&
-        store.createProductOption.result
-      ) {
-        const colorValue = store.createProductOption.result?.filter(
-          (item) => item.name === "Color",
-        );
-        const sizeValue = store.createProductOption.result?.filter(
-          (item) => item.name === "Size",
-        );
-        colorValue.map((item) => {
-          const a = sizeValue.map((size) => {
-            return {
-              variantCode: `${item.value}-${size.value}`,
-              id: [item.id, size.id],
-              productId: id,
-            };
+    useEffect(() => {
+      if (!store.createProduct.loading && store.createProduct.result) {
+        const { id } = store.createProduct.result;
+        let abc = [];
+        if (
+          !store.createProductOption.loading &&
+          store.createProductOption.result
+        ) {
+          const colorValue = store.createProductOption.result?.filter(
+            (item) => item.name === "Color",
+          );
+          const sizeValue = store.createProductOption.result?.filter(
+            (item) => item.name === "Size",
+          );
+          colorValue.map((item) => {
+            const a = sizeValue.map((size) => {
+              return {
+                variantCode: `${item.value}-${size.value}`,
+                id: [item.id, size.id],
+                productId: id,
+              };
+            });
+            abc.push(...a);
           });
-          abc.push(...a);
-        });
-      }
+        }
 
-      const variantsColumn = abc.map((item) => {
-        return {
-          variantCode: item.variantCode,
-        };
-      });
-      console.log(
-        "🚀 ~ file: index.tsx:256 ~ variantsColumn ~ variantsColumn:",
-        variantsColumn,
-      );
-
-      variantsColumn && setVariantItem(variantsColumn);
-
-      if (id && abc.length > 0 && formIsSubmited) {
-        console.log("getValue", getValues())
-        const abcd = abc.map((item, index) => {
+        const variantsColumn = abc.map((item) => {
           return {
-            sku: getValues("sku")[index],
-            name: item.variantCode,
-            // price: item.price,
-            // stock: item.stock,
-            option_ids: item.id,
-            product_id: item.productId,
+            variantCode: item.variantCode,
           };
         });
-        console.log("🚀 ~ file: index.tsx:248 ~ useEffect ~ id:", abcd);
-        abcd.length > 0 &&
-          abcd.map((item, index) => {
-            setValue(`variant[${index}]`, item.name);
-          });
-        abcd.length > 0 &&
-          createProductVariantOption({
-            axiosClient,
-            dispatch,
-            variants: abcd,
-          });
+        console.log(
+          "🚀 ~ file: index.tsx:256 ~ variantsColumn ~ variantsColumn:",
+          variantsColumn,
+        );
 
-          console.log(getValues());
+        variantsColumn && setVariantItem(variantsColumn);
+
+        if (id && abc.length > 0 && formIsSubmited) {
+          console.log("getValue", getValues())
+          const abcd = abc.map((item, index) => {
+            return {
+              sku: getValues("sku")[index],
+              name: item.variantCode,
+              // price: item.price,
+              // stock: item.stock,
+              option_ids: item.id,
+              product_id: item.productId,
+            };
+          });
+          console.log("🚀 ~ file: index.tsx:248 ~ useEffect ~ id:", abcd);
+          abcd.length > 0 &&
+            abcd.map((item, index) => {
+              setValue(`variant[${index}]`, item.name);
+            });
+          abcd.length > 0 &&
+            createProductVariantOption({
+              axiosClient,
+              dispatch,
+              variants: abcd,
+            });
+        }
       }
-    }
-    // let variant = [];
-    // if (variantItems.size || variantItems.color) {
-    //   const sizeLength = variantItems.size.value.length;
-    //   const colorLength = variantItems.color.value.length;
-    //   const total = sizeLength * colorLength;
-    //   total > 0
-    //     ? new Array(total).fill(total).map((_, index) => variant.push(index))
-    //     : (variant = []);
-    //   variant.length > 0 && setVariantItem(variant);
-    // }
+    }, [
+      store.createProduct.loading,
+      store.createProduct.result,
+      productOptions,
+      setProductOptions,
+      store.createProductOption.result,
+      store.createProductOption.loading,
+      formIsSubmited,
+      setFormIsSubmited
+    ]);
 
-    // abc.length > 0 &&
-    //   abc.map((item, index) => {
-    //     setValue(`variant[${index}]`, item);
-    //   });
-    // // setCreateProductVariantStatus(true);
-
-    // console.log("🚀 ~ file: index.tsx:176 ~ onSubmit ~ abc", abc);
-    // console.log("🚀 ~ file: index.tsx:176 ~ onSubmit ~ abc", getValues());
-  }, [
-    store.createProduct.loading,
-    store.createProduct.result,
-    productOptions,
-    setProductOptions,
-    store.createProductOption.result,
-    store.createProductOption.loading,
-    formIsSubmited,
-    setFormIsSubmited
-  ]);
-
-  // useEffect(() => {
-  //   // const createProductOption = async () => {
-  //   //   const data = await createProductOption({
-  //   //     axiosClient,
-  //   //     dispatch,
-  //   //     options: variantItems,
-  //   //   });
-  //   //   return data;
-  //   // };
-
-  //   if (productStore.createProduct.result) {
-  //     const { id } = productStore.createProduct.result;
-  //     if (id && variantItems.length > 0 && createProductStatus) {
-  //       createProductOptionStatus === false &&
-  //         createProductOption({
-  //           axiosClient,
-  //           dispatch,
-  //           options: variantItems,
-  //         });
-  //       setCreateProductOptionStatus(true);
-  //     }
-  //     if (
-  //       (id && createProductOptionStatus) ||
-  //       productStore.createProductOption?.result?.length > 0
-  //     ) {
-  //       const colorValue = productStore.createProductOption.result.filter(
-  //         (item) => item.name === "Color",
-  //       );
-  //       const sizeValue = productStore.createProductOption.result.filter(
-  //         (item) => item.name === "Size",
-  //       );
-  //       let abc = [];
-  //       colorValue.map((item) => {
-  //         const a = sizeValue.map((size) => {
-  //           return {
-  //             variantCode: `${item.value}-${size.value}`,
-  //             id: `${item.id}-${size.id}`,
-  //           };
-  //         });
-  //         abc.push(...a);
-  //       });
-  //       abc.length > 0 && setVariantItem(abc);
-  //       abc.length > 0 &&
-  //         abc.map((item, index) => {
-  //           setValue(`variant[${index}]`, item);
-  //         });
-  //       setCreateProductVariantStatus(true);
-  //     }
-  //     if (id && createProductVariantStatus) {
-  //       setCreateProductVariantStatus(false);
-
-  //       // .map((item, index) => {
-  //       //   setValue(`variant[${index}].price`, item.price)
-  //       //   setValue(`variant[${index}].stock`, item.stock)
-  //       //   setValue(`variant[${index}].sku`, item.sku)
-  //       // })
-  //       getValues("price").map((item, index) => {
-  //         setValue(`variant[${index}].price`, item);
-  //         // setValue(`variant[${index}].productId`, id);
-  //       });
-  //       getValues("stock").map((item, index) => {
-  //         setValue(`variant[${index}].stock`, item);
-  //       });
-  //       getValues("sku").map((item, index) => {
-  //         setValue(`variant[${index}].sku`, item);
-  //       });
-
-  //       console.log(
-  //         "🚀 ~ file: index.tsx:203 ~ useEffect asdfasdfasdf~ data",
-  //         getValues(),
-  //       );
-  //       getValues("variant");
-  //       const abc = getValues("variant").map((item) => {
-  //         const convertId = item.id.split("-").map((item) => Number(item));
-  //         return {
-  //           sku: item.sku,
-  //           name: item.variantCode,
-  //           // price: item.price,
-  //           // stock: item.stock,
-  //           option_ids: convertId,
-  //           product_id: id,
-  //         };
-  //       });
-  //       //  abc.sku &&  createProductVariantOption({
-  //       //   axiosClient,
-  //       //   dispatch,
-  //       //   abc,
-  //       // })
-  //       console.log("abcasdcasdc", abc);
-  //       console.log(
-  //         "🚀 ~ file: index.tsx:248 ~ useEffect ~ id:",
-  //         getValues("variant"),
-  //       );
-  //       // const convertId = id.split("-").map(item => Number(item))
-
-  //       abc.length > 0 &&
-  //         createProductVariantOption({
-  //           axiosClient,
-  //           dispatch,
-  //           variant: abc,
-  //         });
-  //       // console.log("basdbva", convertId)
-  //       // createProductVariantStatus && createProductVariantOption({
-  //       //   axiosClient,
-  //       //   dispatch,
-  //       //   variant: variantItems,
-  //       // })
-  //     }
-  //   }
-  // }, [
-  //   productStore,
-  //   createProductStatus,
-  //   setCreateProductStatus,
-  //   createProductOptionStatus,
-  //   setCreateProductOptionStatus,
-  // ]);
-
-  return (
-    <Fragment>
-      <Row gutter={[0, 16]}>
-        <Col span={24}>
-          <Breadcrumb>
-            <Breadcrumb.Item>
-              <Link to="/">Home</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>
-              <Link to="/products">Products</Link>
-            </Breadcrumb.Item>
-            <Breadcrumb.Item>Create</Breadcrumb.Item>
-          </Breadcrumb>
-        </Col>
-        <Col span={24}>
-          <Card>
-            <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
-              <Flex justifyContent="space-between" alignItems="center">
-                <Flex justifyContent="center" alignItems="center">
-                  <Switch
-                    checked={enabled}
-                    size="small"
-                    onChange={() => setEnabled(!enabled)}
-                  />
-                  <Box as="span" ml={2} fontWeight="semibold">
-                    Enabled
-                  </Box>
+    return (
+      <Fragment>
+        <Row gutter={[0, 16]}>
+          <Col span={24}>
+            <Breadcrumb>
+              <Breadcrumb.Item>
+                <Link to="/">Home</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <Link to="/products">Products</Link>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>Create</Breadcrumb.Item>
+            </Breadcrumb>
+          </Col>
+          <Col span={24}>
+            <Card>
+              <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
+                <Flex justifyContent="space-between" alignItems="center">
+                  <Flex justifyContent="center" alignItems="center">
+                    <Switch
+                      checked={enabled}
+                      size="small"
+                      onChange={() => setEnabled(!enabled)}
+                    />
+                    <Box as="span" ml={2} fontWeight="semibold">
+                      Enabled
+                    </Box>
+                  </Flex>
+                  <Button type="primary" htmlType="submit">
+                    {!id ? "Create" : "Update"}
+                  </Button>
                 </Flex>
-                <Button type="primary" htmlType="submit">
-                  {!id ? "Create" : "Update"}
-                </Button>
-              </Flex>
-              <Divider />
-              {!id ? (
-                <Fragment>
-                  <Row gutter={[24, 0]}>
-                    <Col span={14}>
-                      <ProductCreateBasic
-                        control={control}
-                        errors={errors}
-                        setValue={setValue}
-                      />
-                      <ProductOptionsCreate
-                        control={control}
-                        register={register}
-                        setProductOptions={setProductOptions}
-                        setValue={setValue}
-                      />
-                    </Col>
-                    <Col span={10}>
-                      <ProductAssetCreate />
-                    </Col>
-                  </Row>
-                  {/* <Row>
+                <Divider />
+                {!id ? (
+                  <Fragment>
+                    <Row gutter={[24, 0]}>
+                      <Col span={14}>
+                        <ProductCreateBasic
+                          control={control}
+                          errors={errors}
+                          setValue={setValue}
+                        />
+                        <ProductOptionsCreate
+                          control={control}
+                          register={register}
+                          setProductOptions={setProductOptions}
+                          setValue={setValue}
+                        />
+                      </Col>
+                      <Col span={10}>
+                        <ProductAssetCreate />
+                      </Col>
+                    </Row>
+                    {/* <Row>
                     <Col span={24}>
                     <DragDropContext onDragEnd={handleDragEnd}>
                       <Droppable droppableId="root">
@@ -515,31 +357,31 @@ const ProductCreate: React.FC = () => {
                     </DragDropContext>
                     </Col>
                   </Row> */}
-                  <div>
-                    <Table
-                      bordered
-                      columns={columns()}
-                      dataSource={data({
-                        control,
-                        errors,
-                        variantItem,
-                        register,
-                      })}
-                      pagination={{ hideOnSinglePage: true }}
-                    />
-                  </div>
-                </Fragment>
-              ) : (
-                <ProductDetail />
-              )}
-            </Form>
-          </Card>
-        </Col>
-      </Row>
-    </Fragment>
-  );
-};
-
+                    <div>
+                      <Table
+                        bordered
+                        columns={columns()}
+                        dataSource={data({
+                          control,
+                          errors,
+                          variantItem,
+                          register,
+                        })}
+                        pagination={{ hideOnSinglePage: true }}
+                      />
+                    </div>
+                  </Fragment>
+                ) : (
+                  <ProductDetail />
+                )}
+              </Form>
+            </Card>
+          </Col>
+        </Row>
+      </Fragment>
+    );
+  };
+}
 const Placeholder = ({ height = "auto" }) => {
   return (
     <div
@@ -551,5 +393,8 @@ const Placeholder = ({ height = "auto" }) => {
     />
   );
 };
-
 export default ProductCreate;
+
+
+
+

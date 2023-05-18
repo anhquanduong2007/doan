@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Breadcrumb, Button, Card, Col, Divider, Modal, Row, Space, Switch, Table, message } from 'antd';
+import { Breadcrumb, Button, Card, Col, Divider, Modal, Row, Space, Table, Tag, message } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import {
@@ -30,26 +30,28 @@ const columns = (
         {
             title: 'Category name',
             dataIndex: 'category_name',
+            ellipsis: true,
             key: 'category_name',
         },
         {
             title: 'Category code',
             dataIndex: 'category_code',
+            ellipsis: true,
             key: 'category_code',
         },
         {
             title: 'Description',
-            ellipsis: true,
             dataIndex: 'description',
             key: 'description',
         },
         {
             title: 'Active',
             dataIndex: 'active',
+            ellipsis: true,
             key: 'active',
             render: (active: number) => {
                 return (
-                    <Switch checked={active === 1} />
+                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
                 )
             }
         },
