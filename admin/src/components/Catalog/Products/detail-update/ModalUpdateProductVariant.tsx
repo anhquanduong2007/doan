@@ -1,9 +1,15 @@
 import { Box, Flex } from '@chakra-ui/react';
 import autoAnimate from '@formkit/auto-animate';
-import { Button, Col, Form, Input, InputNumber, Modal, Row } from 'antd';
+import { Button, Col, Form, Input, InputNumber, Modal, Row, message } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { ProductVariant } from 'src/types';
+import { Asset } from 'src/types/asset';
+import SelectImage from '../SelectImage';
+import { updateProductVariant } from 'src/features/catalog/product/actions';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'src/app/hooks';
+import { createAxiosJwt } from 'src/helper/axiosInstance';
 
 export interface FormValuesProductVariant {
     name: string
@@ -17,14 +23,20 @@ interface ModalUpdateProductVariantProps {
     isModalOpen: boolean
     setIsModalOpen: (open: boolean) => void
     variant: ProductVariant
+    refresh: boolean,
+    setRefresh: (refresh: boolean) => void
 }
-const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: ModalUpdateProductVariantProps) => {
+const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refresh, setRefresh }: ModalUpdateProductVariantProps) => {
+    // ** State
+    const [isModalAssetOpen, setIsModalAssetOpen] = useState<boolean>(false);
+    const [featuredAsset, setFeaturedAsset] = useState<Asset>()
 
     // ** Ref
     const skuErrorRef = useRef(null);
     const nameErrorRef = useRef(null);
 
     // ** Third party
+    const navigate = useNavigate();
     const { control, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormValuesProductVariant>({
         defaultValues: {
             name: '',
@@ -34,15 +46,47 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: Mod
         }
     });
 
+    // ** Variables
+    const product = useAppSelector((state) => state.product);
+    const dispatch = useAppDispatch();
+    const axiosClientJwt = createAxiosJwt();
+
     // ** Effect
+    useEffect(() => {
+        if (variant) {
+            setValue("name", variant.name)
+            setValue("price", variant.price)
+            setValue("sku", variant.sku)
+            setValue("stock", variant.stock)
+            setFeaturedAsset(variant.featured_asset)
+        }
+    }, [variant])
+
     useEffect(() => {
         skuErrorRef.current && autoAnimate(skuErrorRef.current);
         nameErrorRef.current && autoAnimate(nameErrorRef.current);
     }, [parent])
 
     // ** Function handle
-    const handleOk = () => {
-        setIsModalOpen(false);
+    const onSubmit = (data: FormValuesProductVariant) => {
+        updateProductVariant({
+            axiosClientJwt,
+            dispatch,
+            id: variant?.id,
+            message,
+            navigate,
+            productVariant: {
+                name: data.name,
+                price: data.price,
+                sku: data.sku,
+                stock: data.stock,
+                featured_asset_id: featuredAsset?.id
+            },
+            refresh,
+            setError,
+            setIsModalOpen,
+            setRefresh
+        })
     };
 
     const handleCancel = () => {
@@ -50,7 +94,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: Mod
     };
 
     return (
-        <Modal title="Update product variant" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered width={"80%"}>
+        <Modal title="Update product variant" open={isModalOpen} onOk={handleSubmit(onSubmit)} onCancel={handleCancel} centered width={"80%"} confirmLoading={product.productVariantUpdate.loading}>
             <Form layout='vertical'>
                 <Row gutter={[16, 16]}>
                     <Col span={19}>
@@ -62,7 +106,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: Mod
                                 render={({ field }) => {
                                     return (
                                         <div ref={nameErrorRef}>
-                                            <Input {...field} placeholder="Eg: Shirt sm" value={variant?.name || ''} />
+                                            <Input {...field} placeholder="Eg: Shirt sm" />
                                             {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Please input your product variant name!" : errors.name.message}</Box> : null}
                                         </div>
                                     )
@@ -77,7 +121,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: Mod
                                 render={({ field }) => {
                                     return (
                                         <div ref={skuErrorRef}>
-                                            <Input {...field} placeholder="sm-0152" value={variant?.sku || ''} />
+                                            <Input {...field} placeholder="sm-0152" />
                                             {errors?.sku ? <Box as="div" mt={1} textColor="red.600">{errors.sku?.type === 'required' ? "Please input your product sku!" : errors.sku.message}</Box> : null}
                                         </div>
                                     )
@@ -94,7 +138,6 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: Mod
                                             <InputNumber
                                                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                                 {...field}
-                                                value={variant?.price || ''}
                                             />
                                         </div>
                                     )
@@ -108,7 +151,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: Mod
                                 render={({ field }) => {
                                     return (
                                         <div >
-                                            <InputNumber {...field} value={variant?.stock || ''} />
+                                            <InputNumber {...field} />
                                         </div>
                                     )
                                 }}
@@ -117,17 +160,18 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant }: Mod
                     </Col>
                     <Col span={5}>
                         <Flex flexDirection={'column'} alignItems={"center"}>
-                            {/* <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
+                            <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
                                 <img
                                     style={{ width: "100%", padding: "10px", height: "300px", objectFit: "contain" }}
-                                    src={featuredAsset ? featuredAsset.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
+                                    src={featuredAsset ? featuredAsset?.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
                                 />
-                            </Box> */}
-                            {/* <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Select image</Button> */}
+                            </Box>
+                            <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Select image</Button>
                         </Flex>
                     </Col>
                 </Row>
             </Form>
+            <SelectImage isModalAssetOpen={isModalAssetOpen} setIsModalAssetOpen={setIsModalAssetOpen} setFeaturedAsset={setFeaturedAsset} featuredAsset={featuredAsset as Asset} />
         </Modal>
     );
 };

@@ -21,6 +21,10 @@ export class ProductVariantCreateDto {
     @IsNotEmpty()
     product_id: number
 
+    @IsNumber()
+    @IsOptional()
+    featured_asset_id: number
+
     @IsArray()
     @IsOptional()
     @IsNumber({}, { each: true })

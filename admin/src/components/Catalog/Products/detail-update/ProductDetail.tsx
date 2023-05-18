@@ -2,12 +2,12 @@ import { Box, Flex } from '@chakra-ui/react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import autoAnimate from '@formkit/auto-animate';
-import { Breadcrumb, Button, Col, Divider, Form, Input, Row, Switch, message } from 'antd';
+import { Button, Col, Divider, Form, Input, Row, Switch, message } from 'antd';
 import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import {  useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { getProduct, updateCategory } from 'src/features/catalog/product/actions';
+import { getProduct, updateProduct } from 'src/features/catalog/product/actions';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import { Asset } from 'src/types/asset';
 import SelectImage from '../SelectImage';
@@ -74,7 +74,7 @@ const ProductDetail = () => {
 
     const onSubmit = async (data: FormValuesProduct) => {
         if (id) {
-            await updateCategory({
+            await updateProduct({
                 product: {
                     active,
                     name: data.name,

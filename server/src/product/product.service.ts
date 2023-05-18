@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AddProductVariantToCartDto, OptionCreateDto, OptionUpdateDto, ProductCreateDto, ProductVariantCreateDto } from './dto';
+import { AddProductVariantToCartDto, OptionCreateDto, OptionUpdateDto, ProductCreateDto, ProductVariantCreateDto, ProductVariantUpdateDto } from './dto';
 import { IResponse } from 'src/common/types';
 import { cart, product, product_option, product_variant } from '@prisma/client';
 import { PaginationDto } from 'src/common/dto';
@@ -258,6 +258,65 @@ export class ProductService {
                     message: 'Success',
                     success: true,
                     data: productVariant
+                }
+            }
+            return {
+                code: 404,
+                message: 'Product variant does not exist in the system!',
+                success: false,
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async productVariantUpdate(input: ProductVariantUpdateDto, id: number): Promise<IResponse<product_variant>> {
+        try {
+            const { name, price, sku, stock, featured_asset_id } = input
+            const productVariant = await this.prisma.product_variant.findUnique({
+                where: { id },
+            })
+            if (productVariant) {
+                if (sku) {
+                    const isSkuExist = await this.prisma.product_variant.findFirst({
+                        where: {
+                            AND: [
+                                { sku },
+                                {
+                                    NOT: [
+                                        { id }
+                                    ]
+                                }
+                            ]
+                        },
+                    })
+                    if (isSkuExist) {
+                        return {
+                            code: 400,
+                            success: false,
+                            message: 'Sku code already exist!',
+                            fieldError: "sku",
+                        }
+                    }
+                }
+                return {
+                    code: 200,
+                    message: 'Success',
+                    success: true,
+                    data: await this.prisma.product_variant.update({
+                        where: { id },
+                        data: {
+                            ...name && { name },
+                            ...price && { price },
+                            ...sku && { sku },
+                            ...stock && { stock },
+                            ...featured_asset_id && { featured_asset_id }
+                        },
+                    })
                 }
             }
             return {

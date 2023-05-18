@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Product } from 'src/types';
+import { Product, ProductVariant } from 'src/types';
 
 export interface ProductOptionType {
     name: string
@@ -48,6 +48,11 @@ interface ProductState {
         loading: boolean;
         error: boolean;
     }
+    productVariantUpdate: {
+        result: ProductVariant | null;
+        loading: boolean;
+        error: boolean;
+    }
 }
 
 const initialState: ProductState = {
@@ -82,6 +87,11 @@ const initialState: ProductState = {
         error: false
     },
     update: {
+        result: null,
+        loading: false,
+        error: false
+    },
+    productVariantUpdate: {
         result: null,
         loading: false,
         error: false
@@ -192,6 +202,20 @@ export const productSlice = createSlice({
             state.update.result = action.payload;
             state.update.error = true;
         },
+        // ** Update product
+        updateProductVariantStart: (state) => {
+            state.productVariantUpdate.loading = true;
+        },
+        updateProductVariantSuccess: (state, action) => {
+            state.productVariantUpdate.loading = false;
+            state.productVariantUpdate.result = action.payload;
+            state.productVariantUpdate.error = false
+        },
+        updateProductVariantFailed: (state, action) => {
+            state.productVariantUpdate.loading = false;
+            state.productVariantUpdate.result = action.payload;
+            state.productVariantUpdate.error = true;
+        },
     }
 });
 
@@ -216,7 +240,10 @@ export const {
     getProductFailed,
     updateProductStart,
     updateProductSuccess,
-    updateProductFailed
+    updateProductFailed,
+    updateProductVariantStart,
+    updateProductVariantSuccess,
+    updateProductVariantFailed
 } = productSlice.actions;
 
 export default productSlice.reducer;

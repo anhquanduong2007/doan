@@ -15,6 +15,7 @@ const ProductVariant = () => {
     // ** State
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [variant, setVariant] = useState<ProductVariantType>()
+    const [refresh, setRefresh] = useState<boolean>(false)
 
     // ** Third party
     const navigate = useNavigate()
@@ -36,7 +37,7 @@ const ProductVariant = () => {
                 navigate
             })
         }
-    }, [id])
+    }, [id, refresh])
 
     // ** Function handle
     const dataToRender = () => {
@@ -116,7 +117,7 @@ const ProductVariant = () => {
     return (
         <Fragment>
             {dataToRender()}
-            <ModalUpdateProductVariant isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} variant = {variant as ProductVariantType}/>
+            <ModalUpdateProductVariant isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} variant={variant as ProductVariantType} refresh={refresh} setRefresh={setRefresh} />
         </Fragment>
     );
 };

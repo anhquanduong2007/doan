@@ -22,7 +22,10 @@ import {
     getProductFailed,
     updateProductStart,
     updateProductSuccess,
-    updateProductFailed
+    updateProductFailed,
+    updateProductVariantStart,
+    updateProductVariantSuccess,
+    updateProductVariantFailed
 } from "./productSlice";
 import { IAxiosResponse } from "src/types/axiosResponse";
 import { Pagination } from "src/types";
@@ -30,6 +33,7 @@ import { NavigateFunction } from "react-router-dom";
 import { MessageApi } from "antd/lib/message";
 import { UseFormSetError } from "react-hook-form";
 import { FormValuesProduct } from "src/components/Catalog/Products/detail-update/ProductDetail";
+import { FormValuesProductVariant } from "src/components/Catalog/Products/detail-update/ModalUpdateProductVariant";
 
 export type CreateProductParams = {
     dispatch: AppDispatch;
@@ -48,6 +52,7 @@ export type ProductOption = {
     name: string;
     value: Array<string>;
 };
+
 type ProductOptionType = {
     [key: string]: ProductOption;
 };
@@ -82,6 +87,24 @@ type UpdateProductParams = Omit<GetListProductParams, "pagination"> & {
     message: MessageApi,
     setRefresh: (refresh: boolean) => void,
     refresh: boolean,
+}
+
+type UpdateProductVariantParams = Omit<GetListProductParams, "pagination"> & {
+    productVariant: ProductVariantUpdate,
+    id: number,
+    setError: UseFormSetError<FormValuesProductVariant>,
+    message: MessageApi,
+    setIsModalOpen: (open: boolean) => void,
+    setRefresh: (refresh: boolean) => void,
+    refresh: boolean,
+}
+
+export type ProductVariantUpdate = {
+    name: string
+    price: number
+    sku: string
+    stock: number
+    featured_asset_id?: number
 }
 
 export type ProductUpdate = {
@@ -334,7 +357,7 @@ export const getProduct = async ({ id, dispatch, axiosClientJwt, navigate }: Get
 }
 
 
-export const updateCategory = async ({ product, axiosClientJwt, dispatch, navigate, setError, message, id, refresh, setRefresh }: UpdateProductParams) => {
+export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigate, setError, message, id, refresh, setRefresh }: UpdateProductParams) => {
     try {
         const { active, name, slug, description, featured_asset_id } = product;
         const accessToken = localStorage.getItem("accessToken")
@@ -366,6 +389,57 @@ export const updateCategory = async ({ product, axiosClientJwt, dispatch, naviga
         }
     } catch (error: any) {
         dispatch(updateProductFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
+    }
+}
+
+export const updateProductVariant = async ({ productVariant, setIsModalOpen, axiosClientJwt, dispatch, navigate, setError, message, id, refresh, setRefresh }: UpdateProductVariantParams) => {
+    try {
+        const { name, price, sku, stock, featured_asset_id } = productVariant;
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(updateProductVariantStart());
+        const [res]: [IAxiosResponse<{}>] = await Promise.all([
+            await axiosClientJwt.put(`/product/variant/update/${id}`, {
+                name,
+                price,
+                sku,
+                stock,
+                featured_asset_id
+
+            }, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }),
+        ])
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(updateProductVariantSuccess(res.response.data));
+                message.success('Update product variant successfully!');
+                setIsModalOpen(false)
+                setRefresh(!refresh)
+            }, 1000)
+        } else if (res?.response?.code === 400 && !res?.response?.success) {
+            dispatch(updateProductVariantFailed(null));
+            setError(res?.response?.fieldError as keyof FormValuesProductVariant, { message: res?.response?.message })
+        } else {
+            dispatch(updateProductVariantFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(updateProductVariantFailed(null));
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
