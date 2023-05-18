@@ -8,20 +8,25 @@ import Register from "../Register";
 import Logo from "../../assets/logo/logo-01.png";
 
 import "./header.scss";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Button, Card, CardBody, CardFooter, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Heading, Image, Stack, Text, useDisclosure, useToast } from "@chakra-ui/react";
+
+import { getCarts } from '../../features/product/productSlice'
 
 const Header = () => {
   const [mobileOpenMenu, setMobileOpenMenu] = React.useState(false)
   const [show, setShow] = React.useState<string>()
+  const [quantityProductCart, setQuantityProductCart] = React.useState<number>()
   const [isShowLogin, setIsShowLogin] = React.useState<boolean>(false)
   const [isSwitchLoginAndRegister, setIsSwitchLoginAndRegister] = React.useState<boolean>(true)
+  
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
 
-  const storeAuth: any = useSelector<any>(state => state.auth)
+  const dispatch = useDispatch()
 
-  console.log(' storeAuth.register', storeAuth.register)
+  const storeAuth: any = useSelector<any>(state => state.auth)
+  const storeCart: any = useSelector<any>(state => state.product)
 
   const { pathname } = useLocation()
 
@@ -39,6 +44,12 @@ const Header = () => {
 
   const switchLoginAndRegister = () => {
     setIsSwitchLoginAndRegister(!isSwitchLoginAndRegister)
+  }
+
+  const totalQuantity = (data) => {
+    const totalQuantity = data ? data.reduce((acc, item) => acc + item.quantity, 0) : 0;
+
+    return totalQuantity
   }
 
   React.useEffect(() => {
@@ -79,6 +90,16 @@ const Header = () => {
     }
   }, [storeAuth])
 
+  React.useEffect(() => {
+    dispatch(getCarts())
+  },[storeCart.addCart])
+
+  React.useEffect(() => {
+    const total = totalQuantity(storeCart.listCart?.data?.data?.carts)
+
+    setQuantityProductCart(total)
+  }, [storeCart.listCart])
+
 
   return (
     <>
@@ -106,8 +127,11 @@ const Header = () => {
             <div className="cursor-pointer">
               <Search size={24} />
             </div>
-            <div className="cursor-pointer">
+            <div className="cursor-pointer relative">
               <ShoppingBag size={24} onClick={() => onOpen()} />
+              <div className="bg-primary absolute -top-1 -right-1 text-white text-[0.625rem] font-medium subpixel-antialiased flex items-center justify-center leading-none rounded-full w-4 h-4">
+                <span>{quantityProductCart}</span>
+              </div>
             </div>
             <div className="cursor-pointer flex flex-row gap-1">
               <User size={24} onClick={() => showLogin()} />

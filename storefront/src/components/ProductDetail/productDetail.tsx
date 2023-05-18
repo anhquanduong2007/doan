@@ -12,12 +12,19 @@ import Product2 from '../../assets/product-02.jpg'
 import Product3 from '../../assets/product-03.jpg'
 import Product4 from '../../assets/product-04.jpg'
 import formatMoney from 'src/shared/utils/formatMoney';
-import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Divider, FormControl, HStack, Input, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, useNumberInput, useRadio, useRadioGroup } from '@chakra-ui/react';
-import RadioButtonCard from './radioCard';
+import { Box, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, Divider, FormControl, HStack, Input, Select, Tab, TabIndicator, TabList, TabPanel, TabPanels, Tabs, useNumberInput, useRadio, useRadioGroup } from '@chakra-ui/react';
 import { ChevronRight, Heart } from 'react-feather';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { productDetail, addToCart } from '../../features/product/productSlice'
 
 const ProductDetail = () => {
   const [isFavourite, setIsFavourite] = React.useState(false)
+  const { id } = useParams()
+  const dispatch = useDispatch()
+  const storeProductDetail: any = useSelector<any>(state => state.product?.detail?.data)
+
   const dataSlider = [
     { id: '1', src: Product1 },
     { id: '2', src: Product2 },
@@ -25,16 +32,14 @@ const ProductDetail = () => {
     { id: '4', src: Product4 },
   ]
 
-  const optionsColor = ['red', 'white', 'blue']
-  const optionsSize = ['S', 'M', 'L']
-
   const favouriteProduct = () => {
     setIsFavourite(!isFavourite)
   }
 
+  console.log('storeProductDetail?.data?.product_variants[0]?.id', storeProductDetail?.data?.product_variants[0]?.id)
+
   const defaultValues = {
-    color: undefined,
-    size: undefined,
+    variantOption: undefined,
     quantity: 1,
   }
 
@@ -47,9 +52,31 @@ const ProductDetail = () => {
     formState: { errors }
   } = useForm({ defaultValues })
 
-  const onSubmit = (data: { color: string, size: string, quantity: number }) => {
-    console.log('data add to cart', data)
+  const onSubmit = (data: { variantOption: number, quantity: number }) => {
+    const { variantOption, quantity } = data
+    dispatch(addToCart({ 
+      quantity, idProductVariant: variantOption 
+    }))
   }
+
+  const renderVariantOption = (data: any) => {
+    const arrayVariantOption: any = []
+    data.forEach(element => {
+      arrayVariantOption.push(element.product_option.value)
+    });
+
+    return arrayVariantOption.toString().replace(',', ' ')
+  }
+
+  React.useEffect(() => {
+    if (id) {
+      dispatch(productDetail(id))
+    }
+  }, [id])
+
+  React.useEffect(() => {
+    setValue('variantOption', storeProductDetail?.data?.product_variants[0]?.id)
+  },[storeProductDetail])
 
   return (
     <Layout>
@@ -109,38 +136,34 @@ const ProductDetail = () => {
         </div>
         <div className='w-[40%]'>
           <div className='flex flex-col gap-3'>
-            <p className='font-bold text-xl'>Lightweight Jacket</p>
-            <p className='font-bold'>${formatMoney(12345)}</p>
-            <p className='text-[#666]'>Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.</p>
+            <p className='font-bold text-xl'>{storeProductDetail?.data.name}</p>
+            <p className='font-bold'>{formatMoney(12345)}</p>
+            <p className='text-[#666]'>{storeProductDetail?.data.description}</p>
             {/* <form > */}
             <div className='flex flex-col gap-2'>
-              <p className='font-semibold'>Color</p>
+              <p className='font-semibold'>Select option</p>
               <FormControl>
                 <Controller
-                  name='color'
+                  name='variantOption'
                   control={control}
                   render={({ field: { value, onChange } }) => (
                     <Fragment>
-                      <RadioButtonCard options={optionsColor} valueSelect={value} onChangeRadio={onChange} type='color' />
+                      <Select value={value} onChange={onChange}>
+                        {
+                          storeProductDetail?.data?.product_variants.map((item, index) => {
+                            const variantOption = renderVariantOption(item.product_options)
+
+                            return (
+                              <option value={item.id} key={item.id}>{`${storeProductDetail?.data.name} ${variantOption}`}</option>
+                            )
+                          })
+                        }
+                      </Select>
                     </Fragment>
                   )}
                 />
               </FormControl>
 
-            </div>
-            <div className='flex flex-col gap-2'>
-              <p className='font-semibold'>Size</p>
-              <FormControl>
-                <Controller
-                  name='size'
-                  control={control}
-                  render={({ field: { value, onChange } }) => (
-                    <Fragment>
-                      <RadioButtonCard options={optionsSize} valueSelect={value} onChangeRadio={onChange} type='size' />
-                    </Fragment>
-                  )}
-                />
-              </FormControl>
             </div>
             <div className='flex flex-col gap-2'>
               <p className='font-semibold'>Quantity</p>
@@ -152,7 +175,7 @@ const ProductDetail = () => {
                     <Fragment>
                       <HStack maxW='320px'>
                         <Button onClick={() => setValue('quantity', value - 1)}>-</Button>
-                        <Input width={'60px'} value={value} onChange={(e) => setValue('quantity', parseInt(e.target.value))}/>
+                        <Input width={'60px'} value={value} onChange={(e) => setValue('quantity', parseInt(e.target.value))} />
                         <Button onClick={() => setValue('quantity', value + 1)}>+</Button>
                       </HStack>
                     </Fragment>

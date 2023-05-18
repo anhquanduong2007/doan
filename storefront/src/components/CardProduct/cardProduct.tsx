@@ -9,7 +9,7 @@ import { Button } from '@chakra-ui/react'
 
 
 const CardProduct = (props: any) => {
-  const { style } = props
+  const { style, data } = props
   return (
     <div className={`flex flex-col gap-y-1 lg:w-[calc(calc(100%/4)-1rem)] md:w-[calc(calc(100%/3)-1rem)] sm:w-[calc(calc(100%/2)-1rem)] ${style} `}>
       <div className='relative overflow-hidden hover-showButton'>
@@ -30,7 +30,7 @@ const CardProduct = (props: any) => {
           </div>
         </div>
       </div>
-      <Link to='#' className='text-[#999] hover:text-primary transition duration-200'>Esprit Ruffle Shirt</Link>
+      <Link to={`${data.id}`} className='text-[#999] hover:text-primary transition duration-200'>{data.name}</Link>
       <p className='text-[#666]'>$16.64</p>
     </div>
   )

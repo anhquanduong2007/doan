@@ -42,7 +42,7 @@ export const login = createAsyncThunk('appAuth/login', async (user: { email: str
       email,
       password
     })
-    return fulfillWithValue(response);
+    return fulfillWithValue(response.response);
   } catch (error: any) {
     return rejectWithValue(error.response.data)
   }
@@ -57,7 +57,7 @@ export const register = createAsyncThunk('appAuth/register', async (user: any, {
       first_name, 
       last_name
     })
-    return fulfillWithValue(response);
+    return fulfillWithValue(response.response);
   } catch (error: any) {
     return rejectWithValue(error.response.data)
   }

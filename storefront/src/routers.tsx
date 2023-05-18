@@ -5,6 +5,7 @@ const HomePage = lazy(() => import('./pages/HomePage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const ProductPage = lazy(() => import('./pages/ProductPage'));
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
+const ShoppingCartPage = lazy(() => import('./pages/ShoppingCartPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
 export const routers = [
@@ -27,11 +28,11 @@ export const routers = [
     element: <AboutPage />
   },
   {
-    path: '/productDetailPage',
-    element: <ProductDetailPage />
+    path: '/checkout',
+    element: <ShoppingCartPage />
   },
-  {
-    path: '*',
-    element: <NotFound />
-  }
+  // {
+  //   path: '*',
+  //   element: <NotFound />
+  // }
 ]
