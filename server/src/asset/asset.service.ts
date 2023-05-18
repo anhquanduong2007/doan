@@ -3,7 +3,6 @@ import { asset } from '@prisma/client';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { IResponse } from 'src/common/types';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { AssetUpdateDto } from './dto';
 import { PaginationDto } from 'src/common/dto';
 
 @Injectable()
@@ -82,49 +81,32 @@ export class AssetService {
             })
             if (asset) {
                 const [assetDelete, _assetCloudinaryDelete] = await Promise.all([
-                    await this.prisma.asset.delete({ where: { id } }),
-                    await this.cloudinaryService.deleteImage(asset.cloudinary_public_id)
+                    this.prisma.asset.delete({ where: { id } }),
+                    this.cloudinaryService.deleteImage(asset.cloudinary_public_id),
+                    this.prisma.product_asset.deleteMany({ where: { asset_id: id } }),
+                    this.prisma.product_variant_asset.deleteMany({ where: { asset_id: id } }),
+                    this.prisma.product.updateMany({
+                        where: {
+                            featured_asset_id: id
+                        },
+                        data: {
+                            featured_asset_id: null
+                        }
+                    }),
+                    this.prisma.product_variant.updateMany({
+                        where: {
+                            featured_asset_id: id
+                        },
+                        data: {
+                            featured_asset_id: null
+                        }
+                    })
                 ])
                 return {
                     code: 200,
                     message: 'Success!',
                     success: true,
                     data: assetDelete
-                }
-            }
-            return {
-                code: 404,
-                message: 'Asset does not exist in the system!',
-                success: false,
-            }
-        } catch (error) {
-            return {
-                code: 500,
-                message: "An error occurred in the system!",
-                success: false,
-            }
-        }
-    }
-
-    public async update(input: AssetUpdateDto, id: number, userId: number): Promise<IResponse<asset>> {
-        try {
-            const { name } = input;
-            const asset = await this.prisma.asset.findUnique({
-                where: { id }
-            })
-            if (asset) {
-                const assetUpdate = await this.prisma.asset.update({
-                    where: { id },
-                    data: {
-                        ...name && { name },
-                        modified_by: userId
-                    },
-                })
-                return {
-                    code: 200,
-                    success: true,
-                    message: 'Success!',
-                    data: assetUpdate
                 }
             }
             return {

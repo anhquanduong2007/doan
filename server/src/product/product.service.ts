@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { OptionCreateDto, ProductCreateDto, ProductVariantCreateDto } from './dto';
+import { AddProductVariantToCartDto, OptionCreateDto, ProductCreateDto, ProductVariantCreateDto } from './dto';
 import { IResponse } from 'src/common/types';
-import { product, product_option, product_variant } from '@prisma/client';
+import { cart, product, product_option, product_variant } from '@prisma/client';
 import { PaginationDto } from 'src/common/dto';
 import { ProductUpdateDto, OptionBulkCreateDto } from './dto';
 
@@ -66,6 +66,22 @@ export class ProductService {
             const product = await this.prisma.product.findUnique({
                 where: { id },
                 include: {
+                    product_variants: {
+                        include: {
+                            product_options: {
+                                select: {
+                                    product_option: {
+                                        select: {
+                                            value: true,
+                                            id: true,
+                                            name: true
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    },
                     featured_asset: true,
                     asset_ids: {
                         include: {
@@ -392,7 +408,6 @@ export class ProductService {
             }
         }
     }
-
     public async productVariantCreate(input: ProductVariantCreateDto, userId: number): Promise<IResponse<product_variant>> {
         try {
             const { option_ids, price, product_id, sku, stock } = input
@@ -445,8 +460,8 @@ export class ProductService {
             const skus = await this.prisma.$transaction(
                 variants.map((variant) => this.prisma.product_variant.findUnique({ where: { sku: variant.sku } }))
             )
-            const isSkuNotExist = skus.some(el => el === null);
-            if (!isSkuNotExist) {
+            const isSkuNotExist = skus.some(el => el !== null);
+            if (isSkuNotExist) {
                 return {
                     code: 400,
                     success: false,
@@ -572,9 +587,38 @@ export class ProductService {
     }
 
     // ** Cart **
-    public async addProductToCard() {
+    public async addProductVariantToCart(input: AddProductVariantToCartDto, customerId: number, productVariantId: number): Promise<IResponse<cart>> {
         try {
-
+            const { quantity } = input
+            const productVariant = await this.prisma.product_variant.findUnique({
+                where: { id: productVariantId },
+            })
+            if (!productVariant) {
+                return {
+                    code: 404,
+                    message: 'Product variant does not exist in the system!',
+                    success: false,
+                }
+            }
+            return {
+                code: 200,
+                message: 'Successfully!',
+                success: true,
+                data: await this.prisma.cart.create({
+                    data: {
+                        quantity,
+                        users_id: customerId,
+                        product_variant_id: productVariantId
+                    },
+                    include: {
+                        product_variant: {
+                            include: {
+                                product: true
+                            }
+                        }
+                    }
+                })
+            }
         } catch (error) {
             return {
                 code: 500,
@@ -584,9 +628,32 @@ export class ProductService {
         }
     }
 
-    public async removeProductFromCard() {
+    public async removeProductVariantFromCart(customerId: number, productVariantId: number): Promise<IResponse<{}>> {
         try {
-
+            const isProductVariantExistInCard = await this.prisma.cart.findFirst({
+                where: {
+                    product_variant_id: productVariantId,
+                    users_id: customerId
+                }
+            })
+            if (!isProductVariantExistInCard) {
+                return {
+                    code: 404,
+                    message: 'Product variant does not exist in card!',
+                    success: false,
+                }
+            }
+            await this.prisma.cart.deleteMany({
+                where: {
+                    users_id: customerId,
+                    product_variant_id: productVariantId
+                }
+            })
+            return {
+                code: 200,
+                success: true,
+                message: "Successfully",
+            }
         } catch (error) {
             return {
                 code: 500,
@@ -596,9 +663,101 @@ export class ProductService {
         }
     }
 
-    public async listProductFromCard() {
+    public async updateProductVariantInCart(input: AddProductVariantToCartDto, customerId: number, productVariantId: number): Promise<IResponse<{}>> {
         try {
+            const { quantity } = input
+            const productVariant = await this.prisma.product_variant.findUnique({
+                where: { id: productVariantId },
+                select: {
+                    stock: true
+                }
+            })
+            if (!productVariant) {
+                return {
+                    code: 404,
+                    message: 'Product variant does not exist in the system!',
+                    success: false,
+                }
+            }
+            const isProductVariantExistInCard = await this.prisma.cart.findFirst({
+                where: {
+                    product_variant_id: productVariantId,
+                    users_id: customerId
+                }
+            })
+            if (!isProductVariantExistInCard) {
+                return {
+                    code: 404,
+                    message: 'Product variant does not exist in card!',
+                    success: false,
+                }
+            }
+            if (quantity > productVariant.stock || quantity < productVariant.stock) {
+                return {
+                    code: 400,
+                    message: 'Quantity exceeded limit quantity!',
+                    success: false,
+                }
+            }
+            return {
+                code: 200,
+                success: true,
+                message: "Successfully",
+                data: this.prisma.cart.updateMany({
+                    where: {
+                        product_variant_id: productVariantId,
+                        users_id: customerId
+                    },
+                    data: {
+                        quantity
+                    }
+                })
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
 
+    public async getListProductVariantFromCart(input: PaginationDto, customerId: number): Promise<IResponse<{ carts: cart[], totalPage: number, skip: number, take: number, total: number }>> {
+        try {
+            const { skip, take } = input;
+            const [totalRecord, carts] = await this.prisma.$transaction([
+                this.prisma.cart.count({
+                    where: {
+                        users_id: customerId
+                    }
+                }),
+                this.prisma.cart.findMany({
+                    take: take || 10,
+                    skip: skip || 0,
+                    where: {
+                        users_id: customerId
+                    },
+                    include: {
+                        product_variant: {
+                            include: {
+                                product: true
+                            }
+                        }
+                    }
+                }),
+            ])
+            return {
+                code: 200,
+                success: true,
+                message: "Successfully!",
+                data: {
+                    carts,
+                    totalPage: take ? Math.ceil(totalRecord / take) : Math.ceil(totalRecord / 10),
+                    total: totalRecord,
+                    skip: skip || 0,
+                    take: take || 10
+                }
+            }
         } catch (error) {
             return {
                 code: 500,

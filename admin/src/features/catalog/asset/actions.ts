@@ -5,119 +5,110 @@ import {
     getListAssetFailed,
     deleteAssetStart,
     deleteAssetSuccess,
-    deleteAssetFailed
 } from "./assetSlice";
 import { Inotification } from 'src/common';
-import type { Axios } from "axios";
+import type { AxiosInstance } from "axios";
+import { Pagination } from "src/types";
+import { NavigateFunction } from "react-router-dom";
+import { IAxiosResponse } from "src/types/axiosResponse";
+import { MessageApi } from "antd/lib/message";
 
 interface GetListAssetParams {
     dispatch: AppDispatch,
-    axiosClient: Axios,
-    pagination: {
-        take: number,
-        skip: number
-        search?: string
+    axiosClientJwt: AxiosInstance,
+    pagination: Pagination,
+    navigate: NavigateFunction
+}
+
+export type DeleteAssetParams = Omit<GetListAssetParams, "pagination">
+    & {
+        id: number,
+        setIsModalOpen: (open: boolean) => void,
+        setRefresh: (refresh: boolean) => void,
+        refresh: boolean,
+        message: MessageApi
     }
-}
 
-interface GetAssetParams {
-    dispatch: AppDispatch,
-    navigate: Function,
-    axiosClient: Axios,
-    assetId: string
-}
-
-interface DeleteAsset {
-    assetId: string,
-    dispatch: AppDispatch,
-    navigate: Function,
-    axiosClient: Axios,
-}
-
-export const getListAsset = async ({ pagination, dispatch, axiosClient }: GetListAssetParams) => {
-    const { skip, take, search } = pagination;
-    dispatch(getListAssetStart());
+export const getListAsset = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListAssetParams) => {
     try {
-        const res: any = await axiosClient.get('asset/list', {
+        const { skip, take, search } = pagination;
+        dispatch(getListAssetStart());
+        const accessToken = localStorage.getItem("accessToken")
+        const res: IAxiosResponse<{}> = await axiosClientJwt.get('/asset', {
             params: {
                 take,
                 skip,
                 search
+            },
+            headers: {
+                Authorization: `Bearer ${accessToken}`
             }
         });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(getListAssetSuccess(res.response.data));
             }, 1000);
+        } else {
+            getListAssetFailed(null)
         }
-        // setTimeout(function () {
-        //     dispatch(getListAssetFailed());
-        //     setError("password", {
-        //         type: "checkUser",
-        //         message: res?.response?.message
-        //     });
-        // }, 1000)
-    } catch (error) {
-        dispatch(getListAssetFailed());
-        Inotification({
-            type: 'error',
-            message: 'Something went wrong!'
-        })
+    } catch (error: any) {
+        dispatch(getListAssetFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
     }
 }
 
-export const deleteAsset = async ({ assetId, dispatch, navigate, axiosClient }: DeleteAsset) => {
-    dispatch(deleteAssetStart());
+export const deleteAsset = async ({ id, dispatch, axiosClientJwt, navigate, message, refresh, setIsModalOpen, setRefresh }: DeleteAssetParams) => {
     try {
-        const res: any = await axiosClient.delete(`asset/delete/${assetId}`);
+        dispatch(deleteAssetStart());
+        const accessToken = localStorage.getItem("accessToken")
+        const res: IAxiosResponse<{}> = await axiosClientJwt.delete(`/asset/delete/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                dispatch(deleteAssetSuccess(res.response.data));
+                dispatch(deleteAssetSuccess(res.response.data))
+                message.success('Delete asset successfully!')
+                setIsModalOpen(false)
+                setRefresh(!refresh)
             }, 1000);
+        } else {
+            dispatch(deleteAssetSuccess(null));
+            setTimeout(function () {
+                setIsModalOpen(false)
+            }, 1000)
+
         }
-        // setTimeout(function () {
-        //     dispatch(getListAssetFailed());
-        //     Inotification({
-        //         type: 'error',
-        //         message: 'Something went wrong!'
-        //     })
-        // }, 1000)
-    } catch (error) {
-        dispatch(deleteAssetFailed());
-        Inotification({
-            type: 'error',
-            message: 'Something went wrong!'
-        })
+    } catch (error: any) {
+        dispatch(deleteAssetSuccess(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                setIsModalOpen(false)
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
     }
 }
-
-// export const getAsset = async ({ assetId, dispatch, navigate, axiosClient }: GetAssetParams) => {
-//     dispatch(getListAssetStart());
-//     try {
-//         const res: any = await axiosClient.get('asset/list', {
-//             params: {
-//                 take,
-//                 skip,
-//                 search
-//             }
-//         });
-//         if (res?.response?.code === 200 && res?.response?.success) {
-//             setTimeout(function () {
-//                 dispatch(getListAssetSuccess(res.response.data));
-//             }, 1000);
-//         }
-//         // setTimeout(function () {
-//         //     dispatch(getListAssetFailed());
-//         //     setError("password", {
-//         //         type: "checkUser",
-//         //         message: res?.response?.message
-//         //     });
-//         // }, 1000)
-//     } catch (error) {
-//         dispatch(getListAssetFailed());
-//         Inotification({
-//             type: 'error',
-//             message: 'Something went wrong!'
-//         })
-//     }
-// }

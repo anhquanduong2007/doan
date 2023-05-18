@@ -56,9 +56,9 @@ const SiderBar = () => {
                         key: "assets",
                         icon: <PictureOutlined />,
                         label: "Assets",
-                        className: location.pathname === "/assets" ? "ant-menu-item-selected" : "",
+                        className: location.pathname === "catalog/assets" ? "ant-menu-item-selected" : "",
                         onClick: () => {
-                            navigate('/assets')
+                            navigate('catalog/assets')
                         }
                     },
                 ]
