@@ -5,9 +5,11 @@
 import React, { Fragment } from 'react';
 import { Input, InputNumber } from 'antd';
 import { Controller } from "react-hook-form";
+import { Text } from '@chakra-ui/react';
 
 interface DataType {
     sku: JSX.Element;
+    variant: JSX.Element;
     price: JSX.Element;
     stock: JSX.Element;
 }
@@ -17,7 +19,13 @@ export const columns = () => [
         title: 'Sku',
         dataIndex: 'sku',
         key: 'sku',
-        render: (sku: JSX.Element) => sku
+        render: (sku: JSX.Element,redcord) => sku
+    },
+    {
+        title: 'Variant',
+        dataIndex: 'variant',
+        key: 'variant',
+        render: (variant: JSX.Element) => variant
     },
     {
         title: 'Price',
@@ -33,14 +41,14 @@ export const columns = () => [
     },
 ];
 
-export const data = ({ control, errors, variantItem }): DataType[] => {
-
+export const data = ({ control, errors, variantItem, register }): DataType[] => {
     return variantItem.map((_item, index) => {
         return {
             sku: (
                 <Controller
                     key={index}
                     name="sku"
+                    {...register(`sku[${index}]`)}
                     control={control}
                     rules={{ required: true }}
                     render={({ field: { value, ...other } }) => {
@@ -60,12 +68,28 @@ export const data = ({ control, errors, variantItem }): DataType[] => {
                     }}
                 />
             ),
+            variant: (
+                <Controller
+                name="variant"
+                {...register(`variant[${index}]`)}
+                key={index}
+                control={control}
+                render={({field: {value }}) => {
+                    return (
+                        <Fragment>
+                           <Text>{value}</Text>
+                        </Fragment>
+                    )
+                }}
+            />
+            ),
             price: (
                 <Controller
                     name="price"
                     key={index}
                     control={control}
-                    rules={{ required: true }}
+                    {...register(`price[${index}]`)}
+                    // rules={{ required: true }}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>
@@ -83,17 +107,18 @@ export const data = ({ control, errors, variantItem }): DataType[] => {
             ),
             stock: (
                 <Controller
-                    name="sku"
+                    name="stock"
                     key={index}
                     control={control}
+                    {...register(`stock[${index}].${_item}`)}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>
                                 <InputNumber
                                     style={{ width: "100%" }}
-                                    id='sku'
+                                    id='stock'
                                     {...other}
-                                    value={value || ''}
+                                    // value={value || ''}
                                 />
                             </Fragment>
                         )

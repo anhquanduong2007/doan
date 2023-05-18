@@ -25,7 +25,12 @@ const LoginPage: React.FC = () => {
 
     const axiosClient = createAxiosClient();
 
-    const { control, handleSubmit, setError, formState: { errors } } = useForm<Inputs>();
+    const { control, handleSubmit, setError, formState: { errors } } = useForm<Inputs>({
+        defaultValues: {
+            email: 'superadmin@gmail.com',
+            password: 'superadmin'
+        }
+    });
     const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
         loginUser({ email, password }, dispatch, navigate, setError, axiosClient);
     };

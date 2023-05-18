@@ -10,6 +10,7 @@
   ],
   "scripts": {
     "docker:up": "docker-compose -f docker-compose.yaml up -d && sleep 5",
+    "phuc": "concurrently yarn:dev:server yarn:dev:admin",
     "dev": "yarn docker:up && concurrently yarn:dev:*",
     "dev:server": "cd server && yarn start:dev",
     "dev:admin": "cd admin && yarn start",
