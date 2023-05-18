@@ -6,9 +6,12 @@ import {
   createProductFailed,
   createProductStart,
   createProductSuccess,
-//   createProductOptionFailed,
+  createProductOptionFailed,
   createProductOptionStart,
-//   createProductOptionSuccess,
+  createProductOptionSuccess,
+  createProductVariantSuccess,
+  createProductVariantFailed,
+  createProductVariantStart,
 } from "./productSlice";
 import { IAxiosResponse } from "src/types/axiosResponse";
 
@@ -35,7 +38,7 @@ type ProductOptionType = {
 export type CreateProductOptionParams = {
   dispatch: AppDispatch;
   axiosClient: Axios;
-  options: ProductOptionType;
+  options: any;
 };
 
 export const createProduct = async ({
@@ -88,10 +91,9 @@ export const createProductOption = async ({
   axiosClient,
 }: CreateProductOptionParams) => {
   dispatch(createProductOptionStart());
-  console.log(options);
   try {
     const accessToken = localStorage.getItem("accessToken");
-    const res: IAxiosResponse<ProductType> = await axiosClient.post(
+    const res: IAxiosResponse<any> = await axiosClient.post(
       `/product/option/bulk-create`,
      {options: options},
       {
@@ -100,20 +102,62 @@ export const createProductOption = async ({
         },
       },
     );
+    console.log("optionsoptions==>", options)
+    console.log("resres==>", res)
     if (res?.response?.code === 200 && res?.response?.success) {
       setTimeout(function () {
-        dispatch(createProductSuccess(res.response.data));
+        console.log(res)
+        dispatch(createProductOptionSuccess(res.response.data));
       }, 1000);
     } else {
-    //   dispatch(
-    //     createProductOptionFailed({
-    //       fieldError: res.response.fieldError,
-    //       message: res.response.message,
-    //     }),
-    //   );
+      dispatch(
+        createProductOptionFailed({
+          fieldError: res.response.fieldError,
+          message: res.response.message,
+        }),
+      );
     }
   } catch (error) {
-    // dispatch(createProductOptionFailed(null));
+    dispatch(createProductOptionFailed(null));
+    Inotification({
+      type: "error",
+      message: "Something went wrong!",
+    });
+  }
+};
+
+export const createProductVariantOption = async ({
+  variants,
+  dispatch,
+  axiosClient,
+}: any) => {
+  console.log("variants", variants);
+  dispatch(createProductVariantStart());
+  try {
+    const accessToken = localStorage.getItem("accessToken");
+    const res: IAxiosResponse<any> = await axiosClient.post(
+      `/product/variant/bulk-create`,
+     {variants},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    if (res?.response?.code === 200 && res?.response?.success) {
+      setTimeout(function () {
+        dispatch(createProductVariantSuccess(res.response.data));
+      }, 1000);
+    } else {
+      dispatch(
+        createProductVariantFailed({
+          fieldError: res.response.fieldError,
+          message: res.response.message,
+        }),
+      );
+    }
+  } catch (error) {
+    dispatch(createProductVariantFailed(null));
     Inotification({
       type: "error",
       message: "Something went wrong!",

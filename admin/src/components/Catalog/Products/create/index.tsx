@@ -27,24 +27,19 @@ import { columns, data } from "./columns";
 import { default as ProductCreateBasic } from "./ProductCreate";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { createAxiosClient } from "src/helper/axiosInstance";
-import { createProduct, createProductOption } from "src/features/catalog/product/actions";
+import {
+  createProduct,
+  createProductOption,
+  createProductVariantOption,
+} from "src/features/catalog/product/actions";
 import ProductAssetCreate from "./ProductAssetCreate";
 import { ErrorValidateResponse } from "src/types";
 import { Box, Flex, Heading, Stack } from "@chakra-ui/react";
 import ProductOptionsCreate from "./ProductOptionsCreate";
 import ProductDetail from "./ProductDetail";
-import { HorizontalStack, Text, VerticalStack } from "@shopify/polaris";
-import {
-  AppProvider,
-  Page,
-  ResourceItem,
-  Icon,
-  Thumbnail,
-  Tooltip,
-} from "@shopify/polaris";
-import { DragHandleMinor } from "@shopify/polaris-icons";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { set } from "lodash";
+import { useSelector } from "react-redux";
+import { set, size } from "lodash";
+import { color } from "framer-motion";
 
 const ITEMS = [
   {
@@ -74,62 +69,21 @@ const defaultValues = {
   slug: "",
   description: "",
   active: true,
-  option: [
-    { optionName: "Size", optionValue: "L" },
-    { optionName: "Size", optionValue: "XL" },
-    { optionName: "Color", optionValue: "Red" },
-    { optionName: "Color", optionValue: "Blue" },
-  ],
 };
-
-function ListItem(props) {
-  const { id, index, title } = props;
-
-  return (
-    <Draggable draggableId={id} index={index}>
-      {(provided, snapshot) => {
-        return (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            style={
-              snapshot.isDragging
-                ? { background: "white", ...provided.draggableProps.style }
-                : provided.draggableProps.style
-            }
-          >
-            <ResourceItem id={id} url="https://github.com/qw-in">
-              <HorizontalStack algin="center" blockAlign="center">
-                <div {...provided.dragHandleProps}>
-                  <Tooltip content="Drag to reorder list items">
-                    <Icon source={DragHandleMinor} color="inkLightest" />
-                  </Tooltip>
-                </div>
-                <Thumbnail
-                  source={`https://picsum.photos/id/${100 + id}/60/60`}
-                  alt={""}
-                />
-                <Text variant="headingMd" as="h2">
-                  {title}
-                </Text>
-              </HorizontalStack>
-            </ResourceItem>
-          </div>
-        );
-      }}
-    </Draggable>
-  );
-}
 
 const options: SelectProps["options"] = [];
 const ProductCreate: React.FC = () => {
   // ** State
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
+  const [formIsSubmited, setFormIsSubmited] = useState<boolean>(false);
   const [enabled, setEnabled] = useState<boolean>(true);
   const [variantItem, setVariantItem] = useState<number[]>([]);
-  const [variantItems, setVariantItems] = useState<number[]>([]);
-  const [items, setItems] = useState(ITEMS);
-  const [options, setOptions] = useState([]);
+  const [productOptions, setProductOptions] = useState<number[]>([]);
+  const [createProductStatus, setCreateProductStatus] = useState<any>(false);
+  const [createProductOptionStatus, setCreateProductOptionStatus] =
+    useState<any>(true);
+  // const [createProductVariantStatus, setCreateProductVariantStatus] =
+  //   useState<any>(false);
 
   // ** Third party
   const navigate = useNavigate();
@@ -175,81 +129,312 @@ const ProductCreate: React.FC = () => {
     }
   }, [store.createProduct.loading, isSubmited, store.createProduct.error]);
 
-  // ** Function handle
+  // console.log("getValues", getValues("option"));
+  // const out = getValues("option")?.reduce((a, v) => {
+  //   if(a[v.name]) {
+  //     a[v.name].value = [a[v.name].value, v.value]
+  //   } else {
+  //     a[v.name] = v
+  //   }
+  //   return a
+  // }, {})
+  // out && console.log(Object?.values(out))
+
   // useEffect(() => {
-  //   console.log("variantItems", variantItems);
-  // }, [variantItems, setVariantItems]);
+  //   setProductOptions(getValues("option"))
+  // }, [getValues])
 
+  // useEffect(() => {
+  //   const a = getValues("option").filter((item) => item.name === "Color");
+  //   const b = getValues("option").filter((item) => item.name === "Size");
+
+  //   const colorOption = {
+  //     name: "Color",
+  //     value: a.map((item) => item.value),
+  //   };
+  //   const sizeOption = {
+  //     name: "Size",
+  //     value: b.map((item) => item.value),
+  //   };
+
+  //   const options = [colorOption, sizeOption];
+  //   console.log("object, formIsSubmited", formIsSubmited);
+  //   formIsSubmited && createProductOptionStatus && createProductOption({
+  //     axiosClient,
+  //     dispatch,
+  //     options: options,
+  //   });
+
+  //   setCreateProductOptionStatus(false);
+  // }, [ formIsSubmited, setFormIsSubmited]);
+
+  // ** Function handle
   const onSubmit = async (data) => {
-    console.log("🚀 ~ file: index.tsx:173 ~ onSubmit ~ data:", data);
-    console.log("variantItems", variantItems);
-    // await createProduct({
-    //     axiosClient,
-    //     dispatch,
-    //     product: {
-    //         name: data.name,
-    //         description: data.description,
-    //         slug: data.slug,
-    //         active: 1,
-    //     }
-    // })
-    console.log("variantItemsvariantItemsvariantItemsvariantItems", variantItems)
-     await createProductOption({
-        axiosClient,
-        dispatch,
-        options: variantItems
-    })
+    setFormIsSubmited(true);
+    await createProduct({
+      axiosClient,
+      dispatch,
+      product: {
+        name: data.name,
+        description: data.description,
+        slug: data.slug,
+        active: 1,
+      },
+    });
 
-    // const { description, enabled, name, slug, ...options } = data;
-    // const optColor = [];
-    // const optSize = [];
-    // const optMaterial = [];
-    // const optStyle = [];
-    // Object.keys(options).forEach((option) => {
-    //   if (option.includes("optionName") && options[option] === "color") {
-    //     optColor.push(options[`optionValue-${option.slice(-1)}`]);
-    //   } else if (option.includes("optionName") && options[option] === "size") {
-    //     optSize.push(options[`optionValue-${option.slice(-1)}`]);
-    //   } else if (
-    //     option.includes("optionName") &&
-    //     options[option] === "material"
-    //   ) {
-    //     optMaterial.push(options[`optionValue-${option.slice(-1)}`]);
-    //   } else {
-    //     optStyle.push(options[`optionValue-${option.slice(-1)}`]);
-    //   }
+    const a = data?.option.filter((item) => item.name === "Color");
+    const b = data?.option.filter((item) => item.name === "Size");
+
+    const colorOption = {
+      name: "Color",
+      value: a.map((item) => item.value),
+    };
+    const sizeOption = {
+      name: "Size",
+      value: b.map((item) => item.value),
+    };
+
+    const options = [colorOption, sizeOption];
+
+    setProductOptions(options);
+
+    createProductOption({
+      axiosClient,
+      dispatch,
+      options: options,
+    });
+
+    // getValues.map((item, index) => {
+    //   setValue(`variant[${index}].price`, item.price);
+    //   setValue(`variant[${index}].stock`, item.stock);
+    //   setValue(`variant[${index}].sku`, item.sku);
     // });
-    // const color = {
-    //   name: "color",
-    //   value: [...optColor],
-    // };
-    // const size = {
-    //   name: "size",
-    //   value: [...optSize],
-    // };
+    // console.log("");
+    // setCreateProductStatus(true);
   };
 
-  // const handleDragEnd = useCallback(({ source, destination }) => {
-  //   setItems((oldItems) => {
-  //     const newItems = oldItems.slice(); // Duplicate
-  //     const [temp] = newItems.splice(source.index, 1);
-  //     newItems.splice(destination.index, 0, temp);
-  //     return newItems;
-  //   });
-  // }, []);
+  //  let variant = [];
+  // if (variantItems.size || variantItems.color) {
+  //   const sizeLength = variantItems.size.value.length;
+  //   const colorLength = variantItems.color.value.length;
+  //   const total = sizeLength * colorLength;
+  //   total > 0
+  //     ? new Array(total).fill(total).map((_, index) => variant.push(index))
+  //     : (variant = []);
+  //   variant.length > 0 && setVariantItem(variant);
+  //   }
 
   useEffect(() => {
-    let variant = [];
-    if (variantItems.size || variantItems.color) {
-      const sizeLength = variantItems.size.value.length;
-      const colorLength = variantItems.color.value.length;
-      const total = sizeLength * colorLength;
-      total > 0
-        ? new Array(total).fill(total).map((_, index) => variant.push(index))
-        : (variant = []);
-      variant.length > 0 && setVariantItem(variant);
+    if (!store.createProduct.loading && store.createProduct.result) {
+      const { id } = store.createProduct.result;
+      let abc = [];
+      if (
+        !store.createProductOption.loading &&
+        store.createProductOption.result
+      ) {
+        const colorValue = store.createProductOption.result?.filter(
+          (item) => item.name === "Color",
+        );
+        const sizeValue = store.createProductOption.result?.filter(
+          (item) => item.name === "Size",
+        );
+        colorValue.map((item) => {
+          const a = sizeValue.map((size) => {
+            return {
+              variantCode: `${item.value}-${size.value}`,
+              id: [item.id, size.id],
+              productId: id,
+            };
+          });
+          abc.push(...a);
+        });
+      }
+
+      const variantsColumn = abc.map((item) => {
+        return {
+          variantCode: item.variantCode,
+        };
+      });
+      console.log(
+        "🚀 ~ file: index.tsx:256 ~ variantsColumn ~ variantsColumn:",
+        variantsColumn,
+      );
+
+      variantsColumn && setVariantItem(variantsColumn);
+
+      if (id && abc.length > 0 && formIsSubmited) {
+        console.log("getValue", getValues())
+        const abcd = abc.map((item, index) => {
+          return {
+            sku: getValues("sku")[index],
+            name: item.variantCode,
+            // price: item.price,
+            // stock: item.stock,
+            option_ids: item.id,
+            product_id: item.productId,
+          };
+        });
+        console.log("🚀 ~ file: index.tsx:248 ~ useEffect ~ id:", abcd);
+        abcd.length > 0 &&
+          abcd.map((item, index) => {
+            setValue(`variant[${index}]`, item.name);
+          });
+        abcd.length > 0 &&
+          createProductVariantOption({
+            axiosClient,
+            dispatch,
+            variants: abcd,
+          });
+
+          console.log(getValues());
+      }
     }
-  }, [setVariantItems, variantItems]);
+    // let variant = [];
+    // if (variantItems.size || variantItems.color) {
+    //   const sizeLength = variantItems.size.value.length;
+    //   const colorLength = variantItems.color.value.length;
+    //   const total = sizeLength * colorLength;
+    //   total > 0
+    //     ? new Array(total).fill(total).map((_, index) => variant.push(index))
+    //     : (variant = []);
+    //   variant.length > 0 && setVariantItem(variant);
+    // }
+
+    // abc.length > 0 &&
+    //   abc.map((item, index) => {
+    //     setValue(`variant[${index}]`, item);
+    //   });
+    // // setCreateProductVariantStatus(true);
+
+    // console.log("🚀 ~ file: index.tsx:176 ~ onSubmit ~ abc", abc);
+    // console.log("🚀 ~ file: index.tsx:176 ~ onSubmit ~ abc", getValues());
+  }, [
+    store.createProduct.loading,
+    store.createProduct.result,
+    productOptions,
+    setProductOptions,
+    store.createProductOption.result,
+    store.createProductOption.loading,
+    formIsSubmited,
+    setFormIsSubmited
+  ]);
+
+  // useEffect(() => {
+  //   // const createProductOption = async () => {
+  //   //   const data = await createProductOption({
+  //   //     axiosClient,
+  //   //     dispatch,
+  //   //     options: variantItems,
+  //   //   });
+  //   //   return data;
+  //   // };
+
+  //   if (productStore.createProduct.result) {
+  //     const { id } = productStore.createProduct.result;
+  //     if (id && variantItems.length > 0 && createProductStatus) {
+  //       createProductOptionStatus === false &&
+  //         createProductOption({
+  //           axiosClient,
+  //           dispatch,
+  //           options: variantItems,
+  //         });
+  //       setCreateProductOptionStatus(true);
+  //     }
+  //     if (
+  //       (id && createProductOptionStatus) ||
+  //       productStore.createProductOption?.result?.length > 0
+  //     ) {
+  //       const colorValue = productStore.createProductOption.result.filter(
+  //         (item) => item.name === "Color",
+  //       );
+  //       const sizeValue = productStore.createProductOption.result.filter(
+  //         (item) => item.name === "Size",
+  //       );
+  //       let abc = [];
+  //       colorValue.map((item) => {
+  //         const a = sizeValue.map((size) => {
+  //           return {
+  //             variantCode: `${item.value}-${size.value}`,
+  //             id: `${item.id}-${size.id}`,
+  //           };
+  //         });
+  //         abc.push(...a);
+  //       });
+  //       abc.length > 0 && setVariantItem(abc);
+  //       abc.length > 0 &&
+  //         abc.map((item, index) => {
+  //           setValue(`variant[${index}]`, item);
+  //         });
+  //       setCreateProductVariantStatus(true);
+  //     }
+  //     if (id && createProductVariantStatus) {
+  //       setCreateProductVariantStatus(false);
+
+  //       // .map((item, index) => {
+  //       //   setValue(`variant[${index}].price`, item.price)
+  //       //   setValue(`variant[${index}].stock`, item.stock)
+  //       //   setValue(`variant[${index}].sku`, item.sku)
+  //       // })
+  //       getValues("price").map((item, index) => {
+  //         setValue(`variant[${index}].price`, item);
+  //         // setValue(`variant[${index}].productId`, id);
+  //       });
+  //       getValues("stock").map((item, index) => {
+  //         setValue(`variant[${index}].stock`, item);
+  //       });
+  //       getValues("sku").map((item, index) => {
+  //         setValue(`variant[${index}].sku`, item);
+  //       });
+
+  //       console.log(
+  //         "🚀 ~ file: index.tsx:203 ~ useEffect asdfasdfasdf~ data",
+  //         getValues(),
+  //       );
+  //       getValues("variant");
+  //       const abc = getValues("variant").map((item) => {
+  //         const convertId = item.id.split("-").map((item) => Number(item));
+  //         return {
+  //           sku: item.sku,
+  //           name: item.variantCode,
+  //           // price: item.price,
+  //           // stock: item.stock,
+  //           option_ids: convertId,
+  //           product_id: id,
+  //         };
+  //       });
+  //       //  abc.sku &&  createProductVariantOption({
+  //       //   axiosClient,
+  //       //   dispatch,
+  //       //   abc,
+  //       // })
+  //       console.log("abcasdcasdc", abc);
+  //       console.log(
+  //         "🚀 ~ file: index.tsx:248 ~ useEffect ~ id:",
+  //         getValues("variant"),
+  //       );
+  //       // const convertId = id.split("-").map(item => Number(item))
+
+  //       abc.length > 0 &&
+  //         createProductVariantOption({
+  //           axiosClient,
+  //           dispatch,
+  //           variant: abc,
+  //         });
+  //       // console.log("basdbva", convertId)
+  //       // createProductVariantStatus && createProductVariantOption({
+  //       //   axiosClient,
+  //       //   dispatch,
+  //       //   variant: variantItems,
+  //       // })
+  //     }
+  //   }
+  // }, [
+  //   productStore,
+  //   createProductStatus,
+  //   setCreateProductStatus,
+  //   createProductOptionStatus,
+  //   setCreateProductOptionStatus,
+  // ]);
 
   return (
     <Fragment>
@@ -296,7 +481,8 @@ const ProductCreate: React.FC = () => {
                       <ProductOptionsCreate
                         control={control}
                         register={register}
-                        setVariantItems={setVariantItems}
+                        setProductOptions={setProductOptions}
+                        setValue={setValue}
                       />
                     </Col>
                     <Col span={10}>
@@ -333,7 +519,12 @@ const ProductCreate: React.FC = () => {
                     <Table
                       bordered
                       columns={columns()}
-                      dataSource={data({ control, errors, variantItem })}
+                      dataSource={data({
+                        control,
+                        errors,
+                        variantItem,
+                        register,
+                      })}
                       pagination={{ hideOnSinglePage: true }}
                     />
                   </div>

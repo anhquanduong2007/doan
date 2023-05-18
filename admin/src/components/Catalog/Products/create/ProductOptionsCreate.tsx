@@ -9,7 +9,7 @@ import { PlusOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import Button from "antd-button-color";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 
-const ProductOptionsCreate = ({ control, register, setVariantItems }) => {
+const ProductOptionsCreate = ({ control, register, setValue, setProductOptions }) => {
   const { fields, append, remove, insert } = useFieldArray({
     control,
     name: "option",
@@ -18,28 +18,23 @@ const ProductOptionsCreate = ({ control, register, setVariantItems }) => {
   const handleChange = (value: string) => {
     console.log(`selected ${value}`);
   };
+  const optionArray = useWatch({ name: "option", control })
 
-  const optionsHook = useWatch({ name: "option", control });
 
-  useEffect(() => {
-    console.log("optionsHook", optionsHook)
-    const a = optionsHook.filter((option) => option.optionName == "Size")
-    const b = optionsHook.filter((option) => option.optionName == "Color")
-    const c = a.map((option) => option.optionValue)
-    const d = b.map((option) => option.optionValue)
- 
-   const color = {
-      name: "Color",
-      value: optionsHook ? d : [],
-    };
-    const size = {
-      name: "Size",
-      value: optionsHook ? c : []
-    };
-    const variant = [color, size]
-  //   console.log("variant", variant)
-    setVariantItems(variant);
-  }, [optionsHook]);
+
+  // useEffect(() => {
+  //   const out = optionArray?.reduce((a, v) => {
+  //     if(a[v.name]) {
+  //       a[v.name].value = [a[v.name].value, v.value]
+  //     } else {
+  //       a[v.name] = v
+  //     }
+  //     return a
+  //   }, {})
+  //   out && setProductOptions(Object?.values(out))
+  // }, [])
+  
+  
   return (
     <Fragment>
       <Box mb={3}>
@@ -62,19 +57,19 @@ const ProductOptionsCreate = ({ control, register, setVariantItems }) => {
             >
               <Box>
                 <Controller
-                  name={`option[${index}].optionName`}
-                  {...register(`option[${index}].optionName`)}
+                  name={`option[${index}].name`}
+                  {...register(`option[${index}].name`)}
                   control={control}
                   render={({ field: { value, ...other } }) => {
                     return (
                       <Box>
                         <Select style={{ width: 120 }} value={value} {...other}>
-                          <Select.Option value="size">Size</Select.Option>
-                          <Select.Option value="color">Color</Select.Option>
-                          <Select.Option value="material">
+                          <Select.Option value="Size">Size</Select.Option>
+                          <Select.Option value="Color">Color</Select.Option>
+                          <Select.Option value="Material">
                             Material
                           </Select.Option>
-                          <Select.Option value="style">Style</Select.Option>
+                          <Select.Option value="Style">Style</Select.Option>
                         </Select>
                       </Box>
                     );
@@ -83,8 +78,8 @@ const ProductOptionsCreate = ({ control, register, setVariantItems }) => {
               </Box>
               <Box>
                 <Controller
-                  name={`option[${index}].optionValue`}
-                  {...register(`option[${index}].optionValue`)}
+                  name={`option[${index}].value`}
+                  {...register(`option[${index}].value`)}
                   control={control}
                   render={({ field: { value, ...other } }) => {
                     return (
@@ -96,17 +91,15 @@ const ProductOptionsCreate = ({ control, register, setVariantItems }) => {
                 />
               </Box>
               <Box>
-                      <MinusCircleOutlined
-                        onClick={() => remove(index)}
-                      />
-                    </Box>
+                <MinusCircleOutlined onClick={() => remove(index)} />
+              </Box>
             </Flex>
           );
         })}
 
         <Button
           onClick={() => {
-            append({ optionName: "", optionValue: "" });
+            append({ name: "", value: "" });
           }}
         >
           Add Option
