@@ -54,31 +54,28 @@ model favorite {
 }
 
 model asset {
-  id                    Int                     @id @default(autoincrement())
-  name                  String
-  url                   String
-  width                 Int
-  height                Int
-  format                String
-  cloudinary_asset_id   String
-  cloudinary_public_id  String
-  created_date          DateTime?               @db.Timestamp(0)
-  modified_date         DateTime?               @db.Timestamp(0)
-  created_by            Int?
-  modified_by           Int?
-  product_asset         product_asset[]
-  product_variant_asset product_variant_asset[]
-  product               product[]
-  product_variant       product_variant[]
+  id                   Int               @id @default(autoincrement())
+  name                 String
+  url                  String
+  width                Int
+  height               Int
+  format               String
+  cloudinary_asset_id  String
+  cloudinary_public_id String
+  created_date         DateTime?         @db.Timestamp(0)
+  modified_date        DateTime?         @db.Timestamp(0)
+  created_by           Int?
+  modified_by          Int?
+  product              product[]
+  product_variant      product_variant[]
 }
 
 model product {
   id                Int               @id @default(autoincrement())
   name              String            @db.VarChar(255)
-  description       String?
+  description       String?           @db.LongText
   slug              String            @unique @db.VarChar(255)
   category_id       Int?
-  brand_id          Int?
   active            Int               @default(1)
   created_date      DateTime?         @default(now())
   modified_date     DateTime?         @updatedAt
@@ -87,31 +84,11 @@ model product {
   favorite          favorite[]
   category          category?         @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
   product_variants  product_variant[]
-  asset_ids         product_asset[]
   featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
   featured_asset_id Int?
+  product_option    product_option[]
 
   @@index([category_id], map: "fk_product_cate")
-}
-
-model product_asset {
-  id         Int     @id @default(autoincrement())
-  product    product @relation(fields: [product_id], references: [id])
-  product_id Int
-  asset      asset   @relation(fields: [asset_id], references: [id])
-  asset_id   Int
-
-  @@unique([asset_id, product_id])
-}
-
-model product_variant_asset {
-  id                 Int             @id @default(autoincrement())
-  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
-  product_variant_id Int
-  asset              asset           @relation(fields: [asset_id], references: [id])
-  asset_id           Int
-
-  @@unique([asset_id, product_variant_id])
 }
 
 model product_variant {
@@ -123,13 +100,14 @@ model product_variant {
   modified_date     DateTime?                @updatedAt
   created_by        Int?
   modified_by       Int?
+  name              String
   product_options   product_variant_option[]
   product           product?                 @relation(fields: [product_id], references: [id])
   product_id        Int?
-  asset_ids         product_variant_asset[]
   featured_asset    asset?                   @relation(fields: [featured_asset_id], references: [id])
   featured_asset_id Int?
   carts             cart[]
+  order             order[]
 }
 
 model product_variant_option {
@@ -182,7 +160,9 @@ model product_option {
   modified_date    DateTime                 @updatedAt
   created_by       Int?
   modified_by      Int?
+  product          product                  @relation(fields: [product_id], references: [id])
   product_variants product_variant_option[]
+  product_id       Int
 }
 
 enum OptionName {
@@ -193,28 +173,26 @@ enum OptionName {
 }
 
 model users {
-  id                   Int                @id @default(autoincrement())
-  hashed_rt            String?
-  password             String             @db.VarChar(255)
-  first_name           String?            @db.VarChar(255)
-  last_name            String?            @db.VarChar(255)
-  gender               Int                @default(0)
-  date_of_birth        DateTime?
-  email                String             @unique @db.VarChar(125)
-  phone                String?            @db.VarChar(10)
-  active               Int                @default(1)
-  created_date         DateTime           @default(now())
-  modified_date        DateTime           @updatedAt
-  created_by           Int?
-  modified_by          Int?
-  favorite             favorite[]
-  rate                 rate[]
-  users_role           users_role[]
-  address              address[]
-  orders               order[]
-  user_info_payment    user_info_payment? @relation(fields: [user_info_payment_id], references: [id])
-  user_info_payment_id Int?
-  carts                cart[]
+  id            Int          @id @default(autoincrement())
+  hashed_rt     String?
+  password      String       @db.VarChar(255)
+  first_name    String?      @db.VarChar(255)
+  last_name     String?      @db.VarChar(255)
+  gender        Int          @default(0)
+  date_of_birth DateTime?
+  email         String       @unique @db.VarChar(125)
+  phone         String?      @db.VarChar(10)
+  active        Int          @default(1)
+  created_date  DateTime     @default(now())
+  modified_date DateTime     @updatedAt
+  created_by    Int?
+  modified_by   Int?
+  favorite      favorite[]
+  rate          rate[]
+  users_role    users_role[]
+  address       address[]
+  orders        order[]
+  carts         cart[]
 }
 
 model users_role {
@@ -253,21 +231,26 @@ model cart {
 }
 
 model order {
-  id                   Int                @id @default(autoincrement())
-  created_date         DateTime           @default(now())
-  modified_date        DateTime           @updatedAt
-  payment              Boolean            @default(false)
-  status               OrderStatus
-  users                users              @relation(fields: [users_id], references: [id])
-  users_id             Int
-  billing_address      address            @relation(fields: [address_id], references: [id])
-  address_id           Int
-  promotion            promotion?         @relation(fields: [promotion_id], references: [id])
-  promotion_id         Int?
-  payment_method       PaymentMethod
-  user_info_payment    user_info_payment? @relation(fields: [user_info_payment_id], references: [id])
-  user_info_payment_id Int?
-  total                Float              @default(0)
+  id                 Int             @id @default(autoincrement())
+  created_date       DateTime        @default(now())
+  code               String          @unique
+  modified_date      DateTime        @updatedAt
+  payment            Boolean         @default(false)
+  status             OrderStatus
+  users              users           @relation(fields: [users_id], references: [id])
+  users_id           Int
+  billing_address    address         @relation(fields: [address_id], references: [id])
+  address_id         Int
+  promotion          promotion?      @relation(fields: [promotion_id], references: [id])
+  promotion_id       Int?
+  payment_method     PaymentMethod
+  quantity           Int
+  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
+  total_price        Float           @default(0)
+  product_variant_id Int
+  order_history      order_history[]
+  payer_id           String?
+  payment_id         String?         @unique
 }
 
 enum OrderStatus {
@@ -284,10 +267,10 @@ enum PaymentMethod {
   Card     @map("card")
 }
 
-model user_info_payment {
-  id            Int      @id @default(autoincrement())
-  created_date  DateTime @default(now())
-  modified_date DateTime @updatedAt
-  orders        order[]
-  users         users[]
+model order_history {
+  id           Int      @id @default(autoincrement())
+  created_date DateTime @default(now())
+  order        order    @relation(fields: [order_id], references: [id])
+  order_id     Int
+  content      String
 }

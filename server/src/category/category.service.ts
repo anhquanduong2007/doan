@@ -102,7 +102,10 @@ export class CategoryService {
     public async category(id: number): Promise<IResponse<category>> {
         try {
             const category = await this.prisma.category.findUnique({
-                where: { id }
+                where: { id },
+                include: {
+                    product: true
+                }
             })
             if (category) {
                 return {

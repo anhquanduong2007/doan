@@ -1,5 +1,5 @@
 import { Type } from "class-transformer"
-import { IsArray, IsEnum, IsNotEmpty, ValidateNested } from "class-validator"
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, ValidateNested } from "class-validator"
 import { OptionName } from "@prisma/client"
 
 export class OptionBulkCreateDto {
@@ -16,4 +16,8 @@ export class Option {
 
     @IsArray()
     value: Array<string>
+
+    @IsNumber()
+    @IsNotEmpty()
+    product_id: number
 }

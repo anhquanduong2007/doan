@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { createCategory, getCategory, getListCategory, getListCategoryChildren, updateCategory } from 'src/features/catalog/category/action';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import CategoriesChildren from './CategoriesChildren';
+import ProductOfCategory from './ProductOfCategory';
+import { Product } from 'src/types';
 
 export type FormValuesCategory = {
     category_name: string
@@ -72,6 +74,7 @@ const CategoryCreateUpdate = () => {
         })
     }, [id])
 
+    console.log(category.single.result)
     useEffect(() => {
         if (id && !category.single.loading && category.single.result) {
             setValue("category_code", category.single.result.category_code)
@@ -230,24 +233,19 @@ const CategoryCreateUpdate = () => {
                                         ]}
                                     />
                                 </Form.Item>
-                                {/* <Form.Item label="Products">
-                                    <Select
-                                        loading={category.list.loading}
-                                        value={parentId}
-                                        onChange={(value: number) => setParentId(value)}
-                                        options={dataParentCategory()}
-                                         onPopupScroll={(event) => {
-                                            const target = event.target;
-                                             // @ts-ignore: Unreachable code error
-                                            if (target.scrollTop + target.offsetHeight === target.scrollHeight) {
-                                                
-                                            }
-                                        }}
-                                    />
-                                </Form.Item> */}
+                                {id && (
+                                    <Form.Item label="Categories children">
+                                        <CategoriesChildren />
+                                    </Form.Item>
+                                )}
+                                {id && (
+                                    <Form.Item label="Product of category">
+                                        <ProductOfCategory products={category.single.result?.product as Product[]} loading={category.single.loading} />
+                                    </Form.Item>
+                                )}
                             </Col>
                         </Form>
-                        {id && <CategoriesChildren />}
+
                     </Card>
                 </Col>
             </Row>

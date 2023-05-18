@@ -37,10 +37,10 @@ export class AuthController {
     return res.json({ response });
   }
 
-  @Post('refreshToken')
-  @UseGuards(RefreshTokenGuard)
-  async refreshTokens(@Req() req: Request, @Res() res: Response) {
-    const response = await this.authService.refreshTokens(req.user['userId'], req.user['refreshToken']);
-    return res.json({ response });
-  }
+    @Post('refreshToken')
+    @UseGuards(RefreshTokenGuard)
+    async refreshTokens(@Req() req: Request, @Res() res: Response) {
+        const response = await this.authService.refreshTokens(req.user['userId'], req.user['refreshToken']);
+        return res.json({ response });
+    }
 }

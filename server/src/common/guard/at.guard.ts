@@ -18,7 +18,7 @@ export class AccessTokenGuard extends AuthGuard('jwt') {
         if (!permissions) {
             return true;
         }
-        if (permissions.includes(Permissions.Anonymous)) {
+        if (permissions && permissions.includes(Permissions.Anonymous)) {
             return true;
         }
         const baseGuardResult = await super.canActivate(context);

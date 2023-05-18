@@ -20,11 +20,6 @@ export class ProductCreateDto {
     @IsNumber()
     @IsOptional()
     featured_asset_id: number
-
-    @IsArray()
-    @IsOptional()
-    @IsNumber({}, { each: true })
-    asset_ids: number[]
     
     @IsInt()
     @Min(0)

@@ -83,8 +83,6 @@ export class AssetService {
                 const [assetDelete, _assetCloudinaryDelete] = await Promise.all([
                     this.prisma.asset.delete({ where: { id } }),
                     this.cloudinaryService.deleteImage(asset.cloudinary_public_id),
-                    this.prisma.product_asset.deleteMany({ where: { asset_id: id } }),
-                    this.prisma.product_variant_asset.deleteMany({ where: { asset_id: id } }),
                     this.prisma.product.updateMany({
                         where: {
                             featured_asset_id: id
