@@ -180,6 +180,7 @@ export class AuthService {
                 ...tokens,
             };
         } catch (error) {
+            console.log(error)
             return {
                 code: 500,
                 message: "An error occurred in the system!",
@@ -288,4 +289,3 @@ export class AuthService {
         };
     }
 }
-
