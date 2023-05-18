@@ -143,12 +143,19 @@ export class ProductService {
 
     public async products(input: PaginationDto): Promise<IResponse<{ products: product[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
-            const { skip, take } = input;
+            const { skip, take, search } = input;
             const [totalRecord, products] = await this.prisma.$transaction([
                 this.prisma.product.count(),
                 this.prisma.product.findMany({
-                    take: take || 10,
-                    skip: skip || 0,
+                    ...take && { take },
+                    ...skip && { skip },
+                    where: {
+                        ...search && {
+                            name: {
+                                contains: search
+                            },
+                        }
+                    },
                     include: {
                         featured_asset: true,
                     }
@@ -177,7 +184,7 @@ export class ProductService {
 
     public async productUpdate(input: ProductUpdateDto, id: number, userId: number): Promise<IResponse<product>> {
         try {
-            const { active, name, slug, featured_asset_id, description } = input
+            const { active, name, slug, featured_asset_id, description, category_id } = input
             const product = await this.prisma.product.findUnique({
                 where: { id }
             })
@@ -219,10 +226,11 @@ export class ProductService {
                     success: true,
                     data: await this.prisma.product.update({
                         data: {
-                            ...featured_asset_id && { featured_asset_id },
+                            featured_asset_id,
                             ...name && { name },
                             ...description && { description },
                             ...slug && { slug },
+                            category_id,
                             active,
                             modified_by: userId
                         },

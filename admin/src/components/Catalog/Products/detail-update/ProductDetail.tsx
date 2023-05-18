@@ -2,20 +2,27 @@ import { Box, Flex } from '@chakra-ui/react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import autoAnimate from '@formkit/auto-animate';
-import { Button, Col, Divider, Form, Input, Row, Switch, message } from 'antd';
+import { Button, Col, Divider, Form, Input, Row, Select, Switch, message } from 'antd';
 import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import {  useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { getProduct, updateProduct } from 'src/features/catalog/product/actions';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import { Asset } from 'src/types/asset';
 import SelectImage from '../SelectImage';
+import { getListCategory } from 'src/features/catalog/category/action';
 
 export interface FormValuesProduct {
     name: string
     slug: string
 }
+
+interface ItemProps {
+    label: string;
+    value: number;
+}
+
 
 const ProductDetail = () => {
     // ** State
@@ -24,6 +31,7 @@ const ProductDetail = () => {
     const [refresh, setRefresh] = useState<boolean>(false)
     const [featuredAsset, setFeaturedAsset] = useState<Asset>()
     const [isModalAssetOpen, setIsModalAssetOpen] = useState<boolean>(false);
+    const [categoryId, setCategoryId] = useState<number | null>(null)
 
     // ** Third party
     const navigate = useNavigate()
@@ -38,6 +46,7 @@ const ProductDetail = () => {
 
     // ** Variables
     const product = useAppSelector((state) => state.product);
+    const category = useAppSelector((state) => state.category);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
 
@@ -54,6 +63,15 @@ const ProductDetail = () => {
                 id: +id,
                 navigate
             })
+            getListCategory({
+                axiosClientJwt,
+                dispatch,
+                navigate,
+                pagination: {
+                    skip: 0,
+                    take: 999
+                }
+            })
         }
     }, [id])
 
@@ -69,6 +87,7 @@ const ProductDetail = () => {
             setDescription(product.single.result.description || '')
             setActive(product.single.result.active)
             setFeaturedAsset(product.single.result.featured_asset)
+            setCategoryId(product.single.result.category_id)
         }
     }, [id, product.single.loading, product.single.result])
 
@@ -80,7 +99,8 @@ const ProductDetail = () => {
                     name: data.name,
                     slug: data.slug,
                     description,
-                    featured_asset_id: featuredAsset?.id
+                    featured_asset_id: featuredAsset?.id,
+                    category_id: categoryId
                 },
                 axiosClientJwt,
                 dispatch,
@@ -92,6 +112,17 @@ const ProductDetail = () => {
                 setRefresh
             })
         }
+    }
+    const dataCategories = (): ItemProps[] => {
+        if (id && !category.list.loading && category.list.result) {
+            return category.list.result.categories.map((category) => {
+                return {
+                    label: category.category_name,
+                    value: category.id
+                }
+            })
+        }
+        return []
     }
 
     return (
@@ -153,6 +184,20 @@ const ProductDetail = () => {
                                         onChange={(_event, editor) => {
                                             setDescription(editor.getData())
                                         }}
+                                    />
+                                </Form.Item>
+                                <Form.Item label="Category">
+                                    <Select
+                                        loading={category.list.loading}
+                                        value={categoryId}
+                                        onChange={(value: number) => setCategoryId(value)}
+                                        options={[
+                                            {
+                                                label: "None",
+                                                value: null
+                                            },
+                                            ...dataCategories()
+                                        ]}
                                     />
                                 </Form.Item>
                             </Col>

@@ -113,6 +113,7 @@ export type ProductUpdate = {
     description?: string
     active: number
     featured_asset_id?: number
+    category_id?: number | null
 }
 
 export const createProduct = async ({
@@ -240,13 +241,14 @@ export const createProductVariantOption = async ({
 
 export const getListProduct = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListProductParams) => {
     try {
-        const { skip, take } = pagination;
+        const { skip, take, search } = pagination;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(getListProductStart());
         const res: IAxiosResponse<{}> = await axiosClientJwt.get('/product', {
             params: {
-                take,
-                skip,
+                ...pagination?.take && { take },
+                ...pagination?.skip && { skip },
+                ...pagination?.search && { search },
             },
             headers: {
                 Authorization: `Bearer ${accessToken}`
@@ -359,7 +361,7 @@ export const getProduct = async ({ id, dispatch, axiosClientJwt, navigate }: Get
 
 export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigate, setError, message, id, refresh, setRefresh }: UpdateProductParams) => {
     try {
-        const { active, name, slug, description, featured_asset_id } = product;
+        const { active, name, slug, description, featured_asset_id, category_id } = product;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(updateProductStart());
         const [res]: [IAxiosResponse<{}>] = await Promise.all([
@@ -368,7 +370,8 @@ export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigat
                 name,
                 slug,
                 description,
-                featured_asset_id
+                featured_asset_id,
+                category_id
             }, {
                 headers: {
                     Authorization: `Bearer ${accessToken}`
