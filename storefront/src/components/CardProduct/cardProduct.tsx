@@ -30,7 +30,7 @@ const CardProduct = (props: any) => {
           </div>
         </div>
       </div>
-      <Link to={`${data.id}`} className='text-[#999] hover:text-primary transition duration-200'>{data.name}</Link>
+      <Link to={`${data?.id}`} className='text-[#999] hover:text-primary transition duration-200'>{data?.name}</Link>
       <p className='text-[#666]'>$16.64</p>
     </div>
   )

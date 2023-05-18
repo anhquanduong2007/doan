@@ -1,8 +1,15 @@
 import React from 'react'
 
+import Cart from 'src/components/Cart/cart'
+import Layout from 'src/components/Layout/layout'
+
 const ShoppingCartPage = () => {
   return (
-    <div>ShoppingCartPage</div>
+    <Layout>
+      <div className='mt-32'>
+        <Cart />
+      </div>
+    </Layout>
   )
 }
 

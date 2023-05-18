@@ -89,9 +89,15 @@ export const addToCart = createAsyncThunk('appProduct/addToCart', async (input: 
   }
 })
 
-export const getCarts = createAsyncThunk('appProduct/getCarts', async (input: number, { rejectWithValue, fulfillWithValue }) => {
+export const getCarts = createAsyncThunk('appProduct/getCarts', async (input: { skip: number, take: number }, { rejectWithValue, fulfillWithValue }) => {
   try {
-    const response: any = await axiosClient.get(`${API_ENDPOINTS.CART}`)
+    const { skip, take } = input
+    const response: any = await axiosClient.get(`${API_ENDPOINTS.CART}`, {
+      params: {
+        skip,
+        take
+      }
+    })
     return fulfillWithValue(response.response);
   } catch (error: any) {
     return rejectWithValue(error.response.data)
