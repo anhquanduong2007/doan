@@ -85,7 +85,7 @@ const columns = (
     ]
 const Products: React.FC = () => {
     // ** State
-    const [take, setTake] = useState<number>(12)
+    const [take, setTake] = useState<number>(1000)
     const [skip, setSkip] = useState<number>(0)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [productDelete, setProductDelete] = useState<{ id: number, name: string }>()

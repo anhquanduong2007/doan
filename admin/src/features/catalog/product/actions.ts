@@ -46,6 +46,7 @@ export type Product = {
     description?: string;
     slug: string;
     active: boolean;
+    featured_asset_id?: number;
 };
 
 export type ProductOption = {
@@ -121,7 +122,7 @@ export const createProduct = async ({
     dispatch,
     axiosClient,
 }: CreateProductParams) => {
-    const { slug, active, description, name } = product;
+    const { slug, active, description, name, featured_asset_id } = product;
     dispatch(createProductStart());
     try {
         const accessToken = localStorage.getItem("accessToken");
@@ -132,6 +133,7 @@ export const createProduct = async ({
                 active,
                 description,
                 name,
+                featured_asset_id
             },
             {
                 headers: {
