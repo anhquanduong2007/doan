@@ -105,7 +105,6 @@ export const productSlice = createSlice({
     reducers: {
         // ** Create product
         createProductStart: (state) => {
-            console.log("statePRD", state)
             state.createProduct.loading = true;
         },
         createProductSuccess: (state, action) => {
