@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import Loading from './components/Loading'
 import NotFoundPage from "./pages/NotFound";
 import HomePage from "./pages/HomePage/home";
 import ProductPage from "./pages/ProductPage/productPage";
@@ -15,21 +14,19 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 
 const App = () => {
   return (
-    <React.Suspense fallback={<Loading />}>
-      <BrowserRouter>
-        <Header />
-        <Routes>
-          <Route path='*' element={<NotFoundPage />} />
-          <Route path='/' element={<HomePage />} />
-          <Route path='login' element={<LoginPage />} />
-          <Route path='products'>
-            <Route index element={<ProductPage />} />
-            <Route path=':id' element={<ProductDetailPage />} />
-          </Route>
-        </Routes>
-        <Footer />
-      </BrowserRouter>
-    </React.Suspense >
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path='*' element={<NotFoundPage />} />
+        <Route path='/' element={<HomePage />} />
+        <Route path='login' element={<LoginPage />} />
+        <Route path='products'>
+          <Route index element={<ProductPage />} />
+          <Route path=':id' element={<ProductDetailPage />} />
+        </Route>
+      </Routes>
+      <Footer />
+    </BrowserRouter>
   );
 }
 

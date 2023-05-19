@@ -21,9 +21,9 @@ export class ProductController {
     // ** Cart
     @Get("cart")
     @Permission()
-    async getListProductVariantFromCard(@Req() req: Request, @Query() pagination: PaginationDto, @Res() res: Response) {
+    async getListProductVariantFromCard(@Req() req: Request, @Res() res: Response) {
         const userId = req.user['userId']
-        const response = await this.productService.getListProductVariantFromCart(pagination, userId);
+        const response = await this.productService.getListProductVariantFromCart(userId);
         return res.json({ response });
     }
 

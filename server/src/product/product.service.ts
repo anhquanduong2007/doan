@@ -807,18 +807,11 @@ export class ProductService {
         }
     }
 
-    public async getListProductVariantFromCart(input: PaginationDto, customerId: number): Promise<IResponse<{ carts: cart[], totalPage: number, skip: number, take: number, total: number }>> {
+    public async getListProductVariantFromCart(customerId: number): Promise<IResponse<cart[]>> {
         try {
-            const { skip, take } = input;
-            const [totalRecord, carts] = await this.prisma.$transaction([
-                this.prisma.cart.count({
-                    where: {
-                        users_id: customerId
-                    }
-                }),
+
+            const [carts] = await this.prisma.$transaction([
                 this.prisma.cart.findMany({
-                    take: take || 10,
-                    skip: skip || 0,
                     where: {
                         users_id: customerId
                     },
@@ -835,13 +828,7 @@ export class ProductService {
                 code: 200,
                 success: true,
                 message: "Successfully!",
-                data: {
-                    carts,
-                    totalPage: take ? Math.ceil(totalRecord / take) : Math.ceil(totalRecord / 10),
-                    total: totalRecord,
-                    skip: skip || 0,
-                    take: take || 10
-                }
+                data: carts
             }
         } catch (error) {
             return {

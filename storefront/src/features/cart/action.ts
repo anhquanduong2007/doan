@@ -3,17 +3,17 @@ import {
     addToCartStart,
     addToCartSuccess,
     addToCartFailed,
+    getListProductOnCartStart,
+    getListProductOnCartSuccess,
+    getListProductOnCartFailed
 } from "./cartSlice";
 import type { AxiosInstance } from "axios";
-import { User } from "src/types/user";
 import { IAxiosResponse } from "src/types/axiosResponse";
-import { NavigateFunction } from "react-router-dom";
 import { CreateToastFnReturn } from "@chakra-ui/react";
 
 export type AddToCartParams = {
     dispatch: AppDispatch,
     axiosClientJwt: AxiosInstance,
-    navigate: NavigateFunction
     cart: {
         quantity: number
     },
@@ -21,7 +21,9 @@ export type AddToCartParams = {
     toast: CreateToastFnReturn
 }
 
-export const addToCart = async ({ axiosClientJwt, cart, dispatch, navigate, id, toast }: AddToCartParams) => {
+export type GetListProductOnCartParams = Omit<AddToCartParams, "cart" | "id">
+
+export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: AddToCartParams) => {
     try {
         const { quantity } = cart
         const accessToken = localStorage.getItem("accessToken")
@@ -65,6 +67,32 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, navigate, id, 
         }
     } catch (error: any) {
         dispatch(addToCartFailed(null));
+        toast({
+            status: 'error',
+            title: "Something went wrong!",
+            isClosable: true,
+        })
+    }
+}
+
+export const getListProductOnCart = async ({ axiosClientJwt, dispatch, toast }: GetListProductOnCartParams) => {
+    try {
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(getListProductOnCartStart());
+        const res: IAxiosResponse<{}> = await axiosClientJwt.get(`product/cart`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(getListProductOnCartSuccess(res.response.data));
+            }, 1000);
+        } else {
+            dispatch(getListProductOnCartFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(getListProductOnCartFailed(null));
         toast({
             status: 'error',
             title: "Something went wrong!",

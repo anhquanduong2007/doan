@@ -4,3 +4,4 @@ export * from './product';
 export * from './productOption';
 export * from './productVariant';
 export * from './asset';
+export * from './cart';
