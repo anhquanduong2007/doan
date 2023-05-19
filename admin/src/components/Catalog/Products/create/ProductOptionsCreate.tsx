@@ -64,7 +64,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
 
     return (
         <Fragment>
-            <Box mb={3}>
+            <Flex mb={3} flexDirection={"column"}>
                 <Box
                     as="span"
                     fontWeight="semibold"
@@ -128,7 +128,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
                 >
                     Add Option
                 </Button>
-            </Box>
+            </Flex>
         </Fragment>
     );
 };

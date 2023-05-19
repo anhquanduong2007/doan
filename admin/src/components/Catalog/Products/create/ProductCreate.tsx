@@ -3,13 +3,12 @@ import React, { Fragment } from 'react';
 import { Control, Controller, FieldErrors, UseFormSetValue, useFieldArray } from 'react-hook-form';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { FormValues } from '.';
 import { Box } from '@chakra-ui/react';
 
 interface ProductCreateProps {
-    control: Control<FormValues>
-    errors: FieldErrors<FormValues>
-    setValue: UseFormSetValue<FormValues>
+    control: Control<any>
+    errors: FieldErrors<any>
+    setValue: UseFormSetValue<any>
 }
 const ProductCreate = ({ control, errors, setValue }: ProductCreateProps) => {
     return (

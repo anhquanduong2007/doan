@@ -5,3 +5,4 @@ export * from './order';
 export * from './productVariant';
 export * from './product';
 export * from './productOption';
+export * from './asset';
