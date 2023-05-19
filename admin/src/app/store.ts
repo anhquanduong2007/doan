@@ -8,6 +8,7 @@ import customerSlice from 'src/features/customer/customerSlice';
 import addressSlice from 'src/features/address/addressSlice';
 import categorySlice from 'src/features/catalog/category/categorySlice';
 import orderSlice from 'src/features/sale/order/actionSlice';
+import promotionSlice from 'src/features/promotion/promotionSlice';
 
 import {
   persistStore,
@@ -20,7 +21,6 @@ import {
   REGISTER,
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import promotionSlice from 'src/features/promotion/promotionSlice';
 
 const persistConfig = {
   key: 'root',

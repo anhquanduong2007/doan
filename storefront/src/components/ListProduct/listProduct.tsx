@@ -1,9 +1,6 @@
 import React from 'react'
-
 import CardProduct from '../CardProduct'
-
 import { useDispatch, useSelector } from 'react-redux'
-import { products } from '../../features/product/productSlice'
 import ReactPaginate from "react-paginate";
 import { ChevronLeft, ChevronRight } from 'react-feather';
 
@@ -19,16 +16,16 @@ const ListProduct = () => {
     setCurrentPage(selected)
   }
 
-  React.useEffect(() => {
-    dispatch(products({ skip: currentPage, take: 9 }))
-  }, [currentPage])
+  // React.useEffect(() => {
+  //   dispatch(products({ skip: currentPage, take: 9 }))
+  // }, [currentPage])
 
   
 
   return (
     <div>
       <div className='flex flex-row gap-4 flex-wrap'>
-        {
+        {/* {
           storeProduct && storeProduct?.data?.products.map((item: any, index: number) => {
             return (
               <CardProduct style='lg:!w-[calc(calc(100%/3)-1rem)] md:!w-[calc(calc(100%/2)-1rem)] sm:!w-[calc(calc(100%/1)-1rem)]' data={item} key={index} />
@@ -63,7 +60,7 @@ const ListProduct = () => {
               activeClassName="bg-primary text-white"
             />
           )
-        }
+        } */}
       </div>
     </div>
   )

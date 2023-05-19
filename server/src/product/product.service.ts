@@ -98,6 +98,7 @@ export class ProductService {
             }
         }
     }
+
     public async delete(id: number): Promise<IResponse<product>> {
         try {
             const product = await this.prisma.product.findUnique({
@@ -440,6 +441,7 @@ export class ProductService {
             }
         }
     }
+
     public async productVariantCreate(input: ProductVariantCreateDto, userId: number): Promise<IResponse<product_variant>> {
         try {
             const { option_ids, price, product_id, sku, stock, name } = input
@@ -658,13 +660,28 @@ export class ProductService {
     public async addProductVariantToCart(input: AddProductVariantToCartDto, customerId: number, productVariantId: number): Promise<IResponse<cart>> {
         try {
             const { quantity } = input
-            const productVariant = await this.prisma.product_variant.findUnique({
-                where: { id: productVariantId },
-            })
+            const [productVariant, isVariantExistInCard] = await Promise.all([
+                this.prisma.product_variant.findUnique({
+                    where: { id: productVariantId },
+                }),
+                this.prisma.cart.findMany({
+                    where: {
+                        product_variant_id: productVariantId,
+                        users_id: customerId
+                    }
+                })
+            ])
             if (!productVariant) {
                 return {
                     code: 404,
                     message: 'Product variant does not exist in the system!',
+                    success: false,
+                }
+            }
+            if (isVariantExistInCard && isVariantExistInCard.length) {
+                return {
+                    code: 400,
+                    message: 'This product already exists on the whole card!',
                     success: false,
                 }
             }
@@ -825,6 +842,39 @@ export class ProductService {
                     skip: skip || 0,
                     take: take || 10
                 }
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async getProductNewArrivals() {
+        try {
+            const [products] = await this.prisma.$transaction([
+                this.prisma.product.findMany({
+                    take: 8,
+                    skip: 0,
+                    where: {
+                        active: 1,
+                    },
+                    orderBy: {
+                        created_date: "desc"
+                    },
+                    include: {
+                        featured_asset: true,
+                        product_variants: true
+                    }
+                }),
+            ])
+            return {
+                code: 200,
+                success: true,
+                message: "Success!",
+                data: products
             }
         } catch (error) {
             return {

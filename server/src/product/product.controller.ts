@@ -12,6 +12,12 @@ export class ProductController {
         private readonly productService: ProductService
     ) { }
 
+    @Get('new-arrivals')
+    async getProductNewArrivals(@Res() res: Response) {
+        const response = await this.productService.getProductNewArrivals();
+        return res.json({ response });
+    }
+
     // ** Cart
     @Get("cart")
     @Permission()
@@ -55,7 +61,6 @@ export class ProductController {
     }
 
     @Get(":id")
-    @Permission(Permissions.ReadProduct)
     async getProduct(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.productService.product(id)
         res.json({ response })
@@ -144,4 +149,6 @@ export class ProductController {
         const response = await this.productService.productVariantDelete(id)
         res.json({ response })
     }
+
+
 }

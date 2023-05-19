@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
 import './index.scss';
+import "antd/dist/antd.css";
+import "antd-button-color/dist/css/style.css";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

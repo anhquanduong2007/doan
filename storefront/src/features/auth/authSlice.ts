@@ -1,104 +1,69 @@
-import { createSlice, createAsyncThunk, PayloadAction, AnyAction } from '@reduxjs/toolkit';
-import axiosClient from '../../axios/axios'
-import { API_ENDPOINTS } from '../../shared/constants/endpoints'
-import { IResponse } from 'src/shared/api/types';
+import { createSlice } from '@reduxjs/toolkit';
+import { User } from 'src/types/user';
 
-// Define a type for the slice state
-export interface AuthState {
-  name: string
-  isLogin: boolean
+interface AuthState {
   login: {
-    loading: boolean
-    error: string
-    data: any
+    result: User | null;
+    loading: boolean;
+    error: boolean;
   },
-  register: {
-    loading: boolean,
-    error: string,
-    data: any
+  logout: {
+    loading: boolean;
+    error: boolean;
   }
 }
 
-// Define the initial state using that type
 const initialState: AuthState = {
-  name: 'appAuth',
-  isLogin: false,
   login: {
+    result: null,
     loading: false,
-    error: '',
-    data: null
+    error: false
   },
-  register: {
+  logout: {
     loading: false,
-    error: '',
-    data: null
+    error: false
   }
-}
-
-export const login = createAsyncThunk('appAuth/login', async (user: { email: string, password: string }, { rejectWithValue, fulfillWithValue }) => {
-  try {
-    const { email, password } = user
-    const response: any = await axiosClient.post(API_ENDPOINTS.LOGIN, {
-      email,
-      password
-    })
-    return fulfillWithValue(response.response);
-  } catch (error: any) {
-    return rejectWithValue(error.response.data)
-  }
-})
-
-export const register = createAsyncThunk('appAuth/register', async (user: any, { rejectWithValue, fulfillWithValue }) => {
-  try {
-    const { email, password, first_name, last_name } = user
-    const response: any = await axiosClient.post(API_ENDPOINTS.REGISTER, {
-      email,
-      password,
-      first_name, 
-      last_name
-    })
-    return fulfillWithValue(response.response);
-  } catch (error: any) {
-    return rejectWithValue(error.response.data)
-  }
-})
+} as AuthState;
 
 export const authSlice = createSlice({
   name: 'auth',
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
-  reducers: {},
-  extraReducers: builder => {
-    builder
-      .addCase(login.pending, (state: any) => {
-        state.login.loading = true
-      })
-      .addCase(login.fulfilled, (state: any, action: PayloadAction<any>) => {
-        state.login.loading = false
-        state.login.data = action.payload
-        state.isLogin = true
-        state.login.error = false
-      })
-      .addCase(login.rejected, (state: any, action: PayloadAction<any>) => {
-        state.login.loading = false
-        state.login.data = action.payload
-        state.login.error = true
-        state.isLogin = false
-      })
-      .addCase(register.pending, (state: any) => {
-        state.register.loading = true
-      })
-      .addCase(register.fulfilled, (state: any, action: PayloadAction<any>) => {
-        state.register.loading = false
-        state.register.data = action.payload
-        state.register.error = false
-      })
-      .addCase(register.rejected, (state: any, action: PayloadAction<any>) => {
-        state.register.loading = false
-        state.register.data = action.payload
-        state.register.error = true
-      })
-  }
+  reducers: {
+    loginStart: (state) => {
+      state.login.loading = true;
+    },
+    loginSuccess: (state, action) => {
+      state.login.loading = false;
+      state.login.result = action.payload;
+      state.login.error = false
+    },
+    loginFailed: (state, action) => {
+      state.login.loading = false;
+      state.login.result = action.payload;
+      state.login.error = true;
+    },
+    logOutStart: (state) => {
+      state.logout.loading = true;
+    },
+    logOutSuccess: (state) => {
+      state.logout.loading = false;
+      state.login.result = null;
+      state.logout.error = false
+    },
+    logOutFailed: (state) => {
+      state.logout.loading = false;
+      state.logout.error = true;
+    }
+  },
 });
+
+export const {
+  loginStart,
+  loginSuccess,
+  loginFailed,
+  logOutStart,
+  logOutSuccess,
+  logOutFailed
+} = authSlice.actions;
 
 export default authSlice.reducer;

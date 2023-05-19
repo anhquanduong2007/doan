@@ -1,6 +1,7 @@
 import { Box, HStack, useRadio, useRadioGroup } from '@chakra-ui/react'
 import React from 'react'
 
+// @ts-ignore: Unreachable code error
 export const RadioCard = (props) => {
   const { type, valueSelect } = props
   const { getInputProps, getRadioProps } = useRadio(props)

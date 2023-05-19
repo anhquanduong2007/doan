@@ -27,7 +27,10 @@
     "redux": "^4.2.0",
     "sass": "^1.54.5",
     "swiper": "^8.4.7",
-    "typescript": "^4.8.2"
+    "typescript": "^4.8.2",
+    "antd": "^4.23.3",
+    "antd-button-color": "^1.0.4",
+    "antd-img-crop": "^4.12.2"
   },
   "scripts": {
     "test": "react-scripts test",

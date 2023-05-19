@@ -12,7 +12,7 @@ import {
 import { Eye, EyeOff } from 'react-feather';
 import { useForm, Controller } from "react-hook-form"
 
-import { register } from '../../features/auth/authSlice'
+// import { register } from '../../features/auth/authSlice'
 import { useDispatch } from 'react-redux';
 
 const Register = () => {
@@ -42,13 +42,13 @@ const Register = () => {
 
   const onSubmit = (data: any) => {
     const { email, password, firstName, lastName, phoneNumber } = data
-    dispatch(register({
-      email,
-      password,
-      first_name: firstName,
-      last_name: lastName,
-      phoneNumber: phoneNumber
-    }))
+    // dispatch(register({
+    //   email,
+    //   password,
+    //   first_name: firstName,
+    //   last_name: lastName,
+    //   phoneNumber: phoneNumber
+    // }))
   }
 
   return (

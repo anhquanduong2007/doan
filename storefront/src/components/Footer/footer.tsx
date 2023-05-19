@@ -11,7 +11,7 @@ import Icon5 from '../../assets/icon-footer/icon-pay-05.png'
 
 const Footer = () => {
   return (
-    <div className='bg-[#222] text-white pt-16 pb-6 mt-24'>
+    <div className='bg-[#222] text-white pt-16 pb-6'>
       <Layout>
         <div className='flex flex-row justify-between flex-wrap gap-3'>
           <div className='flex flex-col gap-y-9 w-[30%] lg:w-[30%] xl:w-[30%] md:w-[30%] sm:w-[30%]'>
