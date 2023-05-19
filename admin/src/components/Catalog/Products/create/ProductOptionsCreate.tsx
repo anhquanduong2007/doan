@@ -25,17 +25,33 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
             const sizeOption = getValueByName(watchOption, "Size")?.value
             const variantArr = []
 
-            colorOption?.map((color) => {
-                const sizeMap = sizeOption?.map((size) => {
-                    const variantCode = `${color}-${size}`
-                    return {
-                        variantCode: variantCode,
-                    }
+            if (colorOption && sizeOption) {
+                colorOption?.map((color) => {
+                    const sizeMap = sizeOption?.map((size) => {
+                        const variantCode = `${color}-${size}`
+                        return {
+                            variantCode: variantCode,
+                        }
+                    })
+                    sizeMap && variantArr.push(...sizeMap);
                 })
-                sizeMap && variantArr.push(...sizeMap);
-            })
+            } else {
+                colorOption && colorOption?.map((color) => {
+                    const variantCode = `${color}`
+                    return variantArr.push({
+                        variantCode: variantCode,
+                    })
+                })
+                sizeOption && sizeOption?.map((color) => {
+                    const variantCode = `${color}`
+                    return variantArr.push({
+                        variantCode: variantCode,
+                    })
+                })
+            }
 
             if (variantArr?.length > 0) {
+                console.log("variantArr", variantArr)
                 setVariantItem(variantArr)
                 variantArr.forEach((item, index) => {
                     setValue(`variant[${index}].name`, item.variantCode);
@@ -48,7 +64,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
 
     return (
         <Fragment>
-            <Flex mb={3} flexDirection={'column'}>
+            <Box mb={3}>
                 <Box
                     as="span"
                     fontWeight="semibold"
@@ -112,7 +128,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
                 >
                     Add Option
                 </Button>
-            </Flex>
+            </Box>
         </Fragment>
     );
 };

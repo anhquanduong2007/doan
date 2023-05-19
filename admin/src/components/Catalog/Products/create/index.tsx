@@ -32,6 +32,7 @@ import { Box, Flex } from "@chakra-ui/react";
 import ProductOptionsCreate from "./ProductOptionsCreate";
 import ProductDetail from "./ProductDetail";
 import { getValueByName, removeEmpty } from "src/hooks/catalog";
+import SelectImage from "../SelectImage";
 
 const defaultValues = {
   name: "",
@@ -47,6 +48,8 @@ const ProductCreate: React.FC = () => {
   const [enabled, setEnabled] = useState<boolean>(true);
   const [variantItem, setVariantItem] = useState<number[]>([]);
   const [productOptions, setProductOptions] = useState<number[]>([]);
+  const [featuredAsset, setFeaturedAsset] = useState<Asset>();
+  const [isModalAssetOpen, setIsModalAssetOpen] = useState<boolean>(false);
 
   const [createProductOptionStatus, setCreateProductOptionStatus] =
     useState<boolean>(false);
@@ -96,6 +99,7 @@ const ProductCreate: React.FC = () => {
   }, [store.createProduct.loading, isSubmited, store.createProduct.error]);
 
   const onSubmit = async (data) => {
+    console.log("featuredAssetfeaturedAsset" , featuredAsset)
     setFormIsSubmited(true);
     await createProduct({
       axiosClient,
@@ -105,6 +109,7 @@ const ProductCreate: React.FC = () => {
         description: data.description,
         slug: data.slug,
         active: 1,
+        featured_asset_id: featuredAsset?.id,
       },
     });
 
@@ -160,26 +165,49 @@ const ProductCreate: React.FC = () => {
       const sizeValue = store.createProductOption.result?.filter(
         (item) => item.name === "Size",
       );
-      let result = [];
-      colorValue.map((item) => {
-        const all = sizeValue.map((size) => {
-          return {
-            name: `${item.value}-${size.value}`,
-            option_ids: [Number(item.id), Number(size.id)],
-            product_id: Number(store.createProduct.result.id),
-          };
-        });
 
-        result.push(...all);
-      });
+      let result = [];
+      if (colorValue.length > 0 && sizeValue.length > 0) {
+        colorValue.map((item) => {
+          const all = sizeValue.map((size) => {
+            return {
+              name: `${item.value}-${size.value}`,
+              option_ids: [Number(item.id), Number(size.id)],
+              product_id: Number(store.createProduct.result.id),
+            };
+          });
+
+          result.push(...all);
+        });
+      } else {
+        colorValue.length > 0 &&
+          colorValue.map((item) => {
+            return result.push({
+              name: `${item.value}`,
+              option_ids: [Number(item.id)],
+              product_id: Number(store.createProduct.result.id),
+            });
+          });
+
+        sizeValue.length > 0 &&
+          sizeValue.map((item) => {
+            return result.push({
+              name: `${item.value}`,
+              option_ids: [Number(item.id)],
+              product_id: Number(store.createProduct.result.id),
+            });
+          });
+      }
+
       const variantOption = result.map((item, index) => {
         return {
-          sku: getValues("sku")[index],
+          sku: getValues("sku") && getValues("sku")[index],
           name: item.name,
           option_ids: item.option_ids,
           product_id: item.product_id,
         };
       });
+
       variantOption &&
         formIsSubmited &&
         createProductOptionStatus &&
@@ -246,7 +274,33 @@ const ProductCreate: React.FC = () => {
                       />
                     </Col>
                     <Col span={10}>
-                      <ProductAssetCreate />
+                      <Flex flexDirection={"column"} alignItems={"center"}>
+                        <Box
+                          border={"1px solid #dbdbdb"}
+                          borderRadius={"10px"}
+                          w={"100%"}
+                        >
+                          <img
+                            style={{
+                              width: "100%",
+                              padding: "10px",
+                              height: "300px",
+                              objectFit: "contain",
+                            }}
+                            src={
+                              featuredAsset
+                                ? featuredAsset.url
+                                : "https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg"
+                            }
+                          />
+                        </Box>
+                        <Button
+                          onClick={() => setIsModalAssetOpen(true)}
+                          style={{ marginTop: "10px" }}
+                        >
+                          Select image
+                        </Button>
+                      </Flex>
                     </Col>
                   </Row>
                   <div>
@@ -270,6 +324,12 @@ const ProductCreate: React.FC = () => {
           </Card>
         </Col>
       </Row>
+      <SelectImage
+        isModalAssetOpen={isModalAssetOpen}
+        setIsModalAssetOpen={setIsModalAssetOpen}
+        setFeaturedAsset={setFeaturedAsset}
+        featuredAsset={featuredAsset as Asset}
+      />
     </Fragment>
   );
 };
