@@ -74,10 +74,10 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                 {...register(`variant[${index}]`)}
                 key={index}
                 control={control}
-                render={({field: {value }}) => {
+                render={({field: {value:{name}}}) => {
                     return (
                         <Fragment>
-                           <Text>{value}</Text>
+                           <Text>{name}</Text>
                         </Fragment>
                     )
                 }}
@@ -97,8 +97,9 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                                     className='!my-1'
                                     id='price'
                                     type=''
+                                    defaultValue={0}
                                     {...other}
-                                    value={value || ''}
+                                    value={value || 0}
                                 />
                             </Fragment>
                         )
@@ -110,15 +111,16 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                     name="stock"
                     key={index}
                     control={control}
-                    {...register(`stock[${index}].${_item}`)}
+                    {...register(`stock[${index}]`)}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>
                                 <InputNumber
                                     style={{ width: "100%" }}
                                     id='stock'
+                                    defaultValue={0}
                                     {...other}
-                                    // value={value || ''}
+                                    value={value || 0}
                                 />
                             </Fragment>
                         )

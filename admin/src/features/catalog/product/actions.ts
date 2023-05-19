@@ -177,11 +177,8 @@ export const createProductOption = async ({
                 },
             },
         );
-        console.log("optionsoptions==>", options)
-        console.log("resres==>", res)
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                console.log(res)
                 dispatch(createProductOptionSuccess(res.response.data));
             }, 1000);
         } else {
