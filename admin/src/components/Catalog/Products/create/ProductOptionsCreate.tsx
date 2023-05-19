@@ -25,7 +25,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
       const  sizeOption= getValueByName(watchOption, "Size")?.value
       const variantArr = []
     
-      colorOption?.map((color) => {
+      if(colorOption && sizeOption ) {colorOption?.map((color) => {
         const sizeMap = sizeOption?.map((size) => {
           const variantCode = `${color}-${size}`
           return {
@@ -34,8 +34,23 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
         })
         sizeMap && variantArr.push(...sizeMap);
       })
+    } else {
+      colorOption && colorOption?.map((color) => {
+        const variantCode = `${color}`
+        return variantArr.push({
+          variantCode: variantCode,
+        })
+      })
+      sizeOption && sizeOption?.map((color) => {
+        const variantCode = `${color}`
+        return variantArr.push({
+          variantCode: variantCode,
+        })
+      })
+    }
       
       if(variantArr?.length > 0) {
+        console.log("variantArr", variantArr)
         setVariantItem(variantArr)
         variantArr.forEach((item, index) => {
           setValue(`variant[${index}].name`, item.variantCode);
