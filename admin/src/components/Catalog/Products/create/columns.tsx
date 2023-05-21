@@ -41,7 +41,7 @@ export const columns = () => [
     },
 ];
 
-export const data = ({ control, errors, variantItem, register }): DataType[] => {
+export const data = ({ control, errors, variantItem, register, setValue }): DataType[] => {
     return variantItem.map((_item, index) => {
         return {
             sku: (
@@ -51,7 +51,7 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                     {...register(`sku[${index}]`)}
                     control={control}
                     rules={{ required: true }}
-                    render={({ field: { value, ...other } }) => {
+                    render={({ field: { value, onChange, ...other } }) => {
                         return (
                             <Fragment>
                                 <Input
@@ -59,6 +59,10 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                                     id='sku'
                                     status={errors?.sku ? 'error' : ''}
                                     placeholder='Eg: bag-sku-01'
+                                    onChange={e => {
+                                        setValue(`variant[${index}].sku`, e.target.value);
+                                        onChange(e.target.value)
+                                    }}
                                     {...other}
                                     value={value || ''}
                                 />
