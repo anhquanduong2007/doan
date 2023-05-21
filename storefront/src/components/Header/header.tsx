@@ -32,6 +32,7 @@ const Header = () => {
     // ** Variables
     const cart = useAppSelector((state) => state.cart);
     const auth = useAppSelector((state) => state.auth)
+    const checkout = useAppSelector((state) => state.checkout)
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
 
@@ -57,7 +58,7 @@ const Header = () => {
                 toast
             })
         }
-    }, [localStorage.getItem("accessToken"), refresh, cart.addToCart.loading])
+    }, [localStorage.getItem("accessToken"), refresh, cart.addToCart.loading, checkout.createOrder.result])
 
     // ** Function handle
     const controlNavbar = () => {

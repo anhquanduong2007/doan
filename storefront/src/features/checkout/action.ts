@@ -128,10 +128,10 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
                 toast({
                     status: 'success',
                     title: "Successfully!",
-                    position: "top",
+                    position: "top-right",
                     isClosable: true,
                 })
-                navigate('/')
+                navigate('/account')
             }, 1000)
         } else {
             dispatch(createOrderFailed(null));

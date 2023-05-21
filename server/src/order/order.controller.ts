@@ -79,11 +79,17 @@ export class OrderController implements OnApplicationBootstrap {
                         await this.prisma.product_variant.update({
                             where: { id: variant.id },
                             data: {
-                                stock: variant.stock - 1
+                                stock: variant.stock - order.quantity
+                            }
+                        }),
+                        await this.prisma.cart.deleteMany({
+                            where: {
+                                product_variant_id: variant.id,
+                                users_id: order.users_id
                             }
                         })
                     ])
-                    return res.redirect('http://localhost:4200/');
+                    return res.redirect('http://localhost:4200/account');
                 }
             });
         } catch (error) {

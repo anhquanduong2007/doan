@@ -77,6 +77,12 @@ export class OrderService {
                         data: {
                             stock: isValidProductVariant.stock - quantity
                         }
+                    }),
+                    await this.prisma.cart.deleteMany({
+                        where: {
+                            product_variant_id: isValidProductVariant.id,
+                            users_id: userId
+                        }
                     })
                 ])
                 return {

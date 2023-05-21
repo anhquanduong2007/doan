@@ -25,6 +25,7 @@ import OrderListPage from './pages/Sales/Orders/list';
 import OrderDetailPage from './pages/Sales/Orders/detail';
 import Payment from './components/Payment';
 import ProductDetailUpdatePage from './pages/Catalog/Products/detail-update';
+import DashboardPage from './pages/Dashboard';
 
 interface ProtectRouteProps {
   children: React.ReactNode
@@ -55,6 +56,7 @@ const App = () => {
           <Route path='/login' element={<LoginPage />} />
           <Route path='/payment' element={<Payment />} />
           <Route path='/' element={<HomePage />} >
+            <Route path='/dashboard' element={<DashboardPage />} />
             <Route path='catalog'>
               <Route path='products'>
                 <Route index element={<ProductListPage />} />

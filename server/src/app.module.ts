@@ -16,6 +16,7 @@ import { RateModule } from './rate/rate.module';
 import { AddressModule } from './address/address.module';
 import { PromotionModule } from './promotion/promotion.module';
 import { OrderModule } from './order/order.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { OrderModule } from './order/order.module';
     AddressModule,
     PromotionModule,
     OrderModule,
+    DashboardModule,
   ],
   controllers: [],
   providers: [
