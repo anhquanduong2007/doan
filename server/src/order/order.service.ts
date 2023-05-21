@@ -75,7 +75,7 @@ export class OrderService {
                     await this.prisma.product_variant.update({
                         where: { id: isValidProductVariant.id },
                         data: {
-                            stock: isValidProductVariant.stock - 1
+                            stock: isValidProductVariant.stock - quantity
                         }
                     })
                 ])
@@ -108,6 +108,52 @@ export class OrderService {
                 take: take || 10,
                 skip: skip || 0,
                 include: {
+                    users: {
+                        select: {
+                            first_name: true,
+                            last_name: true
+                        }
+                    }
+                }
+            }),
+        ])
+        return {
+            code: 200,
+            success: true,
+            message: "Success!",
+            data: {
+                orders,
+                totalPage: take ? Math.ceil(totalRecord / take) : Math.ceil(totalRecord / 10),
+                total: totalRecord,
+                skip: skip || 0,
+                take: take || 10
+            }
+        }
+    }
+
+    public async ordersCustomer(input: PaginationDto, userId: number): Promise<IResponse<{ orders: order[], totalPage: number, skip: number, take: number, total: number }>> {
+        const { skip, take } = input;
+        const [totalRecord, orders] = await this.prisma.$transaction([
+            this.prisma.order.count({
+                where: {
+                    users_id: userId
+                }
+            }),
+            this.prisma.order.findMany({
+                take: take || 10,
+                skip: skip || 0,
+                where: {
+                    users_id: userId
+                },
+                include: {
+                    billing_address: true,
+                    order_history: true,
+                    promotion: true,
+                    product_variant: {
+                        include: {
+                            featured_asset: true
+                        }
+                    },
                     users: {
                         select: {
                             first_name: true,

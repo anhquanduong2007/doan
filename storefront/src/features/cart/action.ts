@@ -5,10 +5,19 @@ import {
     addToCartFailed,
     getListProductOnCartStart,
     getListProductOnCartSuccess,
-    getListProductOnCartFailed
+    getListProductOnCartFailed,
+    deleteProductFromCartStart,
+    deleteProductFromCartSuccess,
+    deleteProductFromCartFailed,
+    getCartStart,
+    getCartSuccess,
+    getCartFailed,
+    updateCartStart,
+    updateCartSuccess,
+    updateCartFailed
 } from "./cartSlice";
 import type { AxiosInstance } from "axios";
-import { IAxiosResponse } from "src/types/axiosResponse";
+import { IAxiosResponse } from "src/shared/types/axiosResponse";
 import { CreateToastFnReturn } from "@chakra-ui/react";
 
 export type AddToCartParams = {
@@ -22,6 +31,19 @@ export type AddToCartParams = {
 }
 
 export type GetListProductOnCartParams = Omit<AddToCartParams, "cart" | "id">
+
+export type DeleteFromCartParams = Omit<AddToCartParams, "cart"> & {
+    refresh: boolean,
+    setRefresh: (refresh: boolean) => void
+}
+
+export type GetCartParams = Omit<AddToCartParams, "cart">
+
+export type UpdateCartParams = AddToCartParams & {
+    refresh: boolean,
+    setRefresh: (refresh: boolean) => void,
+    setError: Function
+}
 
 export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: AddToCartParams) => {
     try {
@@ -100,3 +122,98 @@ export const getListProductOnCart = async ({ axiosClientJwt, dispatch, toast }: 
         })
     }
 }
+
+export const deleteFromCart = async ({ axiosClientJwt, dispatch, id, toast, refresh, setRefresh }: DeleteFromCartParams) => {
+    try {
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(deleteProductFromCartStart());
+        const res: IAxiosResponse<{}> = await axiosClientJwt.delete(`product/cart/delete/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(deleteProductFromCartSuccess(res.response.data));
+                toast({
+                    status: 'success',
+                    title: "Deleted from card!",
+                    isClosable: true,
+                    position: "top"
+                })
+                setRefresh(!refresh)
+            }, 1000);
+        } else {
+            dispatch(deleteProductFromCartFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(deleteProductFromCartFailed(null));
+        toast({
+            status: 'error',
+            title: "Something went wrong!",
+            isClosable: true,
+        })
+    }
+}
+
+export const getCart = async ({ axiosClientJwt, dispatch, id, toast }: GetCartParams) => {
+    try {
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(getCartStart());
+        const res: IAxiosResponse<{}> = await axiosClientJwt.get(`product/cart/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (res?.response?.code === 200 && res?.response?.success) {
+            dispatch(getCartSuccess(res.response.data));
+        } else {
+            dispatch(getCartFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(getCartFailed(null));
+        toast({
+            status: 'error',
+            title: "Something went wrong!",
+            isClosable: true,
+        })
+    }
+}
+
+export const updateCart = async ({ axiosClientJwt, dispatch, id, toast, cart, refresh, setRefresh, setError }: UpdateCartParams) => {
+    try {
+        const { quantity } = cart
+        console.log(quantity)
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(updateCartStart());
+        const res: IAxiosResponse<{}> = await axiosClientJwt.put(`product/cart/update/${id}`, {
+            quantity
+        }, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(updateCartSuccess(res.response.data));
+                setRefresh(!refresh)
+            }, 1000);
+        } else if (res?.response?.code === 400 && !res?.response?.success) {
+            setTimeout(function () {
+                dispatch(updateCartFailed(null));
+                setError(res.response.fieldError, { message: res.response.message })
+            }, 1000);
+        } else {
+            dispatch(updateCartFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(updateCartFailed(null));
+        toast({
+            status: 'error',
+            title: "Something went wrong!",
+            isClosable: true,
+        })
+    }
+}
+
+

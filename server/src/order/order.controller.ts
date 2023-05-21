@@ -83,7 +83,7 @@ export class OrderController implements OnApplicationBootstrap {
                             }
                         })
                     ])
-                    return res.redirect('http://localhost:4201/');
+                    return res.redirect('http://localhost:4200/');
                 }
             });
         } catch (error) {
@@ -260,6 +260,14 @@ export class OrderController implements OnApplicationBootstrap {
         return res.json({ response });
     }
 
+    @Get('customer')
+    @Permission(Permissions.ReadOrder)
+    async getOrdersCustomer(@Req() req: Request, @Query() pagination: PaginationDto, @Res() res: Response) {
+        const userId = req.user['userId']
+        const response = await this.orderService.ordersCustomer(pagination, userId);
+        return res.json({ response });
+    }
+
     @Post('/create')
     @Permission(Permissions.CreateOrder)
     async create(@Req() req: Request, @Body() dto: OrderCreateDto, @Res() res: Response) {
@@ -282,10 +290,13 @@ export class OrderController implements OnApplicationBootstrap {
         return res.json({ response });
     }
 
+
+
     @Get()
     @Permission(Permissions.ReadOrder)
     async getOrders(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.orderService.orders(pagination);
         return res.json({ response });
     }
+
 }

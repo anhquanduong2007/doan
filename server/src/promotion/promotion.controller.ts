@@ -4,7 +4,7 @@ import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
 import { Response, Request } from 'express';
 import { PromotionService } from './promotion.service';
-import { PromotionCreateDto, PromotionUpdateDto } from './dto';
+import { CheckPromotionCodeDto, PromotionCreateDto, PromotionUpdateDto } from './dto';
 
 @Controller('promotion')
 export class PromotionController {
@@ -16,6 +16,12 @@ export class PromotionController {
     @Permission(Permissions.CreatePromotion)
     async create(@Body() dto: PromotionCreateDto, @Res() res: Response) {
         const response = await this.promotionService.create(dto);
+        return res.json({ response });
+    }
+
+    @Post('/check-code')
+    async checkPromotionCode(@Body() dto: CheckPromotionCodeDto, @Res() res: Response) {
+        const response = await this.promotionService.checkPromotionCode(dto);
         return res.json({ response });
     }
 

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import queryString from "query-string";
 import jwtDecode, { JwtPayload } from "jwt-decode";
-import { IAxiosResponse } from 'src/types/axiosResponse';
+import { IAxiosResponse } from 'src/shared/types/axiosResponse';
 
 export const createAxiosJwt = () => {
     const accessToken = localStorage.getItem("accessToken");

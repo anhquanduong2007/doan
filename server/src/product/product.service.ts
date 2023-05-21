@@ -777,18 +777,19 @@ export class ProductService {
                     success: false,
                 }
             }
-            if (quantity > productVariant.stock || quantity < productVariant.stock) {
+            if (productVariant.stock - quantity <= 0 || productVariant.stock - quantity >= productVariant.stock) {
                 return {
                     code: 400,
                     message: 'Quantity exceeded limit quantity!',
                     success: false,
+                    fieldError: "quantity"
                 }
             }
             return {
                 code: 200,
                 success: true,
                 message: "Successfully",
-                data: this.prisma.cart.updateMany({
+                data: await this.prisma.cart.updateMany({
                     where: {
                         product_variant_id: productVariantId,
                         users_id: customerId
@@ -809,7 +810,6 @@ export class ProductService {
 
     public async getListProductVariantFromCart(customerId: number): Promise<IResponse<cart[]>> {
         try {
-
             const [carts] = await this.prisma.$transaction([
                 this.prisma.cart.findMany({
                     where: {
@@ -818,7 +818,8 @@ export class ProductService {
                     include: {
                         product_variant: {
                             include: {
-                                product: true
+                                product: true,
+                                featured_asset: true
                             }
                         }
                     }
@@ -829,6 +830,40 @@ export class ProductService {
                 success: true,
                 message: "Successfully!",
                 data: carts
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async getItemOnCart(cartId: number): Promise<IResponse<cart>> {
+        try {
+            const cart = await this.prisma.cart.findUnique({
+                where: { id: cartId },
+                include: {
+                    product_variant: {
+                        include: {
+                            featured_asset: true
+                        }
+                    }
+                }
+            })
+            if (cart) {
+                return {
+                    code: 200,
+                    message: 'Success',
+                    success: true,
+                    data: cart
+                }
+            }
+            return {
+                code: 404,
+                message: 'Product does not exist in cart!',
+                success: false,
             }
         } catch (error) {
             return {

@@ -38,14 +38,14 @@ export class AddressController {
     }
 
     @Put('/update/:id')
-    @Permission(Permissions.UpdateRole)
+    @Permission(Permissions.UpdateCustomer)
     async update(@Body() dto: AddressUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.addressService.update(id, dto);
         return res.json({ response });
     }
 
     @Put('/default-shipping-address/:id')
-    @Permission(Permissions.UpdateRole)
+    @Permission(Permissions.UpdateCustomer)
     async setDefaultShippingAddress(@Body() dto: SetDefaultShippingAddressDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.addressService.setDefaultShippingAddress(dto, id);
         return res.json({ response });

@@ -20,7 +20,7 @@ export class AuthController {
   @Post('/login')
   async login(@Body() dto: LoginDto, @Res() res: Response) {
     const response = await this.authService.login(dto);
-    return res.status(response.code).send({ response });
+    return res.json({ response });
   }
 
   @Get('logout')
@@ -37,10 +37,18 @@ export class AuthController {
     return res.json({ response });
   }
 
-    @Post('refreshToken')
-    @UseGuards(RefreshTokenGuard)
-    async refreshTokens(@Req() req: Request, @Res() res: Response) {
-        const response = await this.authService.refreshTokens(req.user['userId'], req.user['refreshToken']);
-        return res.json({ response });
-    }
+  @Get('me')
+  @Permission()
+  async me(@Req() req: Request, @Res() res: Response) {
+    const response = await this.authService.me(req.user['userId']);
+    return res.json({ response });
+  }
+
+
+  @Post('refreshToken')
+  @UseGuards(RefreshTokenGuard)
+  async refreshTokens(@Req() req: Request, @Res() res: Response) {
+    const response = await this.authService.refreshTokens(req.user['userId'], req.user['refreshToken']);
+    return res.json({ response });
+  }
 }

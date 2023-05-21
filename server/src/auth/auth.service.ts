@@ -54,7 +54,6 @@ export class AuthService {
                     ...last_name && { last_name },
                     password: hashedPassword,
                     active,
-
                 },
             });
             delete user.password
@@ -110,6 +109,9 @@ export class AuthService {
             const { email, password } = input;
             const user = await this.prisma.users.findUnique({
                 where: { email: email },
+                include: {
+                    address: true
+                }
             })
             if (!user) {
                 return {
@@ -286,5 +288,30 @@ export class AuthService {
             access_token: at,
             refresh_token: rt,
         };
+    }
+
+    public async me(userId: number): Promise<IResponse<users>> {
+        try {
+            const me = await this.prisma.users.findUnique({
+                where: { id: userId },
+                include: {
+                    address: true
+                }
+            })
+            delete me.password
+            delete me.hashed_rt
+            return {
+                code: 200,
+                success: true,
+                message: 'Success!',
+                data: me
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
     }
 }

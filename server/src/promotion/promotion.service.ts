@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { IResponse } from 'src/common/types';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { PromotionCreateDto, PromotionUpdateDto } from './dto';
+import { CheckPromotionCodeDto, PromotionCreateDto, PromotionUpdateDto } from './dto';
 import { promotion } from '@prisma/client';
 import { PaginationDto } from 'src/common/dto';
 
@@ -179,6 +179,51 @@ export class PromotionService {
                 code: 404,
                 message: 'Promotion does not exist in the system!',
                 success: false,
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+    public async checkPromotionCode(input: CheckPromotionCodeDto): Promise<IResponse<promotion>> {
+        try {
+            const { coupon_code } = input
+            const promotion = await this.prisma.promotion.findUnique({
+                where: { coupon_code }
+            })
+            if (promotion) {
+                if (promotion.active === 0) {
+                    return {
+                        code: 400,
+                        message: 'Promotion has been disabled!',
+                        success: false,
+                        fieldError: "coupon_code",
+                    }
+                }
+                if (new Date(promotion.ends_at).getDate() - new Date().getDate() < 0) {
+                    return {
+                        code: 400,
+                        message: 'Promotion out of date!',
+                        success: false,
+                        fieldError: "coupon_code",
+                    }
+                }
+                return {
+                    code: 200,
+                    message: 'Success',
+                    success: true,
+                    data: promotion
+                }
+            }
+            return {
+                code: 404,
+                message: 'Promotion does not exist in the system!',
+                success: false,
+                fieldError: "coupon_code",
             }
         } catch (error) {
             return {

@@ -27,6 +27,13 @@ export class ProductController {
         return res.json({ response });
     }
 
+    @Get("cart/:id")
+    @Permission()
+    async getItemOnCart(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.productService.getItemOnCart(id);
+        return res.json({ response });
+    }
+
     @Post("cart/:id")
     @Permission()
     async addProductVariantToCard(@Req() req: Request, @Param('id', ParseIntPipe) id: number, @Body() dto: AddProductVariantToCartDto, @Res() res: Response) {

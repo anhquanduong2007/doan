@@ -5,3 +5,6 @@ export * from './productOption';
 export * from './productVariant';
 export * from './asset';
 export * from './cart';
+export * from './promotion';
+export * from './order';
+export * from './pagination';
