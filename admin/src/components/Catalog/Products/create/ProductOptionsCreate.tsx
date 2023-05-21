@@ -51,7 +51,6 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
             }
 
             if (variantArr?.length > 0) {
-                console.log("variantArr", variantArr)
                 setVariantItem(variantArr)
                 variantArr.forEach((item, index) => {
                     setValue(`variant[${index}].name`, item.variantCode);
@@ -59,6 +58,8 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
                     setValue(`stock[${index}]`, 0);
                 })
             }
+        } else {
+            setVariantItem([])
         }
     }, [watchOption])
 
