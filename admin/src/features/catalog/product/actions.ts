@@ -204,6 +204,9 @@ export const createProductVariantOption = async ({
     variants,
     dispatch,
     axiosClient,
+    navigate,
+    message,
+    setError
 }: any) => {
     dispatch(createProductVariantStart());
     try {
@@ -220,6 +223,8 @@ export const createProductVariantOption = async ({
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createProductVariantSuccess(res.response.data));
+                navigate("/catalog/products");
+                message.success("Create product successfully!");
             }, 1000);
         } else {
             dispatch(
@@ -228,6 +233,9 @@ export const createProductVariantOption = async ({
                     message: res.response.message,
                 }),
             );
+            //show error when create product variant failed
+            setError(res.response.fieldError, { message: res.response.message });
+
         }
     } catch (error) {
         dispatch(createProductVariantFailed(null));

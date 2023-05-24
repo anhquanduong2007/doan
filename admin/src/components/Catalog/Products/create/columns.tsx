@@ -41,7 +41,7 @@ export const columns = () => [
     },
 ];
 
-export const data = ({ control, errors, variantItem, register, setValue }): DataType[] => {
+export const data = ({ control, errors, variantItem, register, setValue, clearErrors }): DataType[] => {
     return variantItem.map((_item, index) => {
         return {
             sku: (
@@ -62,6 +62,7 @@ export const data = ({ control, errors, variantItem, register, setValue }): Data
                                     onChange={e => {
                                         setValue(`variant[${index}].sku`, e.target.value);
                                         onChange(e.target.value)
+                                        clearErrors('sku')
                                     }}
                                     {...other}
                                     value={value || ''}
