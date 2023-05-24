@@ -33,8 +33,10 @@ const options: SelectProps["options"] = [];
 
 const ProductCreate: React.FC = () => {
   const [isSubmited, setIsSubmited] = useState<boolean>(false);
-  const [isProductOptionSubmited, setIsProductOptionSubmited] = useState<boolean>(false);
-  const [isProductVariantSubmited, setIsProductVariantSubmited] = useState<boolean>(false);
+  const [isProductOptionSubmited, setIsProductOptionSubmited] =
+    useState<boolean>(false);
+  const [isProductVariantSubmited, setIsProductVariantSubmited] =
+    useState<boolean>(false);
   const [formIsSubmited, setFormIsSubmited] = useState<boolean>(false);
   const [enabled, setEnabled] = useState<boolean>(true);
   const [variantItem, setVariantItem] = useState<number[]>([]);
@@ -56,6 +58,7 @@ const ProductCreate: React.FC = () => {
     setError,
     register,
     getValues,
+    clearErrors,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -82,13 +85,11 @@ const ProductCreate: React.FC = () => {
       !store.createProduct.loading &&
       isSubmited &&
       !store.createProduct.error &&
-      store.createProduct.result && 
+      store.createProduct.result &&
       !store.createProductOption.error &&
       !store.createProductVariant.error
     ) {
       setIsSubmited(false);
-    //   navigate("catalog/products");
-    //   message.success("Create product successfully!");
     }
     // ** Check product is have error
     if (
@@ -120,29 +121,11 @@ const ProductCreate: React.FC = () => {
       const error = { ...store.createProductOption.result };
       setError(error.fieldError, { message: error.message });
     }
-  }, [store.createProductOption.loading, isProductOptionSubmited, store.createProductOption.error]);
-
-  useEffect(() => {
-    // ** Create product option
-    if (
-      !store.createProductVariant.loading &&
-      !store.createProductVariant.error &&
-      store.createProductVariant.result
-    ) {
-      setIsProductOptionSubmited(false);
-      navigate("/catalog/products");
-      message.success("Create product successfully!");
-    }
-    // ** Check product option is have error
-    // if (
-    //   !store.createProductVariant.loading &&
-    //   store.createProductVariant.error &&
-    //   store.createProductVariant.result
-    // ) {
-    //   const error = { ...store.createProductVariant.result };
-    //   setError(error.fieldError, { message: error.message });
-    // }
-  }, [store.createProductVariant.loading, isProductOptionSubmited, store.createProductVariant.error,  store.createProductVariant.result]);
+  }, [
+    store.createProductOption.loading,
+    isProductOptionSubmited,
+    store.createProductOption.error,
+  ]);
 
   const onSubmit = async (data) => {
     setFormIsSubmited(true);
@@ -174,11 +157,11 @@ const ProductCreate: React.FC = () => {
   useEffect(() => {
     //Create Product option {...option, product_id}
     if (
-      (store.createProduct.result &&
-        !store.createProduct.loading &&
-        !store.createProduct.error &&
-        productOptions &&
-      formIsSubmited)
+      store.createProduct.result &&
+      !store.createProduct.loading &&
+      !store.createProduct.error &&
+      productOptions &&
+      formIsSubmited
     ) {
       const options = productOptions.map((item) => {
         return {
@@ -206,9 +189,9 @@ const ProductCreate: React.FC = () => {
     //Create product variant
     if (
       !store.createProductOption.loading &&
-      store.createProductOption.result && 
+      store.createProductOption.result &&
       !store.createProduct.error &&
-      !store.createProductOption.error && 
+      !store.createProductOption.error &&
       formIsSubmited
     ) {
       const colorValue = store.createProductOption.result?.filter(
@@ -267,6 +250,9 @@ const ProductCreate: React.FC = () => {
           axiosClient,
           dispatch,
           variants: variantOption,
+          navigate,
+          message,
+          setError
         });
     }
   }, [
@@ -276,7 +262,7 @@ const ProductCreate: React.FC = () => {
     store.createProduct.error,
     store.createProductOption.error,
     formIsSubmited,
-    setFormIsSubmited
+    setFormIsSubmited,
   ]);
 
   useEffect(() => {
@@ -408,6 +394,7 @@ const ProductCreate: React.FC = () => {
                         variantItem,
                         register,
                         setValue,
+                        clearErrors
                       })}
                       pagination={{ hideOnSinglePage: true }}
                     />
