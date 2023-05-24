@@ -37,7 +37,7 @@ const ProductBy = ({ title, url }: ProductByProps) => {
                             {
                                 product.map((p, index) => {
                                     const price = p.product_variants.map((variant) => variant.price)
-                                    return <CardProduct key={index} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} />
+                                    return <CardProduct key={index} span={4} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} />
                                 })
                             }
                         </Row>

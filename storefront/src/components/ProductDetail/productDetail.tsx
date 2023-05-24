@@ -1,16 +1,15 @@
 import React, { Fragment } from 'react'
-import Layout from '../Layout/layout'
 import { useForm, Controller } from "react-hook-form"
 import formatMoney from 'src/shared/utils/formatMoney';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button, FormControl, HStack, Input, Select, useToast } from '@chakra-ui/react';
+import { Breadcrumb, BreadcrumbItem, Button, FormControl, HStack, Input, Select, useToast } from '@chakra-ui/react';
 import { ChevronRight } from 'react-feather';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { createAxiosClient, createAxiosJwt } from 'src/axios/axiosInstance';
 import { IAxiosResponse, Product, ProductOption } from 'src/shared/types';
-import Loading from 'src/components/Loading';
 import { addToCart } from 'src/features/cart/action';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { Col, Row } from 'antd';
+import { Col, Row, Divider } from 'antd';
+import Rating from '../Rating';
 
 const ProductDetail = () => {
     // ** Variables
@@ -170,8 +169,11 @@ const ProductDetail = () => {
                             </Col>
                         </Row>
                     </Col>
+                    <Divider />
+                    <Col span={24}>
+                        <Rating />
+                    </Col>
                 </Row>
-
             </div>
         </React.Fragment>
     )

@@ -74,7 +74,6 @@ export class ProductController {
     }
 
     @Get()
-    @Permission(Permissions.ReadProduct, Permissions.Anonymous)
     async getProducts(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.productService.products(pagination);
         return res.json({ response });

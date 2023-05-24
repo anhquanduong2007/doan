@@ -1,5 +1,4 @@
 import { Transform } from 'class-transformer';
-
 export class PaginationDto {
     @Transform(({ value }) => +value)
     skip?: number;
@@ -10,4 +9,8 @@ export class PaginationDto {
     search?: string
 
     active?: number
+
+    categories?: number[]
+
+    price?: number
 }

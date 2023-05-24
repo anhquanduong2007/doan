@@ -43,7 +43,6 @@ export class CategoryController {
     }
 
     @Get()
-    @Permission(Permissions.ReadCategory)
     async getCategories(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.categoryService.categories(pagination);
         return res.json({ response });

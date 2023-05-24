@@ -144,9 +144,29 @@ export class ProductService {
 
     public async products(input: PaginationDto): Promise<IResponse<{ products: product[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
-            const { skip, take, search } = input;
+            const { skip, take, search, categories, price } = input;
             const [totalRecord, products] = await this.prisma.$transaction([
-                this.prisma.product.count(),
+                this.prisma.product.count({
+                    where: {
+                        ...search && {
+                            name: {
+                                contains: search
+                            },
+                        },
+                        ...categories && {
+                            category_id: { in: [...categories].map((category) => +category) }
+                        },
+                        ...price && {
+                            product_variants: {
+                                some: {
+                                    price: {
+                                        gte: +price
+                                    }
+                                }
+                            }
+                        }
+                    },
+                }),
                 this.prisma.product.findMany({
                     ...take && { take },
                     ...skip && { skip },
@@ -155,9 +175,22 @@ export class ProductService {
                             name: {
                                 contains: search
                             },
+                        },
+                        ...categories && {
+                            category_id: { in: [...categories].map((category) => +category) }
+                        },
+                        ...price && {
+                            product_variants: {
+                                some: {
+                                    price: {
+                                        gte: +price
+                                    }
+                                }
+                            }
                         }
                     },
                     include: {
+                        product_variants: true,
                         featured_asset: true,
                     }
                 }),
@@ -607,55 +640,6 @@ export class ProductService {
         }
     }
 
-    // ** Product favorite **
-    public async addProductFavorite() {
-        try {
-
-        } catch (error) {
-            return {
-                code: 500,
-                message: "An error occurred in the system!",
-                success: false,
-            }
-        }
-    }
-
-    public async listProductFavorite() {
-        try {
-
-        } catch (error) {
-            return {
-                code: 500,
-                message: "An error occurred in the system!",
-                success: false,
-            }
-        }
-    }
-
-    public async removeProductFavorite() {
-        try {
-
-        } catch (error) {
-            return {
-                code: 500,
-                message: "An error occurred in the system!",
-                success: false,
-            }
-        }
-    }
-
-    public async bulkRemoveProductFavorite() {
-        try {
-
-        } catch (error) {
-            return {
-                code: 500,
-                message: "An error occurred in the system!",
-                success: false,
-            }
-        }
-    }
-
     // ** Cart **
     public async addProductVariantToCart(input: AddProductVariantToCartDto, customerId: number, productVariantId: number): Promise<IResponse<cart>> {
         try {
@@ -906,4 +890,5 @@ export class ProductService {
             }
         }
     }
+
 }

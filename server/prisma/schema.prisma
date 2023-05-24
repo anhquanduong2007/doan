@@ -41,18 +41,6 @@ model category {
   @@index([parent_id], map: "fk_category_parent_id")
 }
 
-model favorite {
-  id           Int       @id @default(autoincrement())
-  product_id   Int
-  user_id      Int
-  created_date DateTime? @db.Timestamp(0)
-  product      product   @relation(fields: [product_id], references: [id], onUpdate: Restrict, map: "fk_favorite_product")
-  users        users     @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_favorite_user")
-
-  @@index([product_id], map: "fk_favorite_product")
-  @@index([user_id], map: "fk_favorite_user")
-}
-
 model asset {
   id                   Int               @id @default(autoincrement())
   name                 String
@@ -81,7 +69,6 @@ model product {
   modified_date     DateTime?         @updatedAt
   created_by        Int?
   modified_by       Int?
-  favorite          favorite[]
   category          category?         @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
   product_variants  product_variant[]
   featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
@@ -187,7 +174,6 @@ model users {
   modified_date DateTime     @updatedAt
   created_by    Int?
   modified_by   Int?
-  favorite      favorite[]
   rate          rate[]
   users_role    users_role[]
   address       address[]

@@ -104,7 +104,11 @@ export class CategoryService {
             const category = await this.prisma.category.findUnique({
                 where: { id },
                 include: {
-                    product: true
+                    product: {
+                        include: {
+                            featured_asset: true
+                        }
+                    }
                 }
             })
             if (category) {
@@ -143,6 +147,9 @@ export class CategoryService {
                     skip: skip || 0,
                     where: {
                         parent_id: null
+                    },
+                    include: {
+                        other_category: true
                     }
                 }),
             ])

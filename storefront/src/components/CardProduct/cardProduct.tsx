@@ -8,11 +8,12 @@ interface CardProductProps {
   img: string
   max: number
   min: number
+  span: number
 }
 
-const CardProduct = ({ name, id, img, min, max }: CardProductProps) => {
+const CardProduct = ({ name, id, img, min, max, span }: CardProductProps) => {
   return (
-    <Col span={4} className='!flex'>
+    <Col span={span} className='!flex'>
       <Card
         className='flex-1'
         cover={<img alt="example" src={img ? img : 'https://inantemnhan.com.vn/wp-content/uploads/2017/10/no-image.png'} className='p-5' />}

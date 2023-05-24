@@ -8,3 +8,5 @@ export * from './cart';
 export * from './promotion';
 export * from './order';
 export * from './pagination';
+export * from './rating';
+export * from './category';

@@ -27,10 +27,9 @@ export class RateController {
         res.json({ response })
     }
 
-    @Get()
-    @Permission(Permissions.ReadRate)
-    async getRates(@Query() pagination: PaginationDto, @Res() res: Response) {
-        const response = await this.rateService.rates(pagination);
+    @Get("list/:id")
+    async getRates(@Query() pagination: PaginationDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.rateService.rates(pagination, id);
         return res.json({ response });
     }
 

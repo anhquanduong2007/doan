@@ -73,8 +73,7 @@ const CategoryCreateUpdate = () => {
             dispatch,
         })
     }, [id])
-
-    console.log(category.single.result)
+    
     useEffect(() => {
         if (id && !category.single.loading && category.single.result) {
             setValue("category_code", category.single.result.category_code)

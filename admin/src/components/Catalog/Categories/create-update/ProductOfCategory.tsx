@@ -26,6 +26,7 @@ const columns = (
             dataIndex: 'name',
             key: 'name',
             render: (name, record) => {
+                console.log(record.url)
                 return (
                     <Flex alignItems={"center"}>
                         <Avatar src={<img src={record.url} style={{ width: 40 }} />} />
