@@ -98,7 +98,7 @@ const Purchase = () => {
                                                 </Flex>
                                                 {
                                                     order.promotion ? (
-                                                        <Flex>
+                                                        <Flex justifyContent="space-between">
                                                             <p>Discount</p>
                                                             <p>x{order.promotion.discount}%</p>
                                                         </Flex>

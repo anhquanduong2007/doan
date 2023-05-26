@@ -196,6 +196,14 @@ export class PromotionService {
                 where: { coupon_code }
             })
             if (promotion) {
+                if (promotion.limit === 0) {
+                    return {
+                        code: 400,
+                        message: 'Promotion has been out of code!',
+                        success: false,
+                        fieldError: "coupon_code",
+                    }
+                }
                 if (promotion.active === 0) {
                     return {
                         code: 400,

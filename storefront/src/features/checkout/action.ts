@@ -125,6 +125,7 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createOrderSuccess(res.response.data));
+                dispatch(resetPromotion())
                 toast({
                     status: 'success',
                     title: "Successfully!",

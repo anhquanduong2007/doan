@@ -78,6 +78,14 @@ export class OrderService {
                             stock: isValidProductVariant.stock - quantity
                         }
                     }),
+                    ...promotion_id ? [
+                        await this.prisma.promotion.update({
+                            where: { id: promotion_id },
+                            data: {
+                                limit: isValidPromotion.limit - 1
+                            }
+                        })
+                    ] : [],
                     await this.prisma.cart.deleteMany({
                         where: {
                             product_variant_id: isValidProductVariant.id,

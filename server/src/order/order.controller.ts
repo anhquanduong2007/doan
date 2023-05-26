@@ -7,7 +7,7 @@ import { OrderConfirmRefund, OrderCreateDto } from './dto';
 import { PaginationDto } from 'src/common/dto';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { OrderStatus, PaymentMethod } from '@prisma/client';
+import { OrderStatus, PaymentMethod, promotion } from '@prisma/client';
 import { fromString } from 'uuidv4';
 const paypal = require('paypal-rest-sdk');
 
@@ -48,6 +48,10 @@ export class OrderController implements OnApplicationBootstrap {
                 }
             })
             const variant = await this.prisma.product_variant.findUnique({ where: { id: order.product_variant_id } })
+            let promotion: promotion;
+            if (order.promotion_id) {
+                promotion = await this.prisma.promotion.findUnique({ where: { id: order.promotion_id } })
+            }
             const execute_payment_json = {
                 "payer_id": payerId,
                 "transactions": [{
@@ -82,6 +86,14 @@ export class OrderController implements OnApplicationBootstrap {
                                 stock: variant.stock - order.quantity
                             }
                         }),
+                        ...order.promotion_id ? [
+                            await this.prisma.promotion.update({
+                                where: { id: order.promotion_id },
+                                data: {
+                                    limit: promotion.limit - 1
+                                }
+                            })
+                        ] : [],
                         await this.prisma.cart.deleteMany({
                             where: {
                                 product_variant_id: variant.id,

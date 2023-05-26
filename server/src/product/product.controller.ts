@@ -18,6 +18,13 @@ export class ProductController {
         return res.json({ response });
     }
 
+    @Get('most-bought')
+    async getPorudctMostBought(@Res() res: Response) {
+        const response = await this.productService.getPorudctMostBought();
+        return res.json({ response });
+    }
+
+
     // ** Cart
     @Get("cart")
     @Permission()

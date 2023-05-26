@@ -40,7 +40,7 @@ const LoginPage: React.FC = () => {
 
     React.useEffect(() => {
         if (accessToken) {
-            navigate('/')
+            navigate('/dashboard')
         }
     }, [accessToken])
 

@@ -29,7 +29,7 @@ const HomePage = () => {
             <Header style={{ backgroundColor: "white", position: "relative", zIndex: 10, boxShadow: "0 2px 8px #f0f1f2" }}>
                 <Row justify='start' align='middle' style={{ height: "100%" }} >
                     <Col span={4}>
-                        <Link to='/'>
+                        <Link to='/dashboard'>
                             <img src={logo} alt='Logo' />
                         </Link>
                     </Col>

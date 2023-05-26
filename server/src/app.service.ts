@@ -38,6 +38,8 @@ export class AppService implements OnApplicationBootstrap {
             await this.prisma.users.create({
                 data: {
                     email: "superadmin@gmail.com",
+                    first_name: "super",
+                    last_name: "admin",
                     password: await argon2.hash("superadmin"),
                     users_role: {
                         createMany: {
@@ -78,6 +80,8 @@ export class AppService implements OnApplicationBootstrap {
             await this.prisma.users.create({
                 data: {
                     email: "superadmin@gmail.com",
+                    first_name: "super",
+                    last_name: "admin",
                     password: await argon2.hash("superadmin"),
                     users_role: {
                         createMany: {

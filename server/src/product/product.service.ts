@@ -5,6 +5,7 @@ import { IResponse } from 'src/common/types';
 import { cart, product, product_option, product_variant } from '@prisma/client';
 import { PaginationDto } from 'src/common/dto';
 import { ProductUpdateDto, OptionBulkCreateDto } from './dto';
+import { uniqBy } from 'lodash'
 
 @Injectable()
 export class ProductService {
@@ -890,5 +891,54 @@ export class ProductService {
             }
         }
     }
+
+    public async getPorudctMostBought() {
+        try {
+            const [variants] = await this.prisma.$transaction([
+                // @ts-ignore: Unreachable code error
+                this.prisma.order.groupBy({
+                    by: ["product_variant_id"],
+                    orderBy: {
+                        _sum: {
+                            product_variant_id: "desc"
+                        }
+                    },
+                }),
+            ])
+            // @ts-ignore: Unreachable code error
+            const products = []
+            for (const element of variants) {
+                const user = (await this.prisma.product.findMany({
+                    where: {
+                        product_variants: {
+                            some: {
+                                id: element.product_variant_id.id
+                            }
+                        }
+                    },
+                    include: {
+                        featured_asset: true,
+                        product_variants: true
+                    }
+                }))
+                products.push(user)
+            }
+            return {
+                code: 200,
+                success: true,
+                message: "Success!",
+                data: uniqBy(products.flat(1), "id").slice(0, 8)
+            }
+        } catch (error) {
+            console.log(error)
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
+
+
 
 }

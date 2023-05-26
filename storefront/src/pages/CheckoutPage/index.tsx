@@ -15,6 +15,7 @@ import formatMoney from 'src/shared/utils/formatMoney';
 import Address from 'src/components/Checkout/Address';
 import { UserAddress } from 'src/shared/types';
 import { ChevronRight } from 'react-feather';
+import { resetPromotion } from 'src/features/checkout/checkoutSlice';
 
 export enum PaymentMethod {
     Standard = "Standard",
@@ -335,6 +336,7 @@ const CheckoutPage = () => {
                                                                 ...checkout.promotion.result && { promotion_id: checkout.promotion.result.id }
                                                             }).then((data: any) => {
                                                                 window.location.replace(data?.paymentUrl);
+                                                                dispatch(resetPromotion())
                                                             })
                                                         }
                                                     }}
