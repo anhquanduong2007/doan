@@ -10,13 +10,14 @@ import Button from "antd-button-color";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { getValueByName } from "src/hooks/catalog";
 
-const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) => {
+const ProductOptionsCreate = ({ control, register, setVariantItem, setValue, watch }) => {
     const { fields, append, remove } = useFieldArray({
         control,
         name: "option",
     });
     //watch change option
     const watchOption = useWatch({ name: "option", control });
+    const watchNameProduct = watch('name');
 
     useEffect(() => {
         //create input to clien type sku,price, stock, auto fill variant
@@ -28,7 +29,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
             if (colorOption && sizeOption) {
                 colorOption?.map((color) => {
                     const sizeMap = sizeOption?.map((size) => {
-                        const variantCode = `${color}-${size}`
+                        const variantCode = `${watchNameProduct}-${color}-${size}`
                         return {
                             variantCode: variantCode,
                         }
@@ -37,13 +38,13 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
                 })
             } else {
                 colorOption && colorOption?.map((color) => {
-                    const variantCode = `${color}`
+                    const variantCode = `${watchNameProduct}-${color}`
                     return variantArr.push({
                         variantCode: variantCode,
                     })
                 })
                 sizeOption && sizeOption?.map((color) => {
-                    const variantCode = `${color}`
+                    const variantCode = `${watchNameProduct}-${color}`
                     return variantArr.push({
                         variantCode: variantCode,
                     })
@@ -61,7 +62,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue }) =
         } else {
             setVariantItem([])
         }
-    }, [watchOption])
+    }, [watchOption, watchNameProduct])
 
     return (
         <Fragment>

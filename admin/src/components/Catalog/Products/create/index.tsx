@@ -58,6 +58,7 @@ const ProductCreate: React.FC = () => {
     setError,
     register,
     getValues,
+    watch,
     clearErrors,
     formState: { errors },
   } = useForm({
@@ -352,6 +353,7 @@ const ProductCreate: React.FC = () => {
                         setProductOptions={setProductOptions}
                         setVariantItem={setVariantItem}
                         setValue={setValue}
+                        watch={watch}
                       />
                     </Col>
                     <Col span={5}>
