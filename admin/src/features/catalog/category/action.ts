@@ -15,12 +15,6 @@ import {
     updateCategoryStart,
     updateCategorySuccess,
     updateCategoryFailed,
-    getListCategoryChildrenStart,
-    getListCategoryChildrenSuccess,
-    getListCategoryChildrenFailed,
-    removeCategoryParentStart,
-    removeCategoryParentSuccess,
-    removeCategoryParentFailed
 } from "./categorySlice";
 import { AxiosInstance } from "axios";
 import { NavigateFunction } from "react-router-dom";
@@ -59,16 +53,6 @@ export type CategoryCreate = {
     description?: string
     active: number
     parent_id?: number
-}
-
-interface GetListCategoryChildrenParams extends Omit<GetListCategoryParams, "pagination"> {
-    id: number
-}
-
-interface RemoveCategoryParentParams extends GetListCategoryChildrenParams {
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-    message: MessageApi
 }
 
 export type GetCategoryParams = Omit<GetListCategoryParams, "pagination"> & { id: number }
@@ -190,78 +174,6 @@ export const createCategory = async ({ category, dispatch, axiosClientJwt, navig
         }
     } catch (error: any) {
         dispatch(createCategoryFailed(null));
-        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
-            Inotification({
-                type: 'error',
-                message: 'You do not have permission to perform this action!'
-            })
-            setTimeout(function () {
-                navigate('/')
-            }, 1000);
-        } else {
-            Inotification({
-                type: 'error',
-                message: 'Something went wrong!'
-            })
-        }
-    }
-}
-
-export const getListCategoryChildren = async ({ id, dispatch, axiosClientJwt, navigate }: GetListCategoryChildrenParams) => {
-    try {
-        const accessToken = localStorage.getItem("accessToken")
-        dispatch(getListCategoryChildrenStart());
-        const res: IAxiosResponse<{}> = await axiosClientJwt.get(`/category/children/${id}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
-        if (res?.response?.code === 200 && res?.response?.success) {
-            setTimeout(function () {
-                dispatch(getListCategoryChildrenSuccess(res.response.data));
-            }, 1000)
-        } else {
-            dispatch(getListCategoryChildrenFailed(null));
-        }
-    } catch (error: any) {
-        dispatch(getListCategoryChildrenFailed(null));
-        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
-            Inotification({
-                type: 'error',
-                message: 'You do not have permission to perform this action!'
-            })
-            setTimeout(function () {
-                navigate('/')
-            }, 1000);
-        } else {
-            Inotification({
-                type: 'error',
-                message: 'Something went wrong!'
-            })
-        }
-    }
-}
-
-export const removeCategoryParent = async ({ axiosClientJwt, dispatch, id, navigate, message, refresh, setRefresh }: RemoveCategoryParentParams) => {
-    try {
-        const accessToken = localStorage.getItem("accessToken")
-        dispatch(removeCategoryParentStart());
-        const res: IAxiosResponse<{}> = await axiosClientJwt.put(`/category/remove-category-parent/${id}`, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
-        });
-        if (res?.response?.code === 200 && res?.response?.success) {
-            setTimeout(function () {
-                dispatch(removeCategoryParentSuccess(res.response.data));
-                message.success('Remove category parent successfully!')
-                setRefresh(!refresh)
-            }, 1000)
-        } else {
-            dispatch(removeCategoryParentFailed(null));
-        }
-    } catch (error: any) {
-        dispatch(removeCategoryParentFailed(null));
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',

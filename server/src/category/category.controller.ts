@@ -3,7 +3,7 @@ import { CategoryService } from './category.service';
 import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
 import { Response, Request } from 'express';
-import { CategoryCreateDto, CategoryUpdateDto, SetCategoryParentDto } from './dto';
+import { CategoryCreateDto, CategoryUpdateDto } from './dto';
 import { PaginationDto } from 'src/common/dto';
 
 @Controller('category')
@@ -46,20 +46,5 @@ export class CategoryController {
     async getCategories(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.categoryService.categories(pagination);
         return res.json({ response });
-    }
-
-    @Get('children/:id')
-    @Permission(Permissions.ReadCategory)
-    async categoriesChildren(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const response = await this.categoryService.categoriesChildren(id);
-        return res.json({ response });
-    }
-
-    @Put("remove-category-parent/:id")
-    @Permission(Permissions.UpdateCategory)
-    async removeCategoryParent(@Req() req: Request, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const userId = req.user['userId']
-        const response = await this.categoryService.removeCategoryParent(id, userId)
-        res.json({ response })
     }
 }

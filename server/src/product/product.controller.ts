@@ -24,6 +24,11 @@ export class ProductController {
         return res.json({ response });
     }
 
+    @Get('options')
+    async getProductOptions(@Res() res: Response) {
+        const response = await this.productService.getProductOptions();
+        return res.json({ response });
+    }
 
     // ** Cart
     @Get("cart")

@@ -17,9 +17,10 @@ interface ProductList {
 interface ListProductProps {
     filterCategories: number[],
     price: number
+    opts: number[]
 }
 
-const ListProduct = ({ filterCategories, price }: ListProductProps) => {
+const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
     // ** State
     const [products, setProducts] = React.useState<ProductList>()
     const [take, setTake] = useState<number>(12)
@@ -36,15 +37,16 @@ const ListProduct = ({ filterCategories, price }: ListProductProps) => {
             params: {
                 skip,
                 take,
-                search,
+                search: value,
                 categories: filterCategories,
                 price,
+                options: opts
             }
         }).then((res) => {
             const result = { ...res } as unknown as IAxiosResponse<Product[]>
             setProducts(result.response.data as unknown as ProductList)
         })
-    }, [filterCategories, search, skip, take, price])
+    }, [filterCategories, value, skip, take, price, opts])
 
     // ** Function handle
     const handleOnChangePagination = (e: number) => {

@@ -10,6 +10,9 @@ const ProductPage = () => {
     // ** State
     const [filterCategories, setFilterCategories] = React.useState<number[]>()
     const [price, setPrice] = React.useState<number>(100);
+    const [size, setSize] = React.useState<number[]>([])
+    const [color, setColor] = React.useState<number[]>([])
+
 
     return (
         <Fragment>
@@ -28,10 +31,10 @@ const ProductPage = () => {
                     <Col span={24}>
                         <Row gutter={[16, 16]}>
                             <Col span={5}>
-                                <FilterProduct setFilterCategories={setFilterCategories} setPrice={setPrice} price={price as number}/>
+                                <FilterProduct setFilterCategories={setFilterCategories} setPrice={setPrice} price={price as number} setSize={setSize} setColor={setColor} />
                             </Col>
                             <Col span={19}>
-                                <ListProduct filterCategories={filterCategories as number[]} price={price as number} />
+                                <ListProduct filterCategories={filterCategories as number[]} price={price as number} opts={[...size, ...color]} />
                             </Col>
                         </Row>
                     </Col>

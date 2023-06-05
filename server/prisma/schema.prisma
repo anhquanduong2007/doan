@@ -24,21 +24,16 @@ model address {
 }
 
 model category {
-  id             Int        @id @default(autoincrement())
-  category_name  String     @db.VarChar(255)
-  category_code  String     @unique @db.VarChar(255)
-  description    String?
-  parent_id      Int?
-  active         Int        @default(1)
-  created_date   DateTime?  @default(now())
-  modified_date  DateTime?  @updatedAt
-  created_by     Int?
-  modified_by    Int?
-  category       category?  @relation("categoryTocategory", fields: [parent_id], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "fk_category_parent_id")
-  other_category category[] @relation("categoryTocategory")
-  product        product[]
-
-  @@index([parent_id], map: "fk_category_parent_id")
+  id            Int       @id @default(autoincrement())
+  category_name String    @db.VarChar(255)
+  category_code String    @unique @db.VarChar(255)
+  description   String?
+  active        Int       @default(1)
+  created_date  DateTime? @default(now())
+  modified_date DateTime? @updatedAt
+  created_by    Int?
+  modified_by   Int?
+  product       product[]
 }
 
 model asset {

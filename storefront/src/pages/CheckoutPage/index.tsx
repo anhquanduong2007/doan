@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
 import { Row, Col, Form, Input, Button } from 'antd';
 import Layout from 'src/components/Layout/layout';
-import { Box, BreadcrumbItem, Card, HStack, useToast, Breadcrumb } from '@chakra-ui/react';
+import { Box, BreadcrumbItem, Card, HStack, useToast, Breadcrumb, Flex } from '@chakra-ui/react';
 import { Divider } from 'antd'
 import Icon1 from '../../assets/icon-footer/icon-pay-01.png'
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -32,6 +32,7 @@ const CheckoutPage = () => {
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.Standard)
     const [refresh, setRefresh] = useState<boolean>(false)
     const [address, setAddress] = useState<UserAddress>()
+    const [couponModal, setCouponModal] = useState<boolean>(false)
 
     // ** Variables
     const axiosClient = createAxiosClient();
@@ -124,6 +125,7 @@ const CheckoutPage = () => {
                                         <Row gutter={[16, 0]}>
                                             <Col span={6}>
                                                 <img
+                                                    alt=''
                                                     src={!cart.cart.loading && cart.cart.result ?
                                                         cart.cart.result.product_variant?.featured_asset ?
                                                             cart.cart.result.product_variant.featured_asset.url :
@@ -198,7 +200,10 @@ const CheckoutPage = () => {
                                 <Address address={address as UserAddress} setAddress={setAddress} />
                                 {/* Coupon */}
                                 <div className='mb-[1rem]'>
-                                    <Card variant="outline" padding={8}>
+                                    <Card variant="outline" padding={8} >
+                                        <Flex justifyContent="flex-end">
+                                            <Button>See available coupons</Button>
+                                        </Flex>
                                         <div className='text-center font-bold'>Coupon code</div>
                                         <Divider />
                                         <Form className='flex'>

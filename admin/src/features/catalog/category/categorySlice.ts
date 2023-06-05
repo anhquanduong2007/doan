@@ -33,16 +33,6 @@ interface CategoryState {
         loading: boolean,
         error: boolean
     },
-    children: {
-        result: Cateogry[] | null,
-        loading: boolean,
-        error: boolean
-    },
-    removeCategoryParent: {
-        result: Cateogry | null,
-        loading: boolean,
-        error: boolean
-    }
 }
 
 const initialState: CategoryState = {
@@ -67,16 +57,6 @@ const initialState: CategoryState = {
         error: false
     },
     single: {
-        result: null,
-        loading: false,
-        error: false
-    },
-    children: {
-        result: null,
-        loading: false,
-        error: false
-    },
-    removeCategoryParent: {
         result: null,
         loading: false,
         error: false
@@ -157,35 +137,6 @@ export const categorySlice = createSlice({
             state.update.result = action.payload;
             state.update.error = true;
         },
-        // ** Get children category
-        getListCategoryChildrenStart: (state) => {
-            state.children.loading = true;
-        },
-        getListCategoryChildrenSuccess: (state, action) => {
-            state.children.loading = false;
-            state.children.result = action.payload;
-            state.children.error = false
-        },
-        getListCategoryChildrenFailed: (state, action) => {
-            state.children.loading = false;
-            state.children.result = action.payload;
-            state.children.error = true;
-        },
-
-        // ** Remove category parent
-        removeCategoryParentStart: (state) => {
-            state.removeCategoryParent.loading = true;
-        },
-        removeCategoryParentSuccess: (state, action) => {
-            state.removeCategoryParent.loading = false;
-            state.removeCategoryParent.result = action.payload;
-            state.removeCategoryParent.error = false
-        },
-        removeCategoryParentFailed: (state, action) => {
-            state.removeCategoryParent.loading = false;
-            state.removeCategoryParent.result = action.payload;
-            state.removeCategoryParent.error = true;
-        },
     },
 });
 
@@ -205,12 +156,6 @@ export const {
     updateCategoryStart,
     updateCategorySuccess,
     updateCategoryFailed,
-    getListCategoryChildrenStart,
-    getListCategoryChildrenSuccess,
-    getListCategoryChildrenFailed,
-    removeCategoryParentStart,
-    removeCategoryParentSuccess,
-    removeCategoryParentFailed
 } = categorySlice.actions;
 
 export default categorySlice.reducer;

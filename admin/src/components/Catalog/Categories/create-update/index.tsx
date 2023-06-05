@@ -1,13 +1,12 @@
 import { Box, Flex } from '@chakra-ui/react';
 import autoAnimate from '@formkit/auto-animate';
-import { Breadcrumb, Card, Col, Divider, Row, Switch, Form, Button, Input, Select, message } from 'antd';
+import { Breadcrumb, Card, Col, Divider, Row, Switch, Form, Button, Input, message } from 'antd';
 import React, { Fragment, useEffect, useState, useRef } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { createCategory, getCategory, getListCategory, getListCategoryChildren, updateCategory } from 'src/features/catalog/category/action';
+import { createCategory, getCategory, getListCategory, updateCategory } from 'src/features/catalog/category/action';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
-import CategoriesChildren from './CategoriesChildren';
 import ProductOfCategory from './ProductOfCategory';
 import { Product } from 'src/types';
 
@@ -73,7 +72,7 @@ const CategoryCreateUpdate = () => {
             dispatch,
         })
     }, [id])
-    
+
     useEffect(() => {
         if (id && !category.single.loading && category.single.result) {
             setValue("category_code", category.single.result.category_code)
@@ -119,26 +118,6 @@ const CategoryCreateUpdate = () => {
             })
         }
     };
-
-    const dataParentCategory = (): ItemProps[] => {
-        if (!id && !category.list.loading && category.list.result) {
-            return category.list.result.categories.map((category) => {
-                return {
-                    label: category.category_name,
-                    value: category.id
-                }
-            })
-        }
-        if (id && !category.list.loading && category.list.result) {
-            return category.list.result.categories.filter((category) => category.id !== +id).map((item) => {
-                return {
-                    label: item.category_name,
-                    value: item.id
-                }
-            })
-        }
-        return []
-    }
 
     return (
         <Fragment>
@@ -218,25 +197,6 @@ const CategoryCreateUpdate = () => {
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="Parent category">
-                                    <Select
-                                        loading={category.list.loading}
-                                        value={parentId}
-                                        onChange={(value: number) => setParentId(value)}
-                                        options={[
-                                            {
-                                                label: "None",
-                                                value: null
-                                            },
-                                            ...dataParentCategory()
-                                        ]}
-                                    />
-                                </Form.Item>
-                                {id && (
-                                    <Form.Item label="Categories children">
-                                        <CategoriesChildren />
-                                    </Form.Item>
-                                )}
                                 {id && (
                                     <Form.Item label="Product of category">
                                         <ProductOfCategory products={category.single.result?.product as Product[]} loading={category.single.loading} />

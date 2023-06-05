@@ -10,6 +10,5 @@ export interface Cateogry {
     modified_date: string
     created_by: number
     modified_by: string
-    parent_id: number
     product: Array<Product>
 }

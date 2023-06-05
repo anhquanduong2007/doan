@@ -14,10 +14,6 @@ export class CategoryCreateDto {
     @IsOptional()
     description: string;
     
-    @IsNumber()
-    @IsOptional()
-    parent_id: number;
-
     @IsInt()
     @Min(0)
     @Max(1)

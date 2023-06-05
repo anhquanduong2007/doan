@@ -13,4 +13,6 @@ export class PaginationDto {
     categories?: number[]
 
     price?: number
+
+    options?: string[]
 }

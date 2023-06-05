@@ -99,9 +99,10 @@ const Rating = () => {
 
     const dataToRender = () => {
         if (!rating.list.loading && rating.list.result) {
-            return rating.list.result.rates.map((rate) => {
+            return rating.list.result.rates.map((rate, index) => {
                 return (
                     <Comment
+                        key={index}
                         author={<p>{rate.users.first_name + rate.users.last_name}</p>}
                         content={
                             <Fragment>

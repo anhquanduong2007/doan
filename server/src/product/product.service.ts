@@ -145,7 +145,7 @@ export class ProductService {
 
     public async products(input: PaginationDto): Promise<IResponse<{ products: product[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
-            const { skip, take, search, categories, price } = input;
+            const { skip, take, search, categories, price, options } = input;
             const [totalRecord, products] = await this.prisma.$transaction([
                 this.prisma.product.count({
                     where: {
@@ -162,6 +162,19 @@ export class ProductService {
                                 some: {
                                     price: {
                                         gte: +price
+                                    }
+                                }
+                            }
+                        },
+                        ...options && {
+                            product_variants: {
+                                some: {
+                                    product_options: {
+                                        some: {
+                                            product_option: {
+                                                value: { in: options }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -185,6 +198,19 @@ export class ProductService {
                                 some: {
                                     price: {
                                         gte: +price
+                                    }
+                                }
+                            }
+                        },
+                        ...options && {
+                            product_variants: {
+                                some: {
+                                    product_options: {
+                                        some: {
+                                            product_option: {
+                                                value: { in: options }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -898,6 +924,9 @@ export class ProductService {
                 // @ts-ignore: Unreachable code error
                 this.prisma.order.groupBy({
                     by: ["product_variant_id"],
+                    _sum: {
+                        product_variant_id: true
+                    },
                     orderBy: {
                         _sum: {
                             product_variant_id: "desc"
@@ -908,11 +937,11 @@ export class ProductService {
             // @ts-ignore: Unreachable code error
             const products = []
             for (const element of variants) {
-                const user = (await this.prisma.product.findMany({
+                const product = (await this.prisma.product.findMany({
                     where: {
                         product_variants: {
                             some: {
-                                id: element.product_variant_id.id
+                                id: element.product_variant_id
                             }
                         }
                     },
@@ -921,7 +950,7 @@ export class ProductService {
                         product_variants: true
                     }
                 }))
-                products.push(user)
+                products.push(product)
             }
             return {
                 code: 200,
@@ -930,7 +959,6 @@ export class ProductService {
                 data: uniqBy(products.flat(1), "id").slice(0, 8)
             }
         } catch (error) {
-            console.log(error)
             return {
                 code: 500,
                 message: "An error occurred in the system!",
@@ -939,6 +967,20 @@ export class ProductService {
         }
     }
 
-
-
+    public async getProductOptions(): Promise<IResponse<product_option[]>> {
+        try {
+            return {
+                code: 200,
+                success: true,
+                message: "Success!",
+                data: await this.prisma.product_option.findMany()
+            }
+        } catch (error) {
+            return {
+                code: 500,
+                message: "An error occurred in the system!",
+                success: false,
+            }
+        }
+    }
 }
