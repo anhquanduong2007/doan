@@ -1,5 +1,6 @@
 import { Box, useToast } from '@chakra-ui/react';
 import { Card, Modal } from 'antd';
+import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { createAxiosJwt } from 'src/axios/axiosInstance';
@@ -45,7 +46,7 @@ const CouponModal = ({ couponModal, setCouponModal }: CouponModalProps) => {
                         promotion && promotion.list?.result && (
                             promotion.list?.result?.promotions?.map((promotion) => {
                                 return (
-                                    <Card title={promotion.name} style={{ marginTop: "1rem", opacity: new Date(promotion.ends_at).getDate() - new Date().getDate() < 0 ? 0.5 : 1 }}>
+                                    <Card title={promotion.name} style={{ marginTop: "1rem", opacity: moment(promotion.ends_at).subtract(1, 'days').date() - moment(new Date()).subtract(1, 'days').date() < 0 ? 0.5 : 1 }}>
                                         <Box mb={2}>
                                             Coupon code: <span className='font-bold'>{promotion.coupon_code}</span>
                                         </Box>

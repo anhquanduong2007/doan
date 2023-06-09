@@ -158,7 +158,7 @@ export class ProductService {
                             active: status === 'active' ? 1 : 0
                         },
                         ...categories && {
-                            category_id: { in: [...categories].map((category) => +category) }
+                            category_id: { in: Array.isArray(categories) ? [...categories].map((category) => +category) : [+categories] }
                         },
                         ...price && {
                             product_variants: {
@@ -197,7 +197,7 @@ export class ProductService {
                             active: status === 'active' ? 1 : 0
                         },
                         ...categories && {
-                            category_id: { in: [...categories].map((category) => +category) }
+                            category_id: { in: Array.isArray(categories) ? [...categories].map((category) => +category) : [+categories] }
                         },
                         ...price && {
                             product_variants: {

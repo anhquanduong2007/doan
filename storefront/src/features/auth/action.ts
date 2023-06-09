@@ -35,7 +35,7 @@ export const loginUser = async (user: { email: string, password: string }, dispa
                 toast({
                     status: 'success',
                     title: "Logged in successfully!",
-                    position: "top",
+                    position: "top-right",
                     isClosable: true,
                 })
                 navigate('/');
@@ -91,7 +91,7 @@ export const registeUser = async (user: { email: string, password: string, first
                 toast({
                     status: 'success',
                     title: "Register customer successfully!",
-                    position: "top",
+                    position: "top-right",
                     isClosable: true,
                 })
                 navigate('/');

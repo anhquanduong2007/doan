@@ -146,7 +146,7 @@ const columns = (
 
 const Orders = () => {
     // ** State
-    const [take, setTake] = useState<number>(12)
+    const [take, setTake] = useState<number>(10)
     const [skip, setSkip] = useState<number>(0)
     const [search, setSearch] = useState<string>('')
     const [value] = useDebounce(search, 1000);

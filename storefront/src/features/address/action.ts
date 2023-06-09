@@ -134,7 +134,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, refresh
                 toast({
                     status: 'success',
                     title: "Create address successfully!",
-                    position: "top",
+                    position: "top-right",
                     isClosable: true,
                 })
                 setIsModalOpen(false)
