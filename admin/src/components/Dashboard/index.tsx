@@ -22,7 +22,7 @@ interface Dashboard {
     totalOrderCancel: number
     potentialCustomers: Array<{ _sum: { total_price: number }, user: User }>,
     salesReport: Array<Order>
-    hotSellingProducts: Array<{ _sum: { product_variant_id: number }, variant: ProductVariant }>
+    hotSellingProducts: Array<{ _sum: { quantity: number }, variant: ProductVariant }>
 }
 
 const dateFormat = 'YYYY/MM/DD';
@@ -31,7 +31,7 @@ const Dashboard = () => {
     // ** State
     const [dashboard, setDashboard] = useState<Dashboard>()
     const [money, setMoney] = useState<number>(1000)
-    const [startDate, setStartDate] = useState<string>()
+    const [startDate, setStartDate] = useState<string>(moment(new Date()).subtract(1, 'days')?.toISOString() as string)
     const [endDate, setEndDate] = useState<string>()
 
 
@@ -58,12 +58,14 @@ const Dashboard = () => {
     };
 
     const onChangeStartDate: DatePickerProps['onChange'] = (date, dateString) => {
-        setStartDate(date?.toISOString() as string)
+        setStartDate(moment(date).subtract(1, 'days')?.toISOString() as string)
     };
 
     const onChangeEndDate: DatePickerProps['onChange'] = (date, dateString) => {
-        setEndDate(date?.toISOString() as string)
+        setStartDate(moment(date).subtract(1, 'days')?.toISOString() as string)
     };
+
+
 
     return (
         <Fragment>
@@ -96,13 +98,13 @@ const Dashboard = () => {
                         </Col>
                         <Col span={24} style={{ marginTop: "1rem" }}>
                             <Row gutter={[16, 16]}>
-                                <Col span={14}>
+                                <Col span={24}>
                                     <Card title="Hot Selling Products">
                                         <Column
                                             data={dashboard ? dashboard.hotSellingProducts?.map((product) => {
                                                 return {
-                                                    sales: product._sum.product_variant_id,
-                                                    type: `${product.variant.name} (${product.variant.sku})`
+                                                    sales: product._sum.quantity,
+                                                    type: `${product.variant.product.name}-${product.variant.name}`
                                                 }
                                             }) : []}
                                             xField='type'
@@ -123,7 +125,7 @@ const Dashboard = () => {
                                         />
                                     </Card>
                                 </Col>
-                                <Col span={10}>
+                                <Col span={24}>
                                     <Card title="Order Status">
                                         <Pie
                                             appendPadding={10}
@@ -219,7 +221,7 @@ const Dashboard = () => {
                                                 <Flex mb={"14px"}>
                                                     <Flex flex={1} mr={4} alignItems="center">
                                                         <span style={{ marginRight: "8px" }}>From</span>
-                                                        <DatePicker style={{ width: "100%" }} onChange={onChangeStartDate} />
+                                                        <DatePicker defaultValue={moment(startDate, dateFormat)} style={{ width: "100%" }} onChange={onChangeStartDate} />
                                                     </Flex>
                                                     <Flex flex={1} alignItems="center">
                                                         <span style={{ marginRight: "8px" }}>To</span>

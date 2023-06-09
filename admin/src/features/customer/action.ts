@@ -73,13 +73,15 @@ export type GetCustomerParams = Omit<GetListCustomerParams, "pagination"> & { id
 
 export const getListCustomer = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListCustomerParams) => {
     try {
-        const { skip, take } = pagination;
+        const { skip, take, search, status } = pagination;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(getListCustomerStart());
         const res: IAxiosResponse<User> = await axiosClientJwt.get('/user/customers', {
             params: {
                 take,
                 skip,
+                search,
+                status
             },
             headers: {
                 Authorization: `Bearer ${accessToken}`

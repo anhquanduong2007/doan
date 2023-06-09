@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Card, Col, Divider, Modal, Row, Space, Switch, Table, message } from 'antd';
+import { Breadcrumb, Button, Card, Col, Divider, Input, Modal, Row, Select, Space, Table, Tag, message } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import {
@@ -6,11 +6,12 @@ import {
     DeleteOutlined,
     PlusCircleOutlined
 } from '@ant-design/icons';
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { deleteAdministrator, getListAdministrator } from 'src/features/setting/administrator/action';
 import type { ColumnsType } from 'antd/es/table';
+import { useDebounce } from 'use-debounce';
 
 interface DataType {
     key: number
@@ -54,7 +55,7 @@ const columns = (
             key: 'active',
             render: (active: number) => {
                 return (
-                    <Switch disabled={true} checked={active === 1} />
+                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
                 )
             }
         },
@@ -89,6 +90,9 @@ const AdministratorList = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [administratorDelete, setAdministratorDelete] = useState<{ id: number, email: string }>()
     const [refresh, setRefresh] = useState<boolean>(false)
+    const [search, setSearch] = useState<string>('')
+    const [value] = useDebounce(search, 1000);
+    const [status, setStatus] = useState<string>('all')
 
     // ** Third party
     const navigate = useNavigate()
@@ -103,13 +107,15 @@ const AdministratorList = () => {
         getListAdministrator({
             pagination: {
                 skip,
-                take
+                take,
+                search: value,
+                status
             },
             navigate,
             axiosClientJwt,
             dispatch,
         })
-    }, [skip, take, refresh])
+    }, [skip, take, refresh, value, status])
 
     // ** Function handle
     const dataRender = (): DataType[] => {
@@ -146,6 +152,10 @@ const AdministratorList = () => {
         setIsModalOpen(false);
     };
 
+    const onChangeStatus = (value: string) => {
+        setStatus(value)
+    };
+
     return (
         <Fragment>
             <Row gutter={[0, 16]}>
@@ -161,6 +171,30 @@ const AdministratorList = () => {
                     <Row>
                         <Col span={24}>
                             <Flex justifyContent={"flex-end"} alignItems={"center"}>
+                                <Box mr={3} flex={1}>
+                                    <Input type='text' placeholder='Search...' onChange={(e) => { setSearch(e.target.value); }} />
+                                </Box>
+                                <Box mr={3} flex={1}>
+                                    <Select
+                                        value={status}
+                                        placeholder="Status"
+                                        onChange={onChangeStatus}
+                                        options={[
+                                            {
+                                                value: 'all',
+                                                label: 'All',
+                                            },
+                                            {
+                                                value: 'active',
+                                                label: 'Active',
+                                            },
+                                            {
+                                                value: 'disabled',
+                                                label: 'Disabled',
+                                            },
+                                        ]}
+                                    />
+                                </Box>
                                 <Button
                                     style={{ textTransform: "uppercase" }}
                                     type="primary"

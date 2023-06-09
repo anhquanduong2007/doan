@@ -116,12 +116,51 @@ export class CategoryService {
 
     public async categories(input: PaginationDto): Promise<IResponse<{ categories: category[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
-            const { skip, take } = input;
+            const { skip, take, search, status } = input;
             const [totalRecord, categories] = await this.prisma.$transaction([
-                this.prisma.category.count(),
+                this.prisma.category.count({
+                    where: {
+                        ...search && {
+                            OR: [
+                                {
+                                    category_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    category_code: {
+                                        contains: search
+                                    }
+                                }
+                            ]
+                        },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
+                        },
+                    }
+                }),
                 this.prisma.category.findMany({
                     take: take || 10,
                     skip: skip || 0,
+                    where: {
+                        ...search && {
+                            OR: [
+                                {
+                                    category_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    category_code: {
+                                        contains: search
+                                    }
+                                }
+                            ]
+                        },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
+                        },
+                    }
                 }),
             ])
             return {

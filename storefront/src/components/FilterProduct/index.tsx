@@ -40,6 +40,7 @@ const FilterProduct = ({ setFilterCategories, setPrice, price, setColor, setSize
             params: {
                 skip,
                 take,
+                status: "active"
             }
         }).then((res) => {
             const result = { ...res } as unknown as IAxiosResponse<Cateogry[]>
@@ -95,32 +96,32 @@ const FilterProduct = ({ setFilterCategories, setPrice, price, setColor, setSize
         <Fragment>
             <div className='uppercase font-bold'>Filters</div>
             <div>
-                <div className='flex flex-row justify-between mt-3 mb-3'>
+                <div className='flex flex-row justify-between mt-3'>
                     <p className='font-semibold'>Categories</p>
                     <ChevronDown size={24} onClick={() => setCateCb(!cateCb)} className={`cursor-pointer`} />
                 </div>
-                <Collapse in={cateCb} animateOpacity>
-                    <Checkbox.Group options={optionsCategoriesToRender()} onChange={onChange} />
+                <Collapse in={cateCb} animateOpacity >
+                    <Checkbox.Group options={optionsCategoriesToRender()} onChange={onChange} style={{ display: "flex", flexDirection: "column" }} />
                 </Collapse>
             </div>
             <div>
-                <div className='flex flex-row justify-between mt-3 mb-3'>
+                <div className='flex flex-row justify-between mt-3'>
                     <p className='font-semibold'>Options</p>
                     <ChevronDown size={24} onClick={() => setOptCb(!optCb)} className={`cursor-pointer`} />
                 </div>
                 <Collapse in={optCb} animateOpacity>
                     <div className='mb-2'>
                         <div className='mb-1 font-semibold'>Size</div>
-                        <Checkbox.Group options={optsSizeToRender("Size")} onChange={onChangeSize} />
+                        <Checkbox.Group options={optsSizeToRender("Size")} onChange={onChangeSize} style={{ display: "flex", flexDirection: "column" }} />
                     </div>
                     <div className='mb-2'>
                         <div className='mb-1 font-semibold'>Color</div>
-                        <Checkbox.Group options={optsSizeToRender("Color")} onChange={onChangeColor} />
+                        <Checkbox.Group options={optsSizeToRender("Color")} onChange={onChangeColor} style={{ display: "flex", flexDirection: "column" }} />
                     </div>
                 </Collapse>
             </div>
             <div>
-                <div className='flex flex-row justify-between mt-3 mb-3'>
+                <div className='flex flex-row justify-between mt-3'>
                     <p className='font-semibold'>Price</p>
                 </div>
                 <Slider value={price} onChange={onChangePrice} min={0} max={1000} />

@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Breadcrumb, Button, Card, Col, Divider, Input, Row, Space, Table, Tag } from 'antd';
+import { Breadcrumb, Button, Card, Col, Divider, Input, Row, Select, Space, Table, Tag } from 'antd';
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import type { ColumnsType } from 'antd/es/table';
@@ -150,6 +150,7 @@ const Orders = () => {
     const [skip, setSkip] = useState<number>(0)
     const [search, setSearch] = useState<string>('')
     const [value] = useDebounce(search, 1000);
+    const [status, setStatus] = useState<string>('all')
 
     // ** Third party
     const navigate = useNavigate()
@@ -164,18 +165,24 @@ const Orders = () => {
         getListOrder({
             pagination: {
                 skip,
-                take
+                take,
+                search: value,
+                status
             },
             navigate,
             axiosClientJwt,
             dispatch,
         })
-    }, [skip, take, value])
+    }, [skip, take, value, status])
 
     // ** Function handle
     const handleOnChangePagination = (e: number) => {
-        setSkip(e - 1)
+        setSkip((e - 1) * take)
     }
+
+    const onChangeStatus = (value: string) => {
+        setStatus(value)
+    };
 
     const dataRender = (): DataType[] => {
         if (!order.list.loading && order.list.result) {
@@ -213,7 +220,44 @@ const Orders = () => {
                         <Col span={24}>
                             <Flex>
                                 <Box mr={3} flex={1}>
-                                    <Input type='text' placeholder='Search by code' style={{ width: "30%" }} />
+                                    <Input type='text' placeholder='Search by code' />
+                                </Box>
+                                <Box mr={3}>
+                                    <Select
+                                        value={status}
+                                        placeholder="Status"
+                                        onChange={onChangeStatus}
+                                        options={[
+                                            {
+                                                value: 'all',
+                                                label: 'All',
+                                            },
+                                            {
+                                                value: StatusOrder.Confirm,
+                                                label: 'Confirm',
+                                            },
+                                            {
+                                                value: StatusOrder.Cancel,
+                                                label: 'Cancel',
+                                            },
+                                            {
+                                                value: StatusOrder.Completed,
+                                                label: 'Completed',
+                                            },
+                                            {
+                                                value: StatusOrder.Open,
+                                                label: 'Open',
+                                            },
+                                            {
+                                                value: StatusOrder.Refund,
+                                                label: 'Refund',
+                                            },
+                                            {
+                                                value: StatusOrder.Shipped,
+                                                label: 'Shipped',
+                                            },
+                                        ]}
+                                    />
                                 </Box>
                             </Flex>
                         </Col>

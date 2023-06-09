@@ -10,7 +10,7 @@ import { Asset } from 'src/types/asset';
 import { useDebounce } from 'use-debounce';
 import type { ColumnsType } from 'antd/es/table';
 
-const props = (refresh: boolean, setRefresh: (refresh: boolean) => void): UploadProps => {
+const props = (refresh: boolean, setRefresh: (refresh: boolean) => void, setLoading: (loading: boolean) => void): UploadProps => {
     const accessToken = localStorage.getItem("accessToken")
     return {
         name: 'files',
@@ -21,16 +21,15 @@ const props = (refresh: boolean, setRefresh: (refresh: boolean) => void): Upload
             Authorization: `Bearer ${accessToken}`
         },
         onChange(info) {
-            if (info.file.status === 'done') {
+            setLoading(true)
+            if (info.fileList.every((file) => file.status === "done")) {
                 setTimeout(function () {
                     setRefresh(!refresh)
                     message.success(`File uploaded successfully!`);
+                    setLoading(false)
                 }, 1000);
-            } else if (info.file.status === 'error') {
-                message.error(`File upload failed!`);
             }
         },
-
     }
 };
 
@@ -96,6 +95,7 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
     const [search, setSearch] = useState<string>('')
     const [refresh, setRefresh] = useState<boolean>(false)
     const [value] = useDebounce(search, 1000);
+    const [loading, setLoading] = useState<boolean>(false)
 
     // ** Variables
     const navigate = useNavigate();
@@ -140,7 +140,7 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
     }
 
     const handleOnChangePagination = (e: number) => {
-        setSkip(e - 1)
+        setSkip((e - 1) * take)
     }
 
     return (
@@ -151,8 +151,8 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
                         <Box mr={3} flex={1}>
                             <Input type='text' placeholder='Search by asset name' onChange={(e) => { setSearch(e.target.value); }} />
                         </Box>
-                        <Upload {...props(refresh, setRefresh)}>
-                            <Button type="primary">Upload Assets</Button>
+                        <Upload {...props(refresh, setRefresh, setLoading)}>
+                            <Button type="primary" loading={loading}>Upload Assets</Button>
                         </Upload>
                     </Flex>
                 </Col>

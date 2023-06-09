@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom'
 const ProductPage = () => {
     // ** State
     const [filterCategories, setFilterCategories] = React.useState<number[]>()
-    const [price, setPrice] = React.useState<number>(100);
+    const [price, setPrice] = React.useState<number>(0);
     const [size, setSize] = React.useState<number[]>([])
     const [color, setColor] = React.useState<number[]>([])
 

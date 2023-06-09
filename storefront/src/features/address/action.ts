@@ -188,6 +188,7 @@ export const getAddress = async ({ id, dispatch, axiosClientJwt, toast }: GetAdd
                     status: 'error',
                     title: "You do not have permission to perform this action!",
                     isClosable: true,
+                    position: "top-right",
                 })
             }, 1000);
         } else {
@@ -226,7 +227,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
                 toast({
                     status: 'success',
                     title: "Update address successfully!",
-                    position: "top",
+                    position: "top-right",
                     isClosable: true,
                 })
                 setIsModalOpen(false)
@@ -245,12 +246,14 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
                 status: 'error',
                 title: "You do not have permission to perform this action!",
                 isClosable: true,
+                position: "top-right",
             })
         } else {
             toast({
                 status: 'error',
                 title: "Something went wrong!",
                 isClosable: true,
+                position: "top-right",
             })
         }
     }
@@ -273,9 +276,10 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
             setTimeout(function () {
                 dispatch(setDefaultShippingSuccess(res.response.data));
                 toast({
-                    status: 'error',
+                    status: 'success',
                     title: 'Set default shipping address successfully!',
                     isClosable: true,
+                    position: "top-right",
                 })
                 setRefresh(!refresh)
             }, 1000)
@@ -289,12 +293,14 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
                 status: 'error',
                 title: "You do not have permission to perform this action!",
                 isClosable: true,
+                position: "top-right",
             })
         } else {
             toast({
                 status: 'error',
                 title: "Something went wrong!",
                 isClosable: true,
+                position: "top-right",
             })
         }
     }

@@ -8,11 +8,11 @@ export class PaginationDto {
 
     search?: string
 
-    active?: number
-
     categories?: number[]
 
     price?: number
 
     options?: string[]
+
+    status?: string
 }

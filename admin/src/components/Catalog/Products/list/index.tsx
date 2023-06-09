@@ -6,8 +6,10 @@ import {
     Card,
     Col,
     Divider,
+    Input,
     Modal,
     Row,
+    Select,
     Space,
     Table,
     Tag,
@@ -25,6 +27,7 @@ import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { createAxiosJwt } from "src/helper/axiosInstance";
 import { deleteProduct, getListProduct } from "src/features/catalog/product/actions";
 import { Box } from '@chakra-ui/react';
+import { useDebounce } from "use-debounce";
 
 interface DataType {
     key: number
@@ -85,11 +88,15 @@ const columns = (
     ]
 const Products: React.FC = () => {
     // ** State
-    const [take, setTake] = useState<number>(1000)
+    const [take, setTake] = useState<number>(10)
     const [skip, setSkip] = useState<number>(0)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [productDelete, setProductDelete] = useState<{ id: number, name: string }>()
     const [refresh, setRefresh] = useState<boolean>(false)
+    const [search, setSearch] = useState<string>('')
+    const [value] = useDebounce(search, 1000);
+    const [status, setStatus] = useState<string>('all')
+
 
     // ** Third party
     const navigate = useNavigate()
@@ -104,13 +111,15 @@ const Products: React.FC = () => {
         getListProduct({
             pagination: {
                 skip,
-                take
+                take,
+                search: value,
+                status
             },
             navigate,
             axiosClientJwt,
             dispatch,
         })
-    }, [skip, take, refresh])
+    }, [skip, take, refresh, value, status])
 
     // ** Function handle
     const dataRender = (): DataType[] => {
@@ -145,6 +154,14 @@ const Products: React.FC = () => {
         setIsModalOpen(false);
     };
 
+    const handleOnChangePagination = (e: number) => {
+        setSkip((e - 1) * take)
+    }
+
+    const onChangeStatus = (value: string) => {
+        setStatus(value)
+    };
+
     return (
         <Fragment>
             <Row gutter={[0, 16]}>
@@ -160,6 +177,30 @@ const Products: React.FC = () => {
                     <Row>
                         <Col span={24}>
                             <Flex justifyContent={"flex-end"} alignItems={"center"}>
+                                <Box mr={3} flex={2}>
+                                    <Input type='text' placeholder='Search by promotion...' onChange={(e) => { setSearch(e.target.value); }} />
+                                </Box>
+                                <Box mr={3} flex={1}>
+                                    <Select
+                                        value={status}
+                                        placeholder="Status"
+                                        onChange={onChangeStatus}
+                                        options={[
+                                            {
+                                                value: 'all',
+                                                label: 'All',
+                                            },
+                                            {
+                                                value: 'active',
+                                                label: 'Active',
+                                            },
+                                            {
+                                                value: 'disabled',
+                                                label: 'Disabled',
+                                            },
+                                        ]}
+                                    />
+                                </Box>
                                 <Button
                                     style={{ textTransform: "uppercase" }}
                                     type="primary"
@@ -173,7 +214,20 @@ const Products: React.FC = () => {
                         <Divider />
                         <Col span={24}>
                             <Card>
-                                <Table bordered columns={columns(setIsModalOpen, productDelete, setProductDelete, navigate)} dataSource={dataRender()} loading={product.list.loading} />
+                                <Table
+                                    bordered
+                                    columns={columns(setIsModalOpen, productDelete, setProductDelete, navigate)}
+                                    dataSource={dataRender()}
+                                    loading={product.list.loading}
+                                    pagination={{
+                                        total: product.list.result?.total,
+                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                                        defaultCurrent: skip + 1,
+                                        onChange: handleOnChangePagination,
+                                        defaultPageSize: take,
+                                        responsive: true
+                                    }}
+                                />
                             </Card>
                         </Col>
                     </Row>

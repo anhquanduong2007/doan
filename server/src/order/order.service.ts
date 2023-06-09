@@ -115,12 +115,22 @@ export class OrderService {
     }
 
     public async orders(input: PaginationDto): Promise<IResponse<{ orders: order[], totalPage: number, skip: number, take: number, total: number }>> {
-        const { skip, take } = input;
+        const { skip, take, search, status } = input;
         const [totalRecord, orders] = await this.prisma.$transaction([
             this.prisma.order.count(),
             this.prisma.order.findMany({
                 take: take || 10,
                 skip: skip || 0,
+                where: {
+                    ...search && {
+                        code: {
+                            contains: search
+                        }
+                    },
+                    ...status && status !== 'all' && {
+                        status: status as OrderStatus
+                    },
+                },
                 include: {
                     users: {
                         select: {

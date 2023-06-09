@@ -40,7 +40,8 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
                 search: value,
                 categories: filterCategories,
                 price,
-                options: opts
+                options: opts,
+                status: "active"
             }
         }).then((res) => {
             const result = { ...res } as unknown as IAxiosResponse<Product[]>
@@ -50,7 +51,7 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
 
     // ** Function handle
     const handleOnChangePagination = (e: number) => {
-        setSkip(e - 1)
+        setSkip((e - 1) * take)
     }
 
     const dataToRender = () => {
@@ -59,8 +60,9 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
                 <Row gutter={[16, 16]}>
                     {
                         products?.products?.map((p, index) => {
+                            const variants = p.product_variants.map((variant) => variant.name)
                             const price = p.product_variants.map((variant) => variant.price)
-                            return <CardProduct key={index} span={6} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} />
+                            return <CardProduct key={index} span={6} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} variants={variants} category={p?.category?.category_name} />
                         })
                     }
                 </Row>

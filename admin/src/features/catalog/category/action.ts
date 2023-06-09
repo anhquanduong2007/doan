@@ -63,13 +63,15 @@ interface UpdateCategoryParams extends CreateCategoryParams {
 
 export const getListCategory = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListCategoryParams) => {
     try {
-        const { skip, take } = pagination;
+        const { skip, take, search, status } = pagination;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(getListCategoryStart());
         const res: IAxiosResponse<{}> = await axiosClientJwt.get('/category', {
             params: {
                 take,
                 skip,
+                search,
+                status
             },
             headers: {
                 Authorization: `Bearer ${accessToken}`

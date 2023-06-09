@@ -69,7 +69,8 @@ const ProductDetail = () => {
                 navigate,
                 pagination: {
                     skip: 0,
-                    take: 999
+                    take: 999,
+                    status: "active"
                 }
             })
         }

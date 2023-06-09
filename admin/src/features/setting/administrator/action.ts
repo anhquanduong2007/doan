@@ -78,13 +78,15 @@ export type GetAdministratorParams = Omit<GetListAdministratorParams, "paginatio
 
 export const getListAdministrator = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListAdministratorParams) => {
     try {
-        const { skip, take } = pagination;
+        const { skip, take, search, status } = pagination;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(getListAdministratorStart());
         const res: IAxiosResponse<User> = await axiosClientJwt.get('/user/administrators', {
             params: {
                 take,
                 skip,
+                search,
+                status
             },
             headers: {
                 Authorization: `Bearer ${accessToken}`

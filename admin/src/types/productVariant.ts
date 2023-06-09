@@ -1,4 +1,5 @@
 import { Asset } from "./asset"
+import { Product } from "./product"
 import { ProductOption } from "./productOption"
 
 export interface ProductVariant {
@@ -13,6 +14,7 @@ export interface ProductVariant {
     modified_by: number
     product_id: number
     featured_asset: Asset
+    product: Product
     featured_asset_id: number
     product_options: Array<{ product_option: ProductOption }>
 }

@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect, useRef } from 'react';
-import { Row, Col, Form, Input, Button } from 'antd';
+import { Row, Col, Form, Input, Button, Modal } from 'antd';
 import Layout from 'src/components/Layout/layout';
 import { Box, BreadcrumbItem, Card, HStack, useToast, Breadcrumb, Flex } from '@chakra-ui/react';
 import { Divider } from 'antd'
@@ -16,6 +16,7 @@ import Address from 'src/components/Checkout/Address';
 import { UserAddress } from 'src/shared/types';
 import { ChevronRight } from 'react-feather';
 import { resetPromotion } from 'src/features/checkout/checkoutSlice';
+import CouponModal from 'src/components/Checkout/CouponModal';
 
 export enum PaymentMethod {
     Standard = "Standard",
@@ -202,7 +203,7 @@ const CheckoutPage = () => {
                                 <div className='mb-[1rem]'>
                                     <Card variant="outline" padding={8} >
                                         <Flex justifyContent="flex-end">
-                                            <Button>See available coupons</Button>
+                                            <Button onClick={() => setCouponModal(true)}>See available coupons</Button>
                                         </Flex>
                                         <div className='text-center font-bold'>Coupon code</div>
                                         <Divider />
@@ -356,6 +357,7 @@ const CheckoutPage = () => {
                     </Col>
                 </Row>
             </div>
+            <CouponModal couponModal = {couponModal} setCouponModal = {setCouponModal}/>
         </Fragment>
     );
 };

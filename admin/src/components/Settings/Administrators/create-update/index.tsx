@@ -281,7 +281,7 @@ const AdministratorCreateUpdate = () => {
                                 </Form.Item >
                                 <Form.Item label="Gender">
                                     <Select
-                                        defaultValue={gender}
+                                        value={gender}
                                         onChange={handleChangeGender}
                                         options={[
                                             {

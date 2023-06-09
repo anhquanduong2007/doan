@@ -65,13 +65,15 @@ interface UpdatePromotionParams extends CreatePromotionParams {
 
 export const getListPromotion = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListPromotionParams) => {
     try {
-        const { skip, take } = pagination;
+        const { skip, take, search, status } = pagination;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(getListPromotionStart());
         const res: IAxiosResponse<{}> = await axiosClientJwt.get('/promotion', {
             params: {
                 take,
                 skip,
+                search,
+                status
             },
             headers: {
                 Authorization: `Bearer ${accessToken}`

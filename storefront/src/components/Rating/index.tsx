@@ -98,7 +98,7 @@ const Rating = () => {
     }
 
     const dataToRender = () => {
-        if (!rating.list.loading && rating.list.result) {
+        if (!rating.list.loading && rating.list.result && rating.list.result.rates.length > 0) {
             return rating.list.result.rates.map((rate, index) => {
                 return (
                     <Comment
@@ -118,7 +118,12 @@ const Rating = () => {
                 )
             })
         }
-        return null
+        return (
+            <Flex justifyContent="center" flexDirection="column" alignItems="center">
+                <Box fontWeight="semibold" fontSize="1rem" textTransform="uppercase">The product has no reviews yet</Box>
+                <Rate value={0} disabled />
+            </Flex>
+        )
     }
 
     return (
@@ -126,16 +131,19 @@ const Rating = () => {
             <Row>
                 <Col span={24}>
                     {dataToRender()}
-                    <Flex justifyContent="flex-end">
-                        <Pagination
-                            total={rating.list.result?.total || 0}
-                            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                            defaultCurrent={skip + 1}
-                            onChange={handleOnChangePagination}
-                            defaultPageSize={take}
-                            responsive={true}
-                        />
-                    </Flex>
+                    {
+                        !rating.list.loading && rating.list.result && rating.list.result.rates.length > 0 && (
+                            <Flex justifyContent="flex-end">
+                                <Pagination
+                                    total={rating.list.result?.total || 0}
+                                    defaultCurrent={skip + 1}
+                                    onChange={handleOnChangePagination}
+                                    defaultPageSize={take}
+                                    responsive={true}
+                                />
+                            </Flex>
+                        )
+                    }
                 </Col>
                 {
                     auth.login.result ? (

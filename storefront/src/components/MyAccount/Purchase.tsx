@@ -43,14 +43,14 @@ const Purchase = () => {
 
     // ** Function handle
     const handleOnChangePagination = (e: number) => {
-        setSkip(e - 1)
+        setSkip((e - 1) * take)
     }
 
     const dataToRender = () => {
         if (!order.list.loading && order.list.result) {
-            return order.list.result.orders?.map((order) => {
+            return order.list.result.orders?.map((order, index) => {
                 return (
-                    <Card variant="outline" padding={5} mb={8}>
+                    <Card variant="outline" padding={5} mb={8} key={index}>
                         <Row gutter={[12, 12]}>
                             <Col span={24}>
                                 <Row>
@@ -219,15 +219,13 @@ const Purchase = () => {
                                 </Collapse>
                             </Col>
                         </Row>
-
                     </Card>
                 )
             })
         }
         return null
     }
-
-    console.log(order)
+    
     return (
         <Fragment>
             <Row>
@@ -237,14 +235,17 @@ const Purchase = () => {
                 </Col>
                 <Col span={24}>
                     <Flex justifyContent="flex-end">
-                        <Pagination
-                            total={order.list.result?.total || 0}
-                            showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
-                            defaultCurrent={skip + 1}
-                            onChange={handleOnChangePagination}
-                            defaultPageSize={take}
-                            responsive={true}
-                        />
+                        {
+                            order.list.result && (
+                                <Pagination
+                                    total={order.list.result.total}
+                                    defaultCurrent={skip + 1}
+                                    onChange={handleOnChangePagination}
+                                    defaultPageSize={take}
+                                    responsive={true}
+                                />
+                            )
+                        }
                     </Flex>
                 </Col>
             </Row>

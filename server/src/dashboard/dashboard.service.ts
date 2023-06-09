@@ -110,11 +110,11 @@ export class DashboardService {
                 this.prisma.order.groupBy({
                     by: ['product_variant_id'],
                     _sum: {
-                        product_variant_id: true
+                       quantity: true
                     },
                     orderBy: {
                         _sum: {
-                            product_variant_id: 'desc'
+                            quantity: 'desc'
                         }
                     }
 
@@ -132,8 +132,16 @@ export class DashboardService {
 
             let vrs = [];
             for (const element of hotSellingProducts) {
-                const variant = await this.prisma.product_variant.findUnique({ where: { id: element.product_variant_id } })
-                if (vrs.length <= 6) {
+                const variant = await this.prisma.product_variant.findUnique(
+                    {
+                        where:{
+                            id: element.product_variant_id
+                        },
+                        include: {
+                            product: true
+                        }
+                    })
+                if (vrs.length < 6) {
                     vrs.push({ ...element, variant })
                 }
             }

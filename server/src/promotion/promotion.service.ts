@@ -50,12 +50,51 @@ export class PromotionService {
     }
 
     public async promotions(input: PaginationDto): Promise<IResponse<{ promotions: promotion[], totalPage: number, skip: number, take: number, total: number }>> {
-        const { skip, take } = input;
+        const { skip, take, search, status } = input;
         const [totalRecord, promotions] = await this.prisma.$transaction([
-            this.prisma.promotion.count(),
+            this.prisma.promotion.count({
+                where: {
+                    ...search && {
+                        OR: [
+                            {
+                                name: {
+                                    contains: search
+                                }
+                            },
+                            {
+                                coupon_code: {
+                                    contains: search
+                                }
+                            }
+                        ]
+                    },
+                    ...status && status !== 'all' && {
+                        active: status === 'active' ? 1 : 0
+                    },
+                }
+            }),
             this.prisma.promotion.findMany({
                 take: take || 10,
                 skip: skip || 0,
+                where: {
+                    ...search && {
+                        OR: [
+                            {
+                                name: {
+                                    contains: search
+                                }
+                            },
+                            {
+                                coupon_code: {
+                                    contains: search
+                                }
+                            }
+                        ]
+                    },
+                    ...status && status !== 'all' && {
+                        active: status === 'active' ? 1 : 0
+                    },
+                }
             }),
         ])
         return {

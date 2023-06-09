@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model address {
@@ -18,9 +19,11 @@ model address {
   postal_code              String   @db.VarChar(255)
   country                  String   @db.VarChar(255)
   default_shipping_address Boolean  @default(false)
-  users                    users?   @relation(fields: [users_id], references: [id])
   users_id                 Int?
+  users                    users?   @relation(fields: [users_id], references: [id])
   orders                   order[]
+
+  @@index([users_id], map: "address_users_id_fkey")
 }
 
 model category {
@@ -64,13 +67,14 @@ model product {
   modified_date     DateTime?         @updatedAt
   created_by        Int?
   modified_by       Int?
-  category          category?         @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
-  product_variants  product_variant[]
-  featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
   featured_asset_id Int?
+  category          category?         @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
+  featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
   product_option    product_option[]
+  product_variants  product_variant[]
 
   @@index([category_id], map: "fk_product_cate")
+  @@index([featured_asset_id], map: "product_featured_asset_id_fkey")
 }
 
 model product_variant {
@@ -83,23 +87,27 @@ model product_variant {
   created_by        Int?
   modified_by       Int?
   name              String
-  product_options   product_variant_option[]
-  product           product?                 @relation(fields: [product_id], references: [id])
   product_id        Int?
-  featured_asset    asset?                   @relation(fields: [featured_asset_id], references: [id])
   featured_asset_id Int?
   carts             cart[]
   order             order[]
+  featured_asset    asset?                   @relation(fields: [featured_asset_id], references: [id])
+  product           product?                 @relation(fields: [product_id], references: [id])
+  product_options   product_variant_option[]
+
+  @@index([featured_asset_id], map: "product_variant_featured_asset_id_fkey")
+  @@index([product_id], map: "product_variant_product_id_fkey")
 }
 
 model product_variant_option {
   id                 Int             @id @default(autoincrement())
-  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
   product_variant_id Int
-  product_option     product_option  @relation(fields: [product_option_id], references: [id])
   product_option_id  Int
+  product_option     product_option  @relation(fields: [product_option_id], references: [id])
+  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
 
   @@unique([product_option_id, product_variant_id])
+  @@index([product_variant_id], map: "product_variant_option_product_variant_id_fkey")
 }
 
 model rate {
@@ -114,8 +122,7 @@ model rate {
   modified_date DateTime @updatedAt
   created_by    Int?
   modified_by   Int?
-
-  users users @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_cmt")
+  users         users    @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_cmt")
 
   @@unique([product_id, user_id, cmt_datetime], map: "unique_comments")
   @@index([user_id], map: "fk_users_cmt")
@@ -142,16 +149,11 @@ model product_option {
   modified_date    DateTime                 @updatedAt
   created_by       Int?
   modified_by      Int?
+  product_id       Int
   product          product                  @relation(fields: [product_id], references: [id])
   product_variants product_variant_option[]
-  product_id       Int
-}
 
-enum OptionName {
-  Size     @map("size")
-  Color    @map("color")
-  Material @map("material")
-  Style    @map("style")
+  @@index([product_id], map: "product_option_product_id_fkey")
 }
 
 model users {
@@ -169,11 +171,11 @@ model users {
   modified_date DateTime     @updatedAt
   created_by    Int?
   modified_by   Int?
+  address       address[]
+  carts         cart[]
+  orders        order[]
   rate          rate[]
   users_role    users_role[]
-  address       address[]
-  orders        order[]
-  carts         cart[]
 }
 
 model users_role {
@@ -204,11 +206,14 @@ model promotion {
 model cart {
   id                 Int             @id @default(autoincrement())
   quantity           Int             @default(1)
-  users              users           @relation(fields: [users_id], references: [id])
   users_id           Int
   created_date       DateTime        @default(now())
-  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
   product_variant_id Int
+  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
+  users              users           @relation(fields: [users_id], references: [id])
+
+  @@index([product_variant_id], map: "cart_product_variant_id_fkey")
+  @@index([users_id], map: "cart_users_id_fkey")
 }
 
 model order {
@@ -218,20 +223,42 @@ model order {
   modified_date      DateTime        @updatedAt
   payment            Boolean         @default(false)
   status             OrderStatus
-  users              users           @relation(fields: [users_id], references: [id])
   users_id           Int
-  billing_address    address         @relation(fields: [address_id], references: [id])
   address_id         Int
-  promotion          promotion?      @relation(fields: [promotion_id], references: [id])
   promotion_id       Int?
   payment_method     PaymentMethod
   quantity           Int
-  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
   total_price        Float           @default(0)
   product_variant_id Int
-  order_history      order_history[]
   payer_id           String?
   payment_id         String?         @unique
+  billing_address    address         @relation(fields: [address_id], references: [id])
+  product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
+  promotion          promotion?      @relation(fields: [promotion_id], references: [id])
+  users              users           @relation(fields: [users_id], references: [id])
+  order_history      order_history[]
+
+  @@index([address_id], map: "order_address_id_fkey")
+  @@index([product_variant_id], map: "order_product_variant_id_fkey")
+  @@index([promotion_id], map: "order_promotion_id_fkey")
+  @@index([users_id], map: "order_users_id_fkey")
+}
+
+model order_history {
+  id           Int      @id @default(autoincrement())
+  created_date DateTime @default(now())
+  order_id     Int
+  content      String
+  order        order    @relation(fields: [order_id], references: [id])
+
+  @@index([order_id], map: "order_history_order_id_fkey")
+}
+
+enum OptionName {
+  Size     @map("size")
+  Color    @map("color")
+  Material @map("material")
+  Style    @map("style")
 }
 
 enum OrderStatus {
@@ -246,12 +273,4 @@ enum OrderStatus {
 enum PaymentMethod {
   Standard @map("standard")
   Card     @map("card")
-}
-
-model order_history {
-  id           Int      @id @default(autoincrement())
-  created_date DateTime @default(now())
-  order        order    @relation(fields: [order_id], references: [id])
-  order_id     Int
-  content      String
 }

@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Breadcrumb, Button, Card, Col, Divider, Modal, Row, Space, Table, Tag, message } from 'antd';
+import { Breadcrumb, Button, Card, Col, Divider, Input, Modal, Row, Select, Space, Table, Tag, message } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import {
@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import { deleteCategory, getListCategory } from 'src/features/catalog/category/action';
 import type { ColumnsType } from 'antd/es/table';
+import { useDebounce } from 'use-debounce';
 
 interface DataType {
     key: number
@@ -78,11 +79,14 @@ const columns = (
 
 const Categories = () => {
     // ** State
-    const [take, setTake] = useState<number>(12)
+    const [take, setTake] = useState<number>(10)
     const [skip, setSkip] = useState<number>(0)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [categoryDelete, setCategoryDelete] = useState<{ id: number, name: string }>()
     const [refresh, setRefresh] = useState<boolean>(false)
+    const [search, setSearch] = useState<string>('')
+    const [value] = useDebounce(search, 1000);
+    const [status, setStatus] = useState<string>('all')
 
     // ** Variables
     const category = useAppSelector((state) => state.category);
@@ -97,13 +101,15 @@ const Categories = () => {
         getListCategory({
             pagination: {
                 skip,
-                take
+                take,
+                search: value,
+                status
             },
             navigate,
             axiosClientJwt,
             dispatch,
         })
-    }, [skip, take, refresh])
+    }, [skip, take, refresh, value, status])
 
     // ** Function handle
     const dataRender = (): DataType[] => {
@@ -139,6 +145,14 @@ const Categories = () => {
         setIsModalOpen(false);
     };
 
+    const handleOnChangePagination = (e: number) => {
+        setSkip((e - 1) * take)
+    }
+
+    const onChangeStatus = (value: string) => {
+        setStatus(value)
+    };
+
     return (
         <Fragment>
             <Row gutter={[0, 16]}>
@@ -154,6 +168,30 @@ const Categories = () => {
                     <Row>
                         <Col span={24}>
                             <Flex justifyContent={"flex-end"} alignItems={"center"}>
+                                <Box mr={3} flex={2}>
+                                    <Input type='text' placeholder='Search by promotion...' onChange={(e) => { setSearch(e.target.value); }} />
+                                </Box>
+                                <Box mr={3} flex={1}>
+                                    <Select
+                                        value={status}
+                                        placeholder="Status"
+                                        onChange={onChangeStatus}
+                                        options={[
+                                            {
+                                                value: 'all',
+                                                label: 'All',
+                                            },
+                                            {
+                                                value: 'active',
+                                                label: 'Active',
+                                            },
+                                            {
+                                                value: 'disabled',
+                                                label: 'Disabled',
+                                            },
+                                        ]}
+                                    />
+                                </Box>
                                 <Button
                                     style={{ textTransform: "uppercase" }}
                                     type="primary"
@@ -167,7 +205,20 @@ const Categories = () => {
                         <Divider />
                         <Col span={24}>
                             <Card>
-                                <Table bordered columns={columns(setIsModalOpen, categoryDelete, setCategoryDelete, navigate)} dataSource={dataRender()} loading={category.list.loading} />
+                                <Table
+                                    bordered
+                                    columns={columns(setIsModalOpen, categoryDelete, setCategoryDelete, navigate)}
+                                    dataSource={dataRender()}
+                                    loading={category.list.loading}
+                                    pagination={{
+                                        total: category.list.result?.total,
+                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                                        defaultCurrent: skip + 1,
+                                        onChange: handleOnChangePagination,
+                                        defaultPageSize: take,
+                                        responsive: true
+                                    }}
+                                />
                             </Card>
                         </Col>
                     </Row>

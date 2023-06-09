@@ -145,7 +145,7 @@ export class ProductService {
 
     public async products(input: PaginationDto): Promise<IResponse<{ products: product[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
-            const { skip, take, search, categories, price, options } = input;
+            const { skip, take, search, categories, price, options, status } = input;
             const [totalRecord, products] = await this.prisma.$transaction([
                 this.prisma.product.count({
                     where: {
@@ -153,6 +153,9 @@ export class ProductService {
                             name: {
                                 contains: search
                             },
+                        },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
                         },
                         ...categories && {
                             category_id: { in: [...categories].map((category) => +category) }
@@ -190,6 +193,9 @@ export class ProductService {
                                 contains: search
                             },
                         },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
+                        },
                         ...categories && {
                             category_id: { in: [...categories].map((category) => +category) }
                         },
@@ -219,6 +225,7 @@ export class ProductService {
                     include: {
                         product_variants: true,
                         featured_asset: true,
+                        category: true
                     }
                 }),
             ])
@@ -889,7 +896,7 @@ export class ProductService {
         try {
             const [products] = await this.prisma.$transaction([
                 this.prisma.product.findMany({
-                    take: 8,
+                    take: 12,
                     skip: 0,
                     where: {
                         active: 1,
@@ -973,7 +980,13 @@ export class ProductService {
                 code: 200,
                 success: true,
                 message: "Success!",
-                data: await this.prisma.product_option.findMany()
+                data: await this.prisma.product_option.findMany({
+                    where: {
+                        product: {
+                            active: 1
+                        }
+                    }
+                })
             }
         } catch (error) {
             return {

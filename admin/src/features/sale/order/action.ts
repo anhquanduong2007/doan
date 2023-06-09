@@ -66,14 +66,15 @@ export type DeleteOrderParams = Omit<GetListOrderParams, "pagination">
 
 export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListOrderParams) => {
     try {
-        const { skip, take, search } = pagination;
+        const { skip, take, search, status } = pagination;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(getListOrderStart());
         const res: IAxiosResponse<{}> = await axiosClientJwt.get('/order', {
             params: {
                 take,
                 skip,
-                search
+                search,
+                status
             },
             headers: {
                 Authorization: `Bearer ${accessToken}`

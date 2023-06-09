@@ -1,5 +1,5 @@
-import { Flex } from '@chakra-ui/react';
-import { Breadcrumb, Button, Card, Col, Divider, Modal, Row, Space, Switch, Table, Tag, message } from 'antd';
+import { Box, Flex } from '@chakra-ui/react';
+import { Breadcrumb, Button, Card, Col, Divider, Input, Modal, Row, Select, Space, Switch, Table, Tag, message } from 'antd';
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { deletePromotion, getListPromotion } from 'src/features/promotion/action';
+import { useDebounce } from 'use-debounce';
 
 interface DataType {
     key: number
@@ -69,7 +70,7 @@ const columns = (
             key: 'active',
             render: (active: number) => {
                 return (
-                    <Switch checked={active === 1} />
+                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
                 )
             }
         },
@@ -96,11 +97,14 @@ const columns = (
 
 const Promotions = () => {
     // ** State
-    const [take, setTake] = useState<number>(12)
+    const [take, setTake] = useState<number>(10)
     const [skip, setSkip] = useState<number>(0)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [promotionDelete, setPromotionDelete] = useState<{ id: number, name: string }>()
     const [refresh, setRefresh] = useState<boolean>(false)
+    const [search, setSearch] = useState<string>('')
+    const [value] = useDebounce(search, 1000);
+    const [status, setStatus] = useState<string>('all')
 
     // ** Variables
     const promotion = useAppSelector((state) => state.promotion);
@@ -115,13 +119,15 @@ const Promotions = () => {
         getListPromotion({
             pagination: {
                 skip,
-                take
+                take,
+                search: value,
+                status
             },
             navigate,
             axiosClientJwt,
             dispatch,
         })
-    }, [skip, take, refresh])
+    }, [skip, take, value, refresh, status])
 
     // ** Function handle
     const dataRender = (): DataType[] => {
@@ -158,6 +164,14 @@ const Promotions = () => {
         setIsModalOpen(false);
     };
 
+    const handleOnChangePagination = (e: number) => {
+        setSkip((e - 1) * take)
+    }
+
+    const onChangeStatus = (value: string) => {
+        setStatus(value)
+    };
+
     return (
         <Fragment>
             <Row gutter={[0, 16]}>
@@ -173,6 +187,30 @@ const Promotions = () => {
                     <Row>
                         <Col span={24}>
                             <Flex justifyContent={"flex-end"} alignItems={"center"}>
+                                <Box mr={3} flex={2}>
+                                    <Input type='text' placeholder='Search by promotion...' onChange={(e) => { setSearch(e.target.value); }} />
+                                </Box>
+                                <Box mr={3} flex={1}>
+                                    <Select
+                                        value={status}
+                                        placeholder="Status"
+                                        onChange={onChangeStatus}
+                                        options={[
+                                            {
+                                                value: 'all',
+                                                label: 'All',
+                                            },
+                                            {
+                                                value: 'active',
+                                                label: 'Active',
+                                            },
+                                            {
+                                                value: 'disabled',
+                                                label: 'Disabled',
+                                            },
+                                        ]}
+                                    />
+                                </Box>
                                 <Button
                                     style={{ textTransform: "uppercase" }}
                                     type="primary"
@@ -186,7 +224,20 @@ const Promotions = () => {
                         <Divider />
                         <Col span={24}>
                             <Card>
-                                <Table bordered columns={columns(setIsModalOpen, promotionDelete, setPromotionDelete, navigate)} dataSource={dataRender()} loading={promotion.list.loading} />
+                                <Table
+                                    bordered
+                                    columns={columns(setIsModalOpen, promotionDelete, setPromotionDelete, navigate)}
+                                    dataSource={dataRender()}
+                                    loading={promotion.list.loading}
+                                    pagination={{
+                                        total: promotion.list.result?.total,
+                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                                        defaultCurrent: skip + 1,
+                                        onChange: handleOnChangePagination,
+                                        defaultPageSize: take,
+                                        responsive: true
+                                    }}
+                                />
                             </Card>
                         </Col>
                     </Row>

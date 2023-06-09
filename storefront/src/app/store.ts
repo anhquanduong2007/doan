@@ -5,6 +5,7 @@ import checkoutSlice from 'src/features/checkout/checkoutSlice';
 import addressSlice from 'src/features/address/addressSlice';
 import orderSlice from 'src/features/order/orderSlice';
 import ratingSlice from 'src/features/rating/ratingSlice';
+import promotionSlice from 'src/features/promotion/promotionSlice';
 
 import {
   persistStore,
@@ -30,7 +31,8 @@ const rootReducer = combineReducers({
   checkout: checkoutSlice,
   address: addressSlice,
   order: orderSlice,
-  rating: ratingSlice
+  rating: ratingSlice,
+  promotion: promotionSlice
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

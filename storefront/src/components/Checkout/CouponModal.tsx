@@ -1,10 +1,68 @@
-import React from 'react';
+import { Box, useToast } from '@chakra-ui/react';
+import { Card, Modal } from 'antd';
+import React, { Fragment, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from 'src/app/hooks';
+import { createAxiosJwt } from 'src/axios/axiosInstance';
+import { getListPromotion } from 'src/features/promotion/action';
 
-const CouponModal = () => {
+interface CouponModalProps {
+    couponModal: boolean
+    setCouponModal: (couponModal: boolean) => void
+}
+
+const CouponModal = ({ couponModal, setCouponModal }: CouponModalProps) => {
+    // ** State
+    const [take, setTake] = useState<number>(9999)
+    const [skip, setSkip] = useState<number>(0)
+
+    // ** Third party
+    const toast = useToast()
+
+    // ** Variables
+    const promotion = useAppSelector((state) => state.promotion);
+    const dispatch = useAppDispatch();
+    const axiosClientJwt = createAxiosJwt();
+
+    // ** Effect
+    useEffect(() => {
+        getListPromotion({
+            axiosClientJwt,
+            dispatch,
+            toast,
+            pagination: {
+                skip,
+                take,
+                status: 'active'
+            }
+        })
+    }, [])
+
     return (
-        <div>
-            
-        </div>
+        <Fragment>
+            <Modal title="Coupon" open={couponModal} onOk={() => setCouponModal(false)} onCancel={() => setCouponModal(false)} centered>
+                <Box height="500px" overflowY="auto" sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
+                    {
+                        promotion && promotion.list?.result && (
+                            promotion.list?.result?.promotions?.map((promotion) => {
+                                return (
+                                    <Card title={promotion.name} style={{ marginTop: "1rem", opacity: new Date(promotion.ends_at).getDate() - new Date().getDate() < 0 ? 0.5 : 1 }}>
+                                        <Box mb={2}>
+                                            Coupon code: <span className='font-bold'>{promotion.coupon_code}</span>
+                                        </Box>
+                                        <Box mb={2}>
+                                            Discount: <span className='font-semibold'>{promotion.discount}%</span>
+                                        </Box>
+                                        <Box>
+                                            Remaining: <span className='font-semibold'>{promotion.limit}</span>
+                                        </Box>
+                                    </Card>
+                                )
+                            })
+                        )
+                    }
+                </Box>
+            </Modal>
+        </Fragment>
     );
 };
 

@@ -75,6 +75,7 @@ export const checkPromotion = async ({ axiosClient, dispatch, refresh, setError,
             status: 'error',
             title: "Something went wrong!",
             isClosable: true,
+            position: "top-right",
         })
     }
 }
@@ -144,12 +145,14 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
                 status: 'error',
                 title: "You do not have permission to perform this action!",
                 isClosable: true,
+                position: "top-right",
             })
         } else {
             toast({
                 status: 'error',
                 title: "Something went wrong!",
                 isClosable: true,
+                position: "top-right",
             })
         }
     }

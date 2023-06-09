@@ -4,7 +4,6 @@ import { AssignRolesToUserDto, UserUpdateDto } from './dto';
 import { IResponse } from 'src/common/types';
 import { PaginationDto } from 'src/common/dto';
 import { users } from '@prisma/client';
-import { truncate } from 'lodash';
 
 @Injectable()
 export class UserService {
@@ -109,12 +108,54 @@ export class UserService {
     // ** Administrators
     public async administrators(input: PaginationDto, userId: number): Promise<IResponse<{ administrators: Omit<users, "hashed_rt" | "password">[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
-            const { skip, take, search } = input;
+            const { skip, take, search, status } = input;
             const [totalRecord, administrators] = await this.prisma.$transaction([
                 this.prisma.users.count({
                     where: {
-                        NOT: {
-                            id: userId
+                        AND: [
+                            {
+                                NOT: {
+                                    id: userId,
+                                }
+                            },
+                            {
+                                users_role: {
+                                    every: {
+                                        NOT: {
+                                            role: {
+                                                role_code: "customer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        ...search && {
+                            OR: [
+                                {
+                                    email: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    first_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    last_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    phone: {
+                                        contains: search
+                                    }
+                                }
+                            ]
+                        },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
                         },
                     },
                 }),
@@ -122,8 +163,50 @@ export class UserService {
                     take: take || 10,
                     skip: skip || 0,
                     where: {
-                        NOT: {
-                            id: userId
+                        AND: [
+                            {
+                                NOT: {
+                                    id: userId,
+                                }
+                            },
+                            {
+                                users_role: {
+                                    every: {
+                                        NOT: {
+                                            role: {
+                                                role_code: "customer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        ...search && {
+                            OR: [
+                                {
+                                    email: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    first_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    last_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    phone: {
+                                        contains: search
+                                    }
+                                }
+                            ]
+                        },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
                         },
                     },
                     select: {
@@ -292,13 +375,40 @@ export class UserService {
     // ** Customer
     public async customers(input: PaginationDto): Promise<IResponse<{ customers: Omit<users, "hashed_rt" | "password">[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
-            const { skip, take, search } = input;
+            const { skip, take, search, status } = input;
             const customerRole = await this.prisma.role.findUnique({
                 where: { role_code: "customer" }
             })
             const [totalRecord, customers] = await this.prisma.$transaction([
                 this.prisma.users.count({
                     where: {
+                        ...search && {
+                            OR: [
+                                {
+                                    email: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    first_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    last_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    phone: {
+                                        contains: search
+                                    }
+                                }
+                            ]
+                        },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
+                        },
                         users_role: {
                             some: {
                                 role_id: customerRole.id
@@ -310,6 +420,33 @@ export class UserService {
                     take: take || 10,
                     skip: skip || 0,
                     where: {
+                        ...search && {
+                            OR: [
+                                {
+                                    email: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    first_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    last_name: {
+                                        contains: search
+                                    }
+                                },
+                                {
+                                    phone: {
+                                        contains: search
+                                    }
+                                }
+                            ]
+                        },
+                        ...status && status !== 'all' && {
+                            active: status === 'active' ? 1 : 0
+                        },
                         users_role: {
                             some: {
                                 role_id: customerRole.id

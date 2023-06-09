@@ -248,7 +248,7 @@ export const createProductVariantOption = async ({
 
 export const getListProduct = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListProductParams) => {
     try {
-        const { skip, take, search } = pagination;
+        const { skip, take, search, status } = pagination;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(getListProductStart());
         const res: IAxiosResponse<{}> = await axiosClientJwt.get('/product', {
@@ -256,6 +256,7 @@ export const getListProduct = async ({ pagination, dispatch, axiosClientJwt, nav
                 ...pagination?.take && { take },
                 ...pagination?.skip && { skip },
                 ...pagination?.search && { search },
+                ...pagination?.status && { status },
             },
             headers: {
                 Authorization: `Bearer ${accessToken}`

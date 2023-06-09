@@ -28,7 +28,7 @@ const ProductBy = ({ title, url }: ProductByProps) => {
     const dataToRender = () => {
         if (product && product.length) {
             return (
-                <Row>
+                <Row style={{marginBottom: "2rem"}}>
                     <Col span={24}>
                         <p className='font-bold text-3xl uppercase text-center'>{title}</p>
                     </Col>
@@ -36,8 +36,9 @@ const ProductBy = ({ title, url }: ProductByProps) => {
                         <Row gutter={[16, 16]}>
                             {
                                 product.map((p, index) => {
+                                    const variants = p.product_variants.map((variant) => variant.name)
                                     const price = p.product_variants.map((variant) => variant.price)
-                                    return <CardProduct key={index} span={4} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} />
+                                    return <CardProduct key={index} span={4} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} variants={variants} category={p?.category?.category_name} />
                                 })
                             }
                         </Row>
