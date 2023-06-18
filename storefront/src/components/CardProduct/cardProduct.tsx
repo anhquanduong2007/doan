@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Col, Card, Tag } from 'antd'
+import { Col, Card, Tag, Tooltip } from 'antd'
 import formatMoney from 'src/shared/utils/formatMoney'
 import { Box } from '@chakra-ui/react'
 interface CardProductProps {
@@ -37,7 +37,13 @@ const CardProduct = ({ name, id, img, min, max, span, variants, category }: Card
           {
             variants?.map((variant, index) => {
               const random = Math.floor(Math.random() * color.length);
-              return <Tag key={index} style={{ marginTop: "6px" }} color={color[random]}>{variant}</Tag>
+              return (
+                <Tooltip title={variant}>
+                  <Link to={`/products/${id}`}>
+                    <Tag key={index} style={{ marginTop: "6px", width: "100px", textOverflow: "ellipsis", whiteSpace: 'nowrap', overflow: 'hidden' }} color={color[random]}>{variant}</Tag>
+                  </Link>
+                </Tooltip>
+              )
             })
           }
         </Box>
