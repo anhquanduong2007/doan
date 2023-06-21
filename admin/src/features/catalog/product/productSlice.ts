@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Product, ProductVariant } from 'src/types';
+import { Product, ProductOption, ProductVariant } from 'src/types';
 
 export interface ProductOptionType {
     name: string
@@ -11,17 +11,17 @@ interface ProductState {
         result: Product | null;
         loading: boolean;
         error: boolean;
-    },
+    }
     createProductOption: {
         result: any;
         loading: boolean;
         error: boolean;
-    },
+    }
     createProductVariant: {
         result: any;
         loading: boolean;
         error: boolean;
-    },
+    }
     list: {
         result: {
             products: Array<Product>
@@ -32,23 +32,33 @@ interface ProductState {
         } | null;
         loading: boolean;
         error: boolean;
-    },
+    }
     delete: {
         result: Product | null;
         loading: boolean;
         error: boolean;
-    },
+    }
     single: {
         result: Product | null;
         loading: boolean;
         error: boolean;
-    },
+    }
     update: {
         result: Product | null;
         loading: boolean;
         error: boolean;
     }
     productVariantUpdate: {
+        result: ProductVariant | null;
+        loading: boolean;
+        error: boolean;
+    }
+    productOptionUpdate: {
+        result: ProductOption | null;
+        loading: boolean;
+        error: boolean;
+    }
+    deleteProductVariant: {
         result: ProductVariant | null;
         loading: boolean;
         error: boolean;
@@ -95,8 +105,17 @@ const initialState: ProductState = {
         result: null,
         loading: false,
         error: false
+    },
+    productOptionUpdate: {
+        result: null,
+        loading: false,
+        error: false
+    },
+    deleteProductVariant: {
+        result: null,
+        loading: false,
+        error: false
     }
-
 } as ProductState;
 
 export const productSlice = createSlice({
@@ -201,7 +220,7 @@ export const productSlice = createSlice({
             state.update.result = action.payload;
             state.update.error = true;
         },
-        // ** Update product
+        // ** Update product variant
         updateProductVariantStart: (state) => {
             state.productVariantUpdate.loading = true;
         },
@@ -214,6 +233,34 @@ export const productSlice = createSlice({
             state.productVariantUpdate.loading = false;
             state.productVariantUpdate.result = action.payload;
             state.productVariantUpdate.error = true;
+        },
+        // ** Update product option
+        updateProductOptionStart: (state) => {
+            state.productOptionUpdate.loading = true;
+        },
+        updateProductOptionSuccess: (state, action) => {
+            state.productOptionUpdate.loading = false;
+            state.productOptionUpdate.result = action.payload;
+            state.productOptionUpdate.error = false
+        },
+        updateProductOptionFailed: (state, action) => {
+            state.productOptionUpdate.loading = false;
+            state.productOptionUpdate.result = action.payload;
+            state.productOptionUpdate.error = true;
+        },
+        // ** Delete product variant
+        deleteProductVariantStart: (state) => {
+            state.deleteProductVariant.loading = true;
+        },
+        deleteProductVariantSuccess: (state, action) => {
+            state.deleteProductVariant.loading = false;
+            state.deleteProductVariant.result = action.payload;
+            state.deleteProductVariant.error = false
+        },
+        deleteProductVariantFailed: (state, action) => {
+            state.deleteProductVariant.loading = false;
+            state.deleteProductVariant.result = action.payload;
+            state.deleteProductVariant.error = true;
         },
     }
 });
@@ -242,7 +289,13 @@ export const {
     updateProductFailed,
     updateProductVariantStart,
     updateProductVariantSuccess,
-    updateProductVariantFailed
+    updateProductVariantFailed,
+    updateProductOptionStart,
+    updateProductOptionSuccess,
+    updateProductOptionFailed,
+    deleteProductVariantStart,
+    deleteProductVariantSuccess,
+    deleteProductVariantFailed
 } = productSlice.actions;
 
 export default productSlice.reducer;

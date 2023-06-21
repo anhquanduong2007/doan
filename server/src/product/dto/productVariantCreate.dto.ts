@@ -18,6 +18,10 @@ export class ProductVariantCreateDto {
     price: number
 
     @IsNumber()
+    @IsOptional()
+    origin_price: number
+
+    @IsNumber()
     @IsNotEmpty()
     product_id: number
 

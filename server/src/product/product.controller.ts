@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, Que
 import { Response, Request } from 'express';
 import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
-import { AddProductVariantToCartDto, OptionBulkCreateDto, OptionCreateDto, ProductCreateDto, ProductUpdateDto, ProductVariantCreateDto, ProductVariantUpdateDto } from './dto';
+import { AddProductVariantToCartDto, OptionBulkCreateDto, OptionCreateDto, OptionUpdateDto, ProductCreateDto, ProductUpdateDto, ProductVariantCreateDto, ProductVariantUpdateDto } from './dto';
 import { ProductService } from './product.service';
 import { PaginationDto } from 'src/common/dto';
 
@@ -134,6 +134,13 @@ export class ProductController {
     async optionBulkCreate(@Req() req: Request, @Body() dto: OptionBulkCreateDto, @Res() res: Response) {
         const userId = req.user['userId']
         const response = await this.productService.optionBulkCreate(dto, userId)
+        res.json({ response })
+    }
+
+    @Put("option/update/:id")
+    @Permission(Permissions.UpdateProduct)
+    async updateProductOption(@Param('id', ParseIntPipe) id: number, @Body() dto: OptionUpdateDto, @Res() res: Response) {
+        const response = await this.productService.updateProductOption(dto, id)
         res.json({ response })
     }
 

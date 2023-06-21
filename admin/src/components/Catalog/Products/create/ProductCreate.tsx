@@ -36,28 +36,6 @@ const ProductCreate = ({ control, errors, setValue }: ProductCreateProps) => {
                 />
             </Box>
             <Box mb={3}>
-                <Box as="label" htmlFor='name' fontWeight="semibold">Slug <Box as="span" textColor="red.500" fontWeight="light">*</Box></Box>
-                <Controller
-                    name="slug"
-                    control={control}
-                    rules={{ required: true }}
-                    render={({ field: { value, ...other } }) => {
-                        return (
-                            <Box my={1}>
-                                <Input
-                                    id='slug'
-                                    status={errors?.slug ? 'error' : ''}
-                                    placeholder='Eg: bags'
-                                    {...other}
-                                    value={value || ''}
-                                />
-                                {errors?.slug ? <Box as="span" textColor="red.500">{errors.slug?.type === 'required' ? "Slug is required!" : errors.slug.message}</Box> : null}
-                            </Box>
-                        )
-                    }}
-                />
-            </Box>
-            <Box mb={3}>
                 <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Description</Box>
                 <Controller
                     name="description"

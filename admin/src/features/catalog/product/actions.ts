@@ -25,7 +25,13 @@ import {
     updateProductFailed,
     updateProductVariantStart,
     updateProductVariantSuccess,
-    updateProductVariantFailed
+    updateProductVariantFailed,
+    updateProductOptionStart,
+    updateProductOptionSuccess,
+    updateProductOptionFailed,
+    deleteProductVariantStart,
+    deleteProductVariantSuccess,
+    deleteProductVariantFailed
 } from "./productSlice";
 import { IAxiosResponse } from "src/types/axiosResponse";
 import { Pagination } from "src/types";
@@ -44,7 +50,6 @@ export type CreateProductParams = {
 export type Product = {
     name: string;
     description?: string;
-    slug: string;
     active: boolean;
     featured_asset_id?: number;
 };
@@ -54,9 +59,7 @@ export type ProductOption = {
     value: Array<string>;
 };
 
-type ProductOptionType = {
-    [key: string]: ProductOption;
-};
+
 export type CreateProductOptionParams = {
     dispatch: AppDispatch;
     axiosClient: Axios;
@@ -110,26 +113,34 @@ export type ProductVariantUpdate = {
 
 export type ProductUpdate = {
     name: string
-    slug: string
     description?: string
     active: number
     featured_asset_id?: number
     category_id?: number | null
 }
 
+export type ProductVariantOption = {
+    value: string
+}
+
+type UpdateProductOptionParams = Omit<UpdateProductVariantParams, "productVariant" | "setError"> & {
+    productOption: ProductVariantOption,
+}
+
+type DeleteProductVariantParams = DeleteProductParams
+
 export const createProduct = async ({
     product,
     dispatch,
     axiosClient,
 }: CreateProductParams) => {
-    const { slug, active, description, name, featured_asset_id } = product;
+    const { active, description, name, featured_asset_id } = product;
     dispatch(createProductStart());
     try {
         const accessToken = localStorage.getItem("accessToken");
         const res: IAxiosResponse<{}> = await axiosClient.post(
             `/product/create`,
             {
-                slug,
                 active,
                 description,
                 name,
@@ -366,17 +377,15 @@ export const getProduct = async ({ id, dispatch, axiosClientJwt, navigate }: Get
     }
 }
 
-
 export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigate, setError, message, id, refresh, setRefresh }: UpdateProductParams) => {
     try {
-        const { active, name, slug, description, featured_asset_id, category_id } = product;
+        const { active, name, description, featured_asset_id, category_id } = product;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(updateProductStart());
         const [res]: [IAxiosResponse<{}>] = await Promise.all([
             await axiosClientJwt.put(`/product/update/${id}`, {
                 active,
                 name,
-                slug,
                 description,
                 featured_asset_id,
                 category_id
@@ -457,6 +466,93 @@ export const updateProductVariant = async ({ productVariant, setIsModalOpen, axi
                 message: 'You do not have permission to perform this action!'
             })
             setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
+    }
+}
+
+export const updateProductOption = async ({ productOption, setIsModalOpen, axiosClientJwt, dispatch, navigate, message, id, refresh, setRefresh }: UpdateProductOptionParams) => {
+    try {
+        const { value } = productOption;
+        const accessToken = localStorage.getItem("accessToken")
+        dispatch(updateProductOptionStart());
+        const [res]: [IAxiosResponse<{}>] = await Promise.all([
+            await axiosClientJwt.put(`/product/option/update/${id}`, {
+                value
+
+            }, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`
+                }
+            }),
+        ])
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(updateProductOptionSuccess(res.response.data));
+                message.success('Update product option successfully!');
+                setIsModalOpen(false)
+                setRefresh(!refresh)
+            }, 1000)
+        } else {
+            dispatch(updateProductOptionFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(updateProductOptionFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
+    }
+}
+
+export const deleteProductVariant = async ({ id, dispatch, axiosClientJwt, navigate, message, refresh, setIsModalOpen, setRefresh }: DeleteProductVariantParams) => {
+    try {
+        dispatch(deleteProductVariantStart());
+        const accessToken = localStorage.getItem("accessToken")
+        const res: IAxiosResponse<{}> = await axiosClientJwt.delete(`/product/variant/delete/${id}`, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            }
+        });
+        if (res?.response?.code === 200 && res?.response?.success) {
+            setTimeout(function () {
+                dispatch(deleteProductVariantSuccess(res.response.data))
+                message.success('Delete product variant successfully!')
+                setIsModalOpen(false)
+                setRefresh(!refresh)
+            }, 1000);
+        } else {
+            dispatch(deleteProductVariantFailed(null));
+            setTimeout(function () {
+                setIsModalOpen(false)
+            }, 1000)
+
+        }
+    } catch (error: any) {
+        dispatch(deleteProductVariantFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
+                setIsModalOpen(false)
                 navigate('/')
             }, 1000);
         } else {

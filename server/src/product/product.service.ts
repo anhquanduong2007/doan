@@ -15,18 +15,7 @@ export class ProductService {
 
     public async productCreate(input: ProductCreateDto, userId: number): Promise<IResponse<product>> {
         try {
-            const { active, category_id, description, name, slug, featured_asset_id } = input
-            const isSlugExist = await this.prisma.product.findUnique({
-                where: { slug }
-            })
-            if (isSlugExist) {
-                return {
-                    code: 400,
-                    success: false,
-                    fieldError: "slug",
-                    message: 'Slug already exists in the system!',
-                }
-            }
+            const { active, category_id, description, name, featured_asset_id } = input
             return {
                 code: 200,
                 message: 'Success',
@@ -34,7 +23,6 @@ export class ProductService {
                 data: await this.prisma.product.create({
                     data: {
                         active,
-                        slug,
                         name,
                         category_id,
                         description,
@@ -252,34 +240,14 @@ export class ProductService {
 
     public async productUpdate(input: ProductUpdateDto, id: number, userId: number): Promise<IResponse<product>> {
         try {
-            const { active, name, slug, featured_asset_id, description, category_id } = input
+            const { active, name, featured_asset_id, description, category_id } = input
             const product = await this.prisma.product.findUnique({
                 where: { id }
             })
             if (product) {
-                const [isSkuValid, isAssetValid] = await Promise.all([
-                    ...slug ? [this.prisma.product.findFirst({
-                        where: {
-                            AND: [
-                                { slug },
-                                {
-                                    NOT: [
-                                        { id }
-                                    ]
-                                }
-                            ]
-                        }
-                    })] : [],
+                const [isAssetValid] = await Promise.all([
                     ...featured_asset_id ? [this.prisma.asset.findUnique({ where: { id: featured_asset_id } })] : [],
                 ])
-                if (slug && isSkuValid) {
-                    return {
-                        code: 400,
-                        success: false,
-                        fieldError: "sku",
-                        message: 'slug already exists!',
-                    }
-                }
                 if (featured_asset_id && !isAssetValid) {
                     return {
                         code: 404,
@@ -297,7 +265,6 @@ export class ProductService {
                             featured_asset_id,
                             ...name && { name },
                             ...description && { description },
-                            ...slug && { slug },
                             category_id,
                             active,
                             modified_by: userId
@@ -352,7 +319,7 @@ export class ProductService {
 
     public async productVariantUpdate(input: ProductVariantUpdateDto, id: number): Promise<IResponse<product_variant>> {
         try {
-            const { name, price, sku, stock, featured_asset_id } = input
+            const { name, price, sku, stock, featured_asset_id, origin_price } = input
             const productVariant = await this.prisma.product_variant.findUnique({
                 where: { id },
             })
@@ -390,6 +357,7 @@ export class ProductService {
                             ...price && { price },
                             ...sku && { sku },
                             ...stock && { stock },
+                            ...origin_price && { origin_price },
                             ...featured_asset_id && { featured_asset_id }
                         },
                     })
@@ -511,7 +479,7 @@ export class ProductService {
 
     public async productVariantCreate(input: ProductVariantCreateDto, userId: number): Promise<IResponse<product_variant>> {
         try {
-            const { option_ids, price, product_id, sku, stock, name } = input
+            const { option_ids, price, product_id, sku, stock, name, origin_price } = input
             const isSkuValid = await this.prisma.product_variant.findUnique({
                 where: { sku }
             })
@@ -532,6 +500,7 @@ export class ProductService {
                         created_by: userId,
                         modified_by: userId,
                         price,
+                        origin_price,
                         stock,
                         name,
                         product_id,
@@ -582,6 +551,7 @@ export class ProductService {
                                 created_by: userId,
                                 modified_by: userId,
                                 price: variant.price,
+                                origin_price: variant.origin_price,
                                 name: variant.name,
                                 stock: variant.stock,
                                 product_id: variant.product_id,
@@ -617,6 +587,25 @@ export class ProductService {
             if (productVariant) {
                 await this.prisma.product_variant_option.deleteMany({
                     where: { product_variant_id: id }
+                })
+                const product = await this.prisma.product.findFirst({
+                    where: {
+                        product_variants: {
+                            some: {
+                                id: productVariant.id
+                            }
+                        }
+                    }
+                })
+                await this.prisma.product.update({
+                    where: { id: product.id },
+                    data: {
+                        product_variants: {
+                            delete: {
+                                id: productVariant.id
+                            }
+                        }
+                    }
                 })
                 return {
                     code: 200,

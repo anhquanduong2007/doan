@@ -60,7 +60,6 @@ model product {
   id                Int               @id @default(autoincrement())
   name              String            @db.VarChar(255)
   description       String?           @db.LongText
-  slug              String            @unique @db.VarChar(255)
   category_id       Int?
   active            Int               @default(1)
   created_date      DateTime?         @default(now())
@@ -82,6 +81,7 @@ model product_variant {
   stock             Int                      @default(0)
   sku               String                   @unique @db.VarChar(255)
   price             Int                      @default(0)
+  origin_price      Int                      @default(0)
   created_date      DateTime?                @default(now())
   modified_date     DateTime?                @updatedAt
   created_by        Int?

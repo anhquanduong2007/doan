@@ -9,10 +9,6 @@ export class ProductCreateDto {
     @IsOptional()
     description: string
 
-    @IsString()
-    @IsNotEmpty()
-    slug: string
-
     @IsNumber()
     @IsOptional()
     category_id: number

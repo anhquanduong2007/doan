@@ -1,21 +1,29 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Card, Col, Divider, Form, Input, Popover, Row, Switch, Tag } from 'antd';
+import { Card, Col, Divider, Form, Input, Modal, Popover, Row, message, Tag } from 'antd';
 import React, { Fragment, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
-import { getProduct } from 'src/features/catalog/product/actions';
+import { deleteProductVariant, getProduct } from 'src/features/catalog/product/actions';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import {
     EllipsisOutlined
 } from '@ant-design/icons';
 import ModalUpdateProductVariant from './ModalUpdateProductVariant';
-import { ProductVariant as ProductVariantType } from 'src/types';
+import { ProductOption, ProductVariant as ProductVariantType } from 'src/types';
+import ModalUpdateProductOption from './ModalUpdateProductOption';
 
 const ProductVariant = () => {
     // ** State
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+    const [isModalUpdateProductOptionOpen, setIsModalUpdateProductOptionOpen] = useState<boolean>(false)
     const [variant, setVariant] = useState<ProductVariantType>()
+    const [option, setOption] = useState<ProductOption>()
     const [refresh, setRefresh] = useState<boolean>(false)
+    const [isModalDeleteProductVariantOpen, setIsModalDeleteProductVariantOpen] = useState<boolean>(false)
+    const [productVariantDelete, setProductVariantDelete] = useState<{ id: number, sku: string }>({
+        id: 0,
+        sku: ''
+    })
 
     // ** Third party
     const navigate = useNavigate()
@@ -63,6 +71,22 @@ const ProductVariant = () => {
                                             >
                                                 Update
                                             </Box>
+                                            {/* <Box
+                                                _hover={{ background: '#dbdbdb' }}
+                                                cursor={"pointer"}
+                                                padding={"2px 5px"}
+                                                borderRadius={"4px"}
+                                                onClick={() => {
+                                                    setIsModalDeleteProductVariantOpen(true)
+                                                    setProductVariantDelete({
+                                                        ...productVariantDelete,
+                                                        sku: product_variant.sku,
+                                                        id: product_variant.id
+                                                    })
+                                                }}
+                                            >
+                                                Delete
+                                            </Box> */}
                                         </Fragment>
                                     }
                                     title="Action"
@@ -84,7 +108,16 @@ const ProductVariant = () => {
                                     <Box mt={4}>
                                         {product_variant.product_options.map((option) => {
                                             return (
-                                                <Tag color="blue">{option.product_option.value}</Tag>
+                                                <Tag
+                                                    color="blue"
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => {
+                                                        setIsModalUpdateProductOptionOpen(true)
+                                                        setOption(option.product_option)
+                                                    }}
+                                                >
+                                                    {option.product_option.name} - {option.product_option.value}
+                                                </Tag>
                                             )
                                         })}
                                     </Box>
@@ -114,10 +147,31 @@ const ProductVariant = () => {
         return []
     }
 
+    const handleOk = async () => {
+        deleteProductVariant({
+            axiosClientJwt,
+            dispatch,
+            id: productVariantDelete.id,
+            message,
+            navigate,
+            refresh,
+            setIsModalOpen: setIsModalDeleteProductVariantOpen,
+            setRefresh
+        })
+    }
+
+    const handleCancel = () => {
+        setIsModalDeleteProductVariantOpen(false);
+    }
+
     return (
         <Fragment>
             {dataToRender()}
             <ModalUpdateProductVariant isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} variant={variant as ProductVariantType} refresh={refresh} setRefresh={setRefresh} />
+            <ModalUpdateProductOption isModalUpdateProductOptionOpen={isModalUpdateProductOptionOpen} setIsModalUpdateProductOptionOpen={setIsModalUpdateProductOptionOpen} option={option as ProductOption} refresh={refresh} setRefresh={setRefresh} />
+            <Modal title="Delete product variant" open={isModalDeleteProductVariantOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={product.deleteProductVariant.loading}>
+                Are you sure you want to delete this product variant (<Box as='span' fontWeight='bold'>{productVariantDelete.sku}</Box>)?
+            </Modal>
         </Fragment>
     );
 };
