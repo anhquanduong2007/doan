@@ -59,6 +59,7 @@ const CustomerCreateUpdate = () => {
     const lastNameErrorRef = useRef(null);
     const emailErrorRef = useRef(null);
     const passwordErrorRef = useRef(null);
+    const phoneErrorRef = useRef(null);
 
     // ** Effect
     useEffect(() => {
@@ -66,6 +67,7 @@ const CustomerCreateUpdate = () => {
         lastNameErrorRef.current && autoAnimate(lastNameErrorRef.current);
         emailErrorRef.current && autoAnimate(emailErrorRef.current);
         passwordErrorRef.current && autoAnimate(passwordErrorRef.current);
+        phoneErrorRef.current && autoAnimate(phoneErrorRef.current);
     }, [parent])
 
     useEffect(() => {
@@ -243,10 +245,12 @@ const CustomerCreateUpdate = () => {
                                     <Controller
                                         name="phone"
                                         control={control}
+                                        rules={{ maxLength: 10, minLength: 10 }}
                                         render={({ field }) => {
                                             return (
-                                                <div>
+                                                <div ref={phoneErrorRef}>
                                                     <Input {...field} />
+                                                    {errors?.phone ? <Box as="div" mt={1} textColor="red.600">Enter the wrong phone number format</Box> : null}
                                                 </div>
                                             )
                                         }}

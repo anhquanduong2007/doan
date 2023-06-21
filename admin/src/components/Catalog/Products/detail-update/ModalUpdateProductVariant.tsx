@@ -15,6 +15,7 @@ export interface FormValuesProductVariant {
     name: string
     sku: string
     price: number
+    origin_price: number
     stock: number
 }
 
@@ -40,6 +41,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
         defaultValues: {
             name: '',
             sku: '',
+            origin_price: 0,
             price: 0,
             stock: 0
         }
@@ -55,6 +57,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
         if (variant) {
             setValue("name", variant.name)
             setValue("price", variant.price)
+            setValue("origin_price", variant.origin_price)
             setValue("sku", variant.sku)
             setValue("stock", variant.stock)
             setFeaturedAsset(variant.featured_asset)
@@ -77,6 +80,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
             productVariant: {
                 name: data.name,
                 price: data.price,
+                origin_price: data.origin_price,
                 sku: data.sku,
                 stock: data.stock,
                 featured_asset_id: featuredAsset?.id
@@ -122,6 +126,22 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                         <div ref={skuErrorRef}>
                                             <Input {...field} placeholder="sm-0152" />
                                             {errors?.sku ? <Box as="div" mt={1} textColor="red.600">{errors.sku?.type === 'required' ? "Please input your product sku!" : errors.sku.message}</Box> : null}
+                                        </div>
+                                    )
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Origin price">
+                            <Controller
+                                name="origin_price"
+                                control={control}
+                                render={({ field }) => {
+                                    return (
+                                        <div >
+                                            <InputNumber
+                                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                {...field}
+                                            />
                                         </div>
                                     )
                                 }}

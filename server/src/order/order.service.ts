@@ -132,6 +132,8 @@ export class OrderService {
                     },
                 },
                 include: {
+                    product_variant: true,
+                    promotion: true,
                     users: {
                         select: {
                             first_name: true,

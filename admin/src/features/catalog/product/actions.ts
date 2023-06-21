@@ -106,6 +106,7 @@ type UpdateProductVariantParams = Omit<GetListProductParams, "pagination"> & {
 export type ProductVariantUpdate = {
     name: string
     price: number
+    origin_price: number
     sku: string
     stock: number
     featured_asset_id?: number
@@ -428,7 +429,7 @@ export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigat
 
 export const updateProductVariant = async ({ productVariant, setIsModalOpen, axiosClientJwt, dispatch, navigate, setError, message, id, refresh, setRefresh }: UpdateProductVariantParams) => {
     try {
-        const { name, price, sku, stock, featured_asset_id } = productVariant;
+        const { name, price, sku, stock, featured_asset_id, origin_price } = productVariant;
         const accessToken = localStorage.getItem("accessToken")
         dispatch(updateProductVariantStart());
         const [res]: [IAxiosResponse<{}>] = await Promise.all([
@@ -437,6 +438,7 @@ export const updateProductVariant = async ({ productVariant, setIsModalOpen, axi
                 price,
                 sku,
                 stock,
+                origin_price,
                 featured_asset_id
 
             }, {

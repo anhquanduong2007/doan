@@ -15,6 +15,7 @@ import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 import { currency } from 'src/helper/currencyPrice';
 import { StatusOrder } from 'src/types';
+import { Promotion } from 'src/types/promotion';
 
 TimeAgo.addDefaultLocale(en)
 
@@ -26,12 +27,16 @@ interface DataType {
     id: number
     status: string
     created_date: string
-    modified_date: string,
+    modified_date: string
     total_price: number
-    customer_name: string,
-    users_id: number,
+    customer_name: string
+    users_id: number
     payment_method: string
     code: string
+    quantity: number
+    price: number
+    origin_price: number
+    promotion: Promotion
 }
 
 const columns = (
@@ -93,6 +98,16 @@ const columns = (
             render: (total_price: number) => {
                 return (
                     <span>{currency(total_price)}</span>
+                )
+            }
+        },
+        {
+            title: 'Profit',
+            ellipsis: true,
+            key: 'profit',
+            render: (_, record) => {
+                return (
+                    <span style={{color: '#389e0d'}}>+{record.promotion ? currency((record.price - record.origin_price) * record.quantity * (100 - record.promotion.discount) / 100) : currency((record.price - record.origin_price) * record.quantity)}</span>
                 )
             }
         },
@@ -187,6 +202,7 @@ const Orders = () => {
     const dataRender = (): DataType[] => {
         if (!order.list.loading && order.list.result) {
             return order.list.result.orders.map((order, index: number) => {
+                console.log(order)
                 return {
                     key: index,
                     id: order.id,
@@ -197,7 +213,11 @@ const Orders = () => {
                     modified_date: order.modified_date,
                     payment_method: order.payment_method,
                     total_price: order.total_price,
-                    users_id: order.users_id
+                    users_id: order.users_id,
+                    quantity: order.quantity,
+                    price: order.product_variant.price,
+                    origin_price: order.product_variant.origin_price,
+                    promotion: order.promotion
                 }
             })
         }
