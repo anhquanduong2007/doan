@@ -5,8 +5,4 @@ export class ProductUpdateDto extends ProductCreateDto {
     @IsString()
     @IsOptional()
     name: string;
-
-    @IsString()
-    @IsOptional()
-    slug: string;
 }

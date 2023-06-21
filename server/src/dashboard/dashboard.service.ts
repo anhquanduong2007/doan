@@ -141,7 +141,7 @@ export class DashboardService {
                             product: true
                         }
                     })
-                if (vrs.length < 6) {
+                if (vrs.length < 4) {
                     vrs.push({ ...element, variant })
                 }
             }

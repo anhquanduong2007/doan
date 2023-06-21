@@ -18,7 +18,6 @@ export interface FormValuesProductVariant {
     stock: number
 }
 
-
 interface ModalUpdateProductVariantProps {
     isModalOpen: boolean
     setIsModalOpen: (open: boolean) => void

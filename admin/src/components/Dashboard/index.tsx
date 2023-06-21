@@ -104,7 +104,7 @@ const Dashboard = () => {
                                             data={dashboard ? dashboard.hotSellingProducts?.map((product) => {
                                                 return {
                                                     sales: product._sum.quantity,
-                                                    type: `${product.variant.product.name}-${product.variant.name}`
+                                                    type: `${product.variant.name}`
                                                 }
                                             }) : []}
                                             xField='type'
