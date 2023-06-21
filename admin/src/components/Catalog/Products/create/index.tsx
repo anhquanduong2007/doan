@@ -240,9 +240,11 @@ const ProductCreate: React.FC = () => {
       const variantOption = result.map((item, index) => {
         return {
           sku: getValues("sku") && getValues("sku")[index],
-          name: item.name,
+          name: `${getValues("name")}-${item.name}`,
           option_ids: item.option_ids,
           product_id: item.product_id,
+          stock: getValues("stock") && Number(getValues("stock")[index]),
+          price: getValues("price") && Number(getValues("price")[index])
         };
       });
 
@@ -335,6 +337,7 @@ const ProductCreate: React.FC = () => {
                   type="primary"
                   htmlType="submit"
                   disabled={isDisableButton}
+                  loading={store.createProduct.loading || store.createProductOption.loading || store.createProductVariant.loading}
                 >
                   {!id ? "Create" : "Update"}
                 </Button>
