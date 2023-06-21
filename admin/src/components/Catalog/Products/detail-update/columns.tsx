@@ -28,6 +28,12 @@ export const columns = () => [
         render: (variant: JSX.Element) => variant
     },
     {
+        title: 'Origin Price',
+        dataIndex: 'originPrice',
+        key: 'originPrice',
+        render: (originPrice: JSX.Element) => originPrice
+    },
+    {
         title: 'Price',
         dataIndex: 'price',
         key: 'price',
@@ -84,6 +90,31 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                 }}
             />
             ),
+            originPrice: (
+                <Controller
+                    name="originPrice"
+                    key={index}
+                    control={control}
+                    {...register(`originPrice[${index}]`)}
+                    // rules={{ required: true }}
+                    render={({ field: { value, ...other } }) => {
+                        console.log("value", value)
+                        return (
+                            <Fragment>
+                                <Input
+                                    className='!my-1'
+                                    id='originPrice'
+                                    disabled
+                                    type=''
+                                    defaultValue={0}
+                                    {...other}
+                                    value={value || 0}
+                                />
+                            </Fragment>
+                        )
+                    }}
+                />
+            ),
             price: (
                 <Controller
                     name="price"
@@ -92,6 +123,7 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                     {...register(`price[${index}]`)}
                     // rules={{ required: true }}
                     render={({ field: { value, ...other } }) => {
+                        console.log("value", value)
                         return (
                             <Fragment>
                                 <Input

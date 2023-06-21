@@ -131,6 +131,9 @@ const ProductVariant = () => {
                                     <Form.Item label="Product variant name">
                                         <Input disabled value={product_variant.name} />
                                     </Form.Item>
+                                    <Form.Item label="Origin Price">
+                                        <Input disabled value={product_variant.origin_price} />
+                                    </Form.Item>
                                     <Form.Item label="Price">
                                         <Input disabled value={product_variant.price} />
                                     </Form.Item>

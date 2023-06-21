@@ -244,6 +244,7 @@ const ProductCreate: React.FC = () => {
           option_ids: item.option_ids,
           product_id: item.product_id,
           stock: getValues("stock") && Number(getValues("stock")[index]),
+          origin_price: getValues("originPrice") && Number(getValues("originPrice")[index]),
           price: getValues("price") && Number(getValues("price")[index])
         };
       });
@@ -272,38 +273,34 @@ const ProductCreate: React.FC = () => {
 
   useEffect(() => {
     //check disable button
-    if (watchFormSlugValue !== "") {
-      if (watchFormVariantValue.length > 0) {
-        const result = watchFormVariantValue.reduce(function (
-          result,
-          currentObject,
-        ) {
-          for (var key in currentObject) {
-            if (currentObject.hasOwnProperty(key)) {
-              result[key] = currentObject[key];
-            }
+    if (watchFormVariantValue.length > 0) {
+      const result = watchFormVariantValue.reduce(function (
+        result,
+        currentObject,
+      ) {
+        for (var key in currentObject) {
+          if (currentObject.hasOwnProperty(key)) {
+            result[key] = currentObject[key];
           }
-          return result;
-        },
-        {});
-
-        if (
-          result.sku !== "" &&
-          result.sku !== undefined &&
-          result.sku !== null &&
-          result.name !== "" &&
-          result.name !== undefined &&
-          result.name !== null
-        ) {
-          setIsDisableButton(false);
-        } else {
-          setIsDisableButton(true);
         }
+        return result;
+      },
+      {});
+
+      if (
+        result.sku !== "" &&
+        result.sku !== undefined &&
+        result.sku !== null &&
+        result.name !== "" &&
+        result.name !== undefined &&
+        result.name !== null
+      ) {
+        setIsDisableButton(false);
+      } else {
+        setIsDisableButton(true);
       }
-    } else {
-      setIsDisableButton(true);
     }
-  }, [watchFormVariantValue, watchFormSlugValue]);
+  }, [watchFormVariantValue]);
 
   return (
     <Fragment>

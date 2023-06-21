@@ -33,10 +33,12 @@ function ManageVariant() {
         store.result.product_variants.map((item: any, index: any) => {
           setValue(`variant[${index}]`, item.name);
           setValue(`sku[${index}]`, item.sku);
+          setValue(`originPrice[${index}]`, item.origin_price);
           setValue(`price[${index}]`, item.price);
           setValue(`stock[${index}]`, item.stock);
           return item.name
         });
+
         setVariantItem(variantArr)
 
       store.result.product_variants.map((item: any) => {
@@ -65,7 +67,6 @@ function ManageVariant() {
   const watchOption = useWatch({ name: "option", control });
 
   useEffect(() => {
-    console.log("object", watchOption);
       //create input to clien type sku,price, stock, auto fill variant
       if (watchOption?.length > 0) {
           const colorOption = getValueByName(watchOption, "Color")?.value
@@ -98,24 +99,20 @@ function ManageVariant() {
           }
 
           if (variantArr?.length > 0) {
-                console.log("new", variantArr);
-                console.log("oble", variantItem);
-                const rs = variantArr.filter(val => !variantItem.includes(val));
-                console.log("🚀 ~ file: ManageVariant.tsx:104 ~ useEffect ~ rs:", rs)
+                // const rs = variantArr.filter(val => !variantItem.includes(val));
                 
-            //   setVariantItem(variantArr)
-            //   variantArr.forEach((item, index) => {
-            //       setValue(`variant[${index}]`, item.variantCode);
-            //       setValue(`price[${index}]`, 0);
-            //       setValue(`stock[${index}]`, 0);
-            //   })
+              setVariantItem(variantArr)
+              variantArr.forEach((item, index) => {
+                  setValue(`variant[${index}]`, item.variantCode);
+                  setValue(`price[${index}]`, 0);
+                  setValue(`stock[${index}]`, 0);
+              })
           }
       } else {
           setVariantItem([])
       }
   }, [watchOption])
 
-  console.log("objecadsfasdft", getValues());
 
   return (
     <Fragment>

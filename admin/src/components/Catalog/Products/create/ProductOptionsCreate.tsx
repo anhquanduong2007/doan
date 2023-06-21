@@ -55,6 +55,7 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue, wat
                 setVariantItem(variantArr)
                 variantArr.forEach((item, index) => {
                     setValue(`variant[${index}].name`, item.variantCode);
+                    setValue(`originPrice[${index}]`, 0);
                     setValue(`price[${index}]`, 0);
                     setValue(`stock[${index}]`, 0);
                 })

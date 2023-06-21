@@ -6,6 +6,7 @@ export interface ProductVariant {
     id: number
     stock: number
     sku: string
+    origin_price: number
     price: number
     created_date: number
     name: string

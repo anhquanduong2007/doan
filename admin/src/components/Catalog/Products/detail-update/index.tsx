@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 import { Link, useParams } from "react-router-dom";
 import ProductDetail from "./ProductDetail";
 import ProductVariant from "./ProductVariant";
-import ManageVariant from "./ManageVariant";
+import AddVariant from "./AddVariant";
 
 const ProductDetailUpdate = () => {
   // ** Third party
@@ -35,8 +35,8 @@ const ProductDetailUpdate = () => {
               <Tabs.TabPane tab="Product variants" key="2">
                 <ProductVariant />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Manage Variants +" key="3">
-                <ManageVariant />
+              <Tabs.TabPane tab="Create New Variants +" key="3">
+                <AddVariant />
               </Tabs.TabPane>
             </Tabs>
           </Card>
