@@ -10,6 +10,7 @@ import { Text } from '@chakra-ui/react';
 interface DataType {
     sku: JSX.Element;
     variant: JSX.Element;
+    originPrice: JSX.Element;
     price: JSX.Element;
     stock: JSX.Element;
 }
@@ -26,6 +27,12 @@ export const columns = () => [
         dataIndex: 'variant',
         key: 'variant',
         render: (variant: JSX.Element) => variant
+    },
+    {
+        title: 'Origin Price',
+        dataIndex: 'originPrice',
+        key: 'originPrice',
+        render: (originPrice: JSX.Element) => originPrice
     },
     {
         title: 'Price',
@@ -87,6 +94,29 @@ export const data = ({ control, errors, variantItem, register, setValue, clearEr
                     )
                 }}
             />
+            ),
+            originPrice: (
+                <Controller
+                    name="originPrice"
+                    key={index}
+                    control={control}
+                    {...register(`originPrice[${index}]`)}
+                    // rules={{ required: true }}
+                    render={({ field: { value, ...other } }) => {
+                        return (
+                            <Fragment>
+                                <Input
+                                    className='!my-1'
+                                    id='originPrice'
+                                    type=''
+                                    defaultValue={0}
+                                    {...other}
+                                    value={value || 0}
+                                />
+                            </Fragment>
+                        )
+                    }}
+                />
             ),
             price: (
                 <Controller
