@@ -27,19 +27,19 @@ function ManageVariant() {
   useEffect(() => {
     let productOptions = [] as Object[];
     if (store.result && !store.loading) {
-      const variantArr =
-        store.result.product_variants &&
-        store.result.product_variants.length > 0 &&
-        store.result.product_variants.map((item: any, index: any) => {
-          setValue(`variant[${index}]`, item.name);
-          setValue(`sku[${index}]`, item.sku);
-          setValue(`originPrice[${index}]`, item.origin_price);
-          setValue(`price[${index}]`, item.price);
-          setValue(`stock[${index}]`, item.stock);
-          return item.name
-        });
+      // const variantArr =
+      //   store.result.product_variants &&
+      //   store.result.product_variants.length > 0 &&
+      //   store.result.product_variants.map((item: any, index: any) => {
+      //     setValue(`variant[${index}]`, item.name);
+      //     setValue(`sku[${index}]`, item.sku);
+      //     setValue(`originPrice[${index}]`, item.origin_price);
+      //     setValue(`price[${index}]`, item.price);
+      //     setValue(`stock[${index}]`, item.stock);
+      //     return item.name
+      //   });
 
-        setVariantItem(variantArr)
+      //   setVariantItem(variantArr)
 
       store.result.product_variants.map((item: any) => {
         item.product_options.map((item: any) => {
@@ -49,19 +49,19 @@ function ManageVariant() {
           });
         });
       });
-      setVariantItem(variantArr)
+      // setVariantItem(variantArr)
     }
     // console.log([...new Set(productOptions)])
     //Remove duplicate
-    const result = productOptions.filter((obj, index) => {
-      return (
-        index ===
-        productOptions.findIndex(
-          (o) => obj.name === o.name && obj.value === o.value,
-        )
-      );
-    });
-    result.length > 0 && setValue("option", result);
+    // const result = productOptions.filter((obj, index) => {
+    //   return (
+    //     index ===
+    //     productOptions.findIndex(
+    //       (o) => obj.name === o.name && obj.value === o.value,
+    //     )
+    //   );
+    // });
+    // result.length > 0 && setValue("option", result);
   }, [store.result, store.loading]);
 
   const watchOption = useWatch({ name: "option", control });
@@ -100,7 +100,7 @@ function ManageVariant() {
 
           if (variantArr?.length > 0) {
                 // const rs = variantArr.filter(val => !variantItem.includes(val));
-                
+                console.log(variantArr)
               setVariantItem(variantArr)
               variantArr.forEach((item, index) => {
                   setValue(`variant[${index}]`, item.variantCode);

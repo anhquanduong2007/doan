@@ -66,7 +66,6 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                                     status={errors?.sku ? 'error' : ''}
                                     placeholder='Eg: bag-sku-01'
 
-                                   disabled
                                     {...other}
                                     value={value || ''}
                                 />
@@ -104,7 +103,6 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                                 <Input
                                     className='!my-1'
                                     id='originPrice'
-                                    disabled
                                     type=''
                                     defaultValue={0}
                                     {...other}
@@ -129,7 +127,6 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                                 <Input
                                     className='!my-1'
                                     id='price'
-                                    disabled
                                     type=''
                                     defaultValue={0}
                                     {...other}
@@ -153,7 +150,6 @@ export const data = ({ control, errors, variantItem, register }): DataType[] => 
                                     style={{ width: "100%" }}
                                     id='stock'
                                     defaultValue={0}
-                                    disabled
                                     {...other}
                                     value={value || 0}
                                 />
