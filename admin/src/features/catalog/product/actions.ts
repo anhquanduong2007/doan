@@ -1,16 +1,8 @@
-import { AppDispatch } from "src/app/store";
 import { Inotification } from "src/common";
-import type { Axios, AxiosInstance } from "axios";
 import {
     createProductFailed,
     createProductStart,
     createProductSuccess,
-    createProductOptionFailed,
-    createProductOptionStart,
-    createProductOptionSuccess,
-    createProductVariantSuccess,
-    createProductVariantFailed,
-    createProductVariantStart,
     getListProductStart,
     getListProductSuccess,
     getListProductFailed,
@@ -31,116 +23,23 @@ import {
     updateProductOptionFailed,
     deleteProductVariantStart,
     deleteProductVariantSuccess,
-    deleteProductVariantFailed
+    deleteProductVariantFailed,
+    createProductVariantOptionStart,
+    createProductVariantOptionSuccess,
+    createProductVariantOptionFailed
 } from "./productSlice";
 import { IAxiosResponse } from "src/types/axiosResponse";
-import { Pagination } from "src/types";
-import { NavigateFunction } from "react-router-dom";
-import { MessageApi } from "antd/lib/message";
-import { UseFormSetError } from "react-hook-form";
 import { FormValuesProduct } from "src/components/Catalog/Products/detail-update/ProductDetail";
+import { CreateProductOptionParams, CreateProductParams, CreateProductVariantOptionParams, CreateProductVariantParams, DeleteProductParams, DeleteProductVariantParams, GetListProductParams, GetProductParams, UpdateProductOptionParams, UpdateProductParams, UpdateProductVariantParams } from "./type";
+import { Product, ProductOption } from "src/types";
 import { FormValuesProductVariant } from "src/components/Catalog/Products/detail-update/ModalUpdateProductVariant";
 
-export type CreateProductParams = {
-    dispatch: AppDispatch;
-    axiosClient: Axios;
-    product: Product;
-};
-
-export type Product = {
-    name: string;
-    description?: string;
-    active: boolean;
-    featured_asset_id?: number;
-};
-
-export type ProductOption = {
-    name: string;
-    value: Array<string>;
-};
-
-
-export type CreateProductOptionParams = {
-    dispatch: AppDispatch;
-    axiosClient: Axios;
-    options: any;
-};
-
-export interface GetListProductParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction
-}
-
-export type DeleteProductParams = Omit<GetListProductParams, "pagination">
-    & {
-        id: number,
-        setIsModalOpen: (open: boolean) => void,
-        setRefresh: (refresh: boolean) => void,
-        refresh: boolean,
-        message: MessageApi
-    }
-
-export type GetProductParams = Omit<GetListProductParams, "pagination"> & { id: number }
-
-type UpdateProductParams = Omit<GetListProductParams, "pagination"> & {
-    product: ProductUpdate,
-    id: number,
-    setError: UseFormSetError<FormValuesProduct>,
-    message: MessageApi,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-}
-
-type UpdateProductVariantParams = Omit<GetListProductParams, "pagination"> & {
-    productVariant: ProductVariantUpdate,
-    id: number,
-    setError: UseFormSetError<FormValuesProductVariant>,
-    message: MessageApi,
-    setIsModalOpen: (open: boolean) => void,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-}
-
-export type ProductVariantUpdate = {
-    name: string
-    price: number
-    origin_price: number
-    sku: string
-    stock: number
-    featured_asset_id?: number
-}
-
-export type ProductUpdate = {
-    name: string
-    description?: string
-    active: number
-    featured_asset_id?: number
-    category_id?: number | null
-}
-
-export type ProductVariantOption = {
-    value: string
-}
-
-type UpdateProductOptionParams = Omit<UpdateProductVariantParams, "productVariant" | "setError"> & {
-    productOption: ProductVariantOption,
-}
-
-type DeleteProductVariantParams = DeleteProductParams
-
-export const createProduct = async ({
-    product,
-    dispatch,
-    axiosClient,
-}: CreateProductParams) => {
-    const { active, description, name, featured_asset_id } = product;
-    dispatch(createProductStart());
+export const createProduct = async ({ product, dispatch, axiosClientJwt, setError, navigate, message }: CreateProductParams) => {
     try {
+        const { active, description, name, featured_asset_id, options, getValues } = product;
+        dispatch(createProductStart());
         const accessToken = localStorage.getItem("accessToken");
-        const res: IAxiosResponse<{}> = await axiosClient.post(
-            `/product/create`,
+        const resCreateProduct: IAxiosResponse<Product> = await axiosClientJwt.post(`/product/create`,
             {
                 active,
                 description,
@@ -153,58 +52,114 @@ export const createProduct = async ({
                 },
             },
         );
-        if (res?.response?.code === 200 && res?.response?.success) {
+        if (resCreateProduct?.response?.code === 200 && resCreateProduct?.response?.success) {
+            const resCreateProductOption = await createProductOption({ options, axiosClientJwt, productId: resCreateProduct.response.data?.id })
+            if (resCreateProductOption?.response?.code === 200 && resCreateProductOption?.response?.success) {
+                const colorValue = resCreateProductOption.response.data?.filter((item) => item.name === "Color")
+                const sizeValue = resCreateProductOption.response.data?.filter((item) => item.name === "Size")
+                let result: { name: string, option_ids: number[], product_id: number }[] = [];
+                if (colorValue.length > 0 && sizeValue.length > 0) {
+                    colorValue.map((item) => {
+                        const all = sizeValue.map((size) => {
+                            return {
+                                name: `${item.value}-${size.value}`,
+                                option_ids: [item.id, size.id],
+                                product_id: resCreateProduct.response.data?.id,
+                            };
+                        });
+                        result.push(...all);
+                    });
+                } else if (colorValue.length > 0) {
+                    colorValue.length > 0 && colorValue.map((item) => {
+                        return result.push({
+                            name: `${item.value}`,
+                            option_ids: [item.id],
+                            product_id: resCreateProduct.response.data?.id
+                        });
+                    });
+                } else {
+                    sizeValue.length > 0 && sizeValue.map((item) => {
+                        return result.push({
+                            name: `${item.value}`,
+                            option_ids: [item.id],
+                            product_id: resCreateProduct.response.data?.id
+                        });
+                    });
+                }
+                const variants = result.map((item, index) => {
+                    return {
+                        sku: getValues("sku") && getValues("sku")[index] as string,
+                        name: `${getValues("name")}-${item.name}`,
+                        option_ids: item.option_ids,
+                        product_id: item.product_id,
+                        stock: getValues("stock") && getValues("stock")[index] as number,
+                        origin_price: getValues("originPrice") && getValues("originPrice")[index] as number,
+                        price: getValues("price") && getValues("price")[index] as number
+                    };
+                });
+                const resCreateProductVariant = await createProductVariant({ axiosClientJwt, variants })
+                if (resCreateProductVariant?.response?.code === 200 && resCreateProductVariant?.response?.success) {
+                    setTimeout(function () {
+                        dispatch(createProductSuccess(resCreateProduct.response.data));
+                        message.success('Create product successfully!');
+                        navigate("/catalog/products")
+                    }, 1000);
+                } else if (resCreateProductVariant?.response?.code === 400 && !resCreateProductVariant?.response?.success) {
+                    dispatch(createProductFailed(null));
+                    const indexValuesError = resCreateProductVariant.response?.valuesError!.map((value) => {
+                        return getValues("sku").indexOf(value);
+                    })
+                    indexValuesError.map((i) => {
+                        setError(`${resCreateProductVariant?.response?.fieldError}[${i}]` as keyof FormValuesProductVariant, { message: resCreateProductVariant?.response?.message })
+                    })
+                } else {
+                    dispatch(createProductFailed(null));
+                }
+            } else {
+                dispatch(createProductFailed(null));
+            }
+        } else {
+            dispatch(createProductFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(createProductFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
             setTimeout(function () {
-                dispatch(createProductSuccess(res.response.data));
+                navigate('/')
             }, 1000);
         } else {
-            dispatch(
-                createProductFailed({
-                    fieldError: res.response.fieldError,
-                    message: res.response.message,
-                }),
-            );
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
         }
-    } catch (error) {
-        dispatch(createProductFailed(null));
-        Inotification({
-            type: "error",
-            message: "Something went wrong!",
-        });
     }
 };
 
-export const createProductOption = async ({
-    options,
-    dispatch,
-    axiosClient,
-}: CreateProductOptionParams) => {
-    dispatch(createProductOptionStart());
+export const createProductOption = async ({ options, axiosClientJwt, productId }: CreateProductOptionParams) => {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        const res: IAxiosResponse<{}> = await axiosClient.post(
-            `/product/option/bulk-create`,
-            { options: options },
+        const res: IAxiosResponse<ProductOption[]> = await axiosClientJwt.post(`/product/option/bulk-create`,
+            {
+                options: options.map((option) => {
+                    return {
+                        ...option,
+                        product_id: productId
+                    }
+                })
+            },
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
                 },
             },
         );
-        if (res?.response?.code === 200 && res?.response?.success) {
-            setTimeout(function () {
-                dispatch(createProductOptionSuccess(res.response.data));
-            }, 1000);
-        } else {
-            dispatch(
-                createProductOptionFailed({
-                    fieldError: res.response.fieldError,
-                    message: res.response.message,
-                }),
-            );
-        }
+        return res;
     } catch (error) {
-        dispatch(createProductOptionFailed(null));
         Inotification({
             type: "error",
             message: "Something went wrong!",
@@ -212,19 +167,10 @@ export const createProductOption = async ({
     }
 };
 
-export const createProductVariantOption = async ({
-    variants,
-    dispatch,
-    axiosClient,
-    navigate,
-    message,
-    setError
-}: any) => {
-    dispatch(createProductVariantStart());
+export const createProductVariant = async ({ variants, axiosClientJwt }: CreateProductVariantParams) => {
     try {
         const accessToken = localStorage.getItem("accessToken");
-        const res: IAxiosResponse<{}> = await axiosClient.post(
-            `/product/variant/bulk-create`,
+        const res: IAxiosResponse<{}> = await axiosClientJwt.post(`/product/variant/bulk-create`,
             { variants },
             {
                 headers: {
@@ -232,25 +178,8 @@ export const createProductVariantOption = async ({
                 },
             },
         );
-        if (res?.response?.code === 200 && res?.response?.success) {
-            setTimeout(function () {
-                dispatch(createProductVariantSuccess(res.response.data));
-                navigate("/catalog/products");
-                message.success("Create product successfully!");
-            }, 1000);
-        } else {
-            dispatch(
-                createProductVariantFailed({
-                    fieldError: res.response.fieldError,
-                    message: res.response.message,
-                }),
-            );
-            //show error when create product variant failed
-            setError(res.response.fieldError, { message: res.response.message });
-
-        }
+        return res
     } catch (error) {
-        dispatch(createProductVariantFailed(null));
         Inotification({
             type: "error",
             message: "Something went wrong!",
@@ -555,6 +484,93 @@ export const deleteProductVariant = async ({ id, dispatch, axiosClientJwt, navig
             })
             setTimeout(function () {
                 setIsModalOpen(false)
+                navigate('/')
+            }, 1000);
+        } else {
+            Inotification({
+                type: 'error',
+                message: 'Something went wrong!'
+            })
+        }
+    }
+}
+
+export const createProductVariantOption = async ({ axiosClientJwt, dispatch, getValues, message, navigate, options, setError, productId, productName }: CreateProductVariantOptionParams) => {
+    try {
+        dispatch(createProductVariantOptionStart());
+        const resCreateProductOption = await createProductOption({ options, axiosClientJwt, productId })
+        if (resCreateProductOption?.response?.code === 200 && resCreateProductOption?.response?.success) {
+            const colorValue = resCreateProductOption.response.data?.filter((item) => item.name === "Color")
+            const sizeValue = resCreateProductOption.response.data?.filter((item) => item.name === "Size")
+            let result: { name: string, option_ids: number[], product_id: number }[] = [];
+            if (colorValue.length > 0 && sizeValue.length > 0) {
+                colorValue.map((item) => {
+                    const all = sizeValue.map((size) => {
+                        return {
+                            name: `${item.value}-${size.value}`,
+                            option_ids: [item.id, size.id],
+                            product_id: productId
+                        };
+                    });
+                    result.push(...all);
+                });
+            } else if (colorValue.length > 0) {
+                colorValue.length > 0 && colorValue.map((item) => {
+                    return result.push({
+                        name: `${item.value}`,
+                        option_ids: [item.id],
+                        product_id: productId
+                    });
+                });
+            } else {
+                sizeValue.length > 0 && sizeValue.map((item) => {
+                    return result.push({
+                        name: `${item.value}`,
+                        option_ids: [item.id],
+                        product_id: productId
+                    });
+                });
+            }
+            const variants = result.map((item, index) => {
+                return {
+                    sku: getValues("sku") && getValues("sku")[index] as string,
+                    name: `${productName}-${item.name}`,
+                    option_ids: item.option_ids,
+                    product_id: item.product_id,
+                    stock: getValues("stock") && getValues("stock")[index] as number,
+                    origin_price: getValues("originPrice") && getValues("originPrice")[index] as number,
+                    price: getValues("price") && getValues("price")[index] as number
+                };
+            });
+            const resCreateProductVariant = await createProductVariant({ axiosClientJwt, variants })
+            if (resCreateProductVariant?.response?.code === 200 && resCreateProductVariant?.response?.success) {
+                setTimeout(function () {
+                    dispatch(createProductVariantOptionFailed(null));
+                    message.success('Create product variants successfully!');
+                    navigate(`/catalog/products`)
+                }, 1000);
+            } else if (resCreateProductVariant?.response?.code === 400 && !resCreateProductVariant?.response?.success) {
+                dispatch(createProductVariantOptionFailed(null));
+                const indexValuesError = resCreateProductVariant.response?.valuesError!.map((value) => {
+                    return getValues("sku").indexOf(value);
+                })
+                indexValuesError.map((i) => {
+                    setError(`${resCreateProductVariant?.response?.fieldError}[${i}]` as keyof FormValuesProductVariant, { message: resCreateProductVariant?.response?.message })
+                })
+            } else {
+                dispatch(createProductVariantOptionFailed(null));
+            }
+        } else {
+            dispatch(createProductVariantOptionFailed(null));
+        }
+    } catch (error: any) {
+        dispatch(createProductVariantOptionFailed(null));
+        if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
+            Inotification({
+                type: 'error',
+                message: 'You do not have permission to perform this action!'
+            })
+            setTimeout(function () {
                 navigate('/')
             }, 1000);
         } else {

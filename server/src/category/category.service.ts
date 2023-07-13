@@ -11,7 +11,7 @@ export class CategoryService {
         private readonly prisma: PrismaService
     ) { }
 
-    public async create(input: CategoryCreateDto, userId: number): Promise<IResponse<category>> {
+    public async create(input: CategoryCreateDto): Promise<IResponse<category>> {
         try {
             const { active, category_code, category_name, description } = input
             const [isExistingCategoryCode] = await Promise.all([
@@ -37,8 +37,6 @@ export class CategoryService {
                         active,
                         description,
                         category_code,
-                        created_by: userId,
-                        modified_by: userId
                     }
                 })
             }
@@ -135,7 +133,7 @@ export class CategoryService {
                             ]
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                     }
                 }),
@@ -158,7 +156,7 @@ export class CategoryService {
                             ]
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                     }
                 }),
@@ -184,7 +182,7 @@ export class CategoryService {
         }
     }
 
-    public async update(input: CategoryUpdateDto, id: number, userId: number): Promise<IResponse<category>> {
+    public async update(input: CategoryUpdateDto, id: number): Promise<IResponse<category>> {
         try {
             const { active, category_code, category_name, description } = input
             const category = await this.prisma.category.findUnique({
@@ -223,7 +221,6 @@ export class CategoryService {
                             ...category_name && { category_name },
                             ...description && { description },
                             active,
-                            modified_by: userId
                         },
                         where: { id }
                     })

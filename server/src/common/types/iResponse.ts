@@ -6,6 +6,7 @@ export class IResponse<T extends {}> {
         message: string;
     }>;
     success: boolean;
+    valuesError?: string[]
     accessToken?: string;
     refreshToken?: string;
     data?: T;

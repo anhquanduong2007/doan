@@ -36,14 +36,8 @@ const HomePage = () => {
                     <Col span={20}>
                         <Menu mode="horizontal" style={{ border: 0, justifyContent: "end" }}>
                             <Menu.SubMenu key="info-user" title={`Hi, ${!currentUser.loading && currentUser.result && currentUser.result.first_name} ${!currentUser.loading && currentUser.result && currentUser.result.last_name}`}>
-                                <Menu.Item key="home" >
+                                <Menu.Item key="home" onClick={() => navigate('/dashboard')}>
                                     Home
-                                </Menu.Item>
-                                <Menu.Item key="profile" >
-                                    Profile
-                                </Menu.Item>
-                                <Menu.Item key="settings" >
-                                    Settings
                                 </Menu.Item>
                                 <Menu.Item key="logout" onClick={handleLogout}>
                                     Logout

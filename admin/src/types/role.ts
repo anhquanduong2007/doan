@@ -6,7 +6,5 @@ export interface Role {
     id: number
     permissions: string[]
     updated_at: string
-    created_by: number
-    modified_by: number
     modified_date: string
 }

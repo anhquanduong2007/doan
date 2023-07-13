@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import autoAnimate from '@formkit/auto-animate';
-import { Breadcrumb, Button, Card, Col, Divider, Form, Input, Row, message } from 'antd';
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import { Breadcrumb, Button, Card, Col, Divider, Form, Input, Row, Spin, message } from 'antd';
+import React, { Fragment, useEffect, useRef } from 'react';
 import { useForm, Controller } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
@@ -29,7 +29,7 @@ const permissions: PermissionType[] = [
     {
         title: "Asset",
         description: "Grants permissions on Asset",
-        permissions: ["ReadAsset", "CreateAsset", "DeleteAsset", "UpdateAsset"]
+        permissions: ["ReadAsset", "CreateAsset", "DeleteAsset"]
     },
     {
         title: "Customer",
@@ -51,12 +51,6 @@ const permissions: PermissionType[] = [
         description: "Grants permissions on Role",
         permissions: ["ReadRole", "CreateRole", "DeleteRole", "UpdateRole"]
     },
-    {
-        title: "Rate",
-        description: "Grants permissions on Rate",
-        permissions: ["ReadRate", "CreateRate", "DeleteRate", "UpdateRate"]
-    },
-
 ]
 
 export interface FormValuesRole {
@@ -79,8 +73,6 @@ const defaultValues: FormValuesRole = {
     }, {})
 }
 const RoleCreateUpdate = () => {
-    // ** State
-
     // ** Third party
     const navigate = useNavigate()
     const params = useParams()
@@ -115,6 +107,18 @@ const RoleCreateUpdate = () => {
     }, [id])
 
     useEffect(() => {
+        const perms = permissions.map((permission) => {
+            return permission.permissions
+        }).flat(1).reduce((prewPermiss, currentPermiss) => {
+            return {
+                ...prewPermiss,
+                [currentPermiss]: false
+            }
+        }, {})
+        Object.keys(perms).forEach((key) => {
+            // @ts-ignore: Unreachable code error
+            setValue(key, false)
+        })
         if (id && !role.single.loading && role.single.result) {
             setValue("role_name", role.single.result.role_name)
             setValue("role_code", role.single.result.role_code)
@@ -177,117 +181,119 @@ const RoleCreateUpdate = () => {
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
-                    <Form onFinish={handleSubmit(onSubmit)} layout='vertical'>
-                        <Row>
-                            <Col span={24}>
-                                <Flex justifyContent="flex-end" alignItems="center">
-                                    {
-                                        id && role.update.loading ?
-                                            <Button type="primary" loading>Updating...</Button> :
-                                            role.create.loading ?
-                                                <Button type="primary" loading>Creating...</Button> :
-                                                id ? <Button htmlType="submit" type="primary">Update</Button> :
-                                                    <Button htmlType="submit" type="primary">Create</Button>
-                                    }
-                                </Flex>
-                            </Col>
-                            <Divider />
-                            <Col span={24}>
-                                <Card>
-                                    <Form.Item label="Role name">
-                                        <Controller
-                                            name="role_name"
-                                            control={control}
-                                            rules={{ required: true }}
-                                            render={({ field }) => {
+                    <Spin spinning={role.single.loading}>
+                        <Form onFinish={handleSubmit(onSubmit)} layout='vertical'>
+                            <Row>
+                                <Col span={24}>
+                                    <Flex justifyContent="flex-end" alignItems="center">
+                                        {
+                                            id && role.update.loading ?
+                                                <Button type="primary" loading>Updating...</Button> :
+                                                role.create.loading ?
+                                                    <Button type="primary" loading>Creating...</Button> :
+                                                    id ? <Button htmlType="submit" type="primary">Update</Button> :
+                                                        <Button htmlType="submit" type="primary">Create</Button>
+                                        }
+                                    </Flex>
+                                </Col>
+                                <Divider />
+                                <Col span={24}>
+                                    <Card>
+                                        <Form.Item label="Role name">
+                                            <Controller
+                                                name="role_name"
+                                                control={control}
+                                                rules={{ required: true }}
+                                                render={({ field }) => {
+                                                    return (
+                                                        <div ref={roleNameErrorRef}>
+                                                            <Input {...field} placeholder="Eg: superadmin" />
+                                                            {errors?.role_name ? <Box as="div" mt={1} textColor="red.600">{errors.role_name?.type === 'required' ? "Please input your role name!" : errors.role_name.message}</Box> : null}
+                                                        </div>
+                                                    )
+                                                }}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item label="Role code">
+                                            <Controller
+                                                name="role_code"
+                                                control={control}
+                                                rules={{ required: true }}
+                                                render={({ field }) => {
+                                                    return (
+                                                        <div ref={roleCodeErrorRef}>
+                                                            <Input {...field} placeholder="Eg: superadmin" />
+                                                            {errors?.role_code ? <Box as="div" mt={1} textColor="red.600">{errors.role_code?.type === 'required' ? "Please input your role code!" : errors.role_code.message}</Box> : null}
+                                                        </div>
+                                                    )
+                                                }}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item label="Description">
+                                            <Controller
+                                                name="description"
+                                                control={control}
+                                                render={({ field }) => {
+                                                    return (
+                                                        <div>
+                                                            <Input.TextArea {...field} />
+                                                        </div>
+                                                    )
+                                                }}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item label="Permissions">
+                                            {permissions.map((permission, index: number) => {
                                                 return (
-                                                    <div ref={roleNameErrorRef}>
-                                                        <Input {...field} placeholder="Eg: superadmin" />
-                                                        {errors?.role_name ? <Box as="div" mt={1} textColor="red.600">{errors.role_name?.type === 'required' ? "Please input your role name!" : errors.role_name.message}</Box> : null}
-                                                    </div>
+                                                    <Row key={index}>
+                                                        <Col span={6} style={{ background: "#f2f3f5", padding: "16px", borderBottom: "1px solid #bfc3cc" }}>
+                                                            <Flex flexDirection="column">
+                                                                <Box fontWeight="bold" textColor="#666">{permission.title}</Box>
+                                                                <Box textColor="#666" fontSize="12px">{permission.description}</Box>
+                                                            </Flex>
+                                                        </Col>
+                                                        <Col span={18}
+                                                            style={index === 0 ?
+                                                                { padding: "16px", border: "1px solid #f2f3f5", borderRight: "unset" } :
+                                                                { padding: "16px", border: "1px solid #f2f3f5", borderRight: "unset", borderTop: "unset" }}
+                                                        >
+                                                            <Flex justifyContent="space-around" alignItems="center" height="100%">
+                                                                {permission.permissions.map((item: any, index: number) => {
+                                                                    return (
+                                                                        <Flex justifyContent="center" alignItems="center" key={index}>
+                                                                            <Controller
+                                                                                name={item}
+                                                                                control={control}
+                                                                                render={({ field: { value, ...other } }) => {
+                                                                                    return (
+                                                                                        <Fragment>
+                                                                                            <Input
+                                                                                                id={item}
+                                                                                                type='checkbox'
+                                                                                                checked={value || false}
+                                                                                                value={value || false}
+                                                                                                {...other}
+                                                                                                placeholder='Code'
+                                                                                            />
+                                                                                        </Fragment>
+                                                                                    )
+                                                                                }}
+                                                                            />
+                                                                            <Box as="label" ml={2} cursor="pointer" fontWeight="semibold" htmlFor={item}>{item}</Box>
+                                                                        </Flex>
+                                                                    )
+                                                                })}
+                                                            </Flex>
+                                                        </Col>
+                                                    </Row>
                                                 )
-                                            }}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item label="Role code">
-                                        <Controller
-                                            name="role_code"
-                                            control={control}
-                                            rules={{ required: true }}
-                                            render={({ field }) => {
-                                                return (
-                                                    <div ref={roleCodeErrorRef}>
-                                                        <Input {...field} placeholder="Eg: superadmin" />
-                                                        {errors?.role_code ? <Box as="div" mt={1} textColor="red.600">{errors.role_code?.type === 'required' ? "Please input your role code!" : errors.role_code.message}</Box> : null}
-                                                    </div>
-                                                )
-                                            }}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item label="Description">
-                                        <Controller
-                                            name="description"
-                                            control={control}
-                                            render={({ field }) => {
-                                                return (
-                                                    <div>
-                                                        <Input.TextArea {...field} />
-                                                    </div>
-                                                )
-                                            }}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item label="Permissions">
-                                        {permissions.map((permission, index: number) => {
-                                            return (
-                                                <Row key={index}>
-                                                    <Col span={6} style={{ background: "#f2f3f5", padding: "16px", borderBottom: "1px solid #bfc3cc" }}>
-                                                        <Flex flexDirection="column">
-                                                            <Box fontWeight="bold" textColor="#666">{permission.title}</Box>
-                                                            <Box textColor="#666" fontSize="12px">{permission.description}</Box>
-                                                        </Flex>
-                                                    </Col>
-                                                    <Col span={18}
-                                                        style={index === 0 ?
-                                                            { padding: "16px", border: "1px solid #f2f3f5", borderRight: "unset" } :
-                                                            { padding: "16px", border: "1px solid #f2f3f5", borderRight: "unset", borderTop: "unset" }}
-                                                    >
-                                                        <Flex justifyContent="space-around" alignItems="center" height="100%">
-                                                            {permission.permissions.map((item: any, index: number) => {
-                                                                return (
-                                                                    <Flex justifyContent="center" alignItems="center" key={index}>
-                                                                        <Controller
-                                                                            name={item}
-                                                                            control={control}
-                                                                            render={({ field: { value, ...other } }) => {
-                                                                                return (
-                                                                                    <Fragment>
-                                                                                        <Input
-                                                                                            id={item}
-                                                                                            type='checkbox'
-                                                                                            checked={value || false}
-                                                                                            value={value || false}
-                                                                                            {...other}
-                                                                                            placeholder='Code'
-                                                                                        />
-                                                                                    </Fragment>
-                                                                                )
-                                                                            }}
-                                                                        />
-                                                                        <Box as="label" ml={2} cursor="pointer" fontWeight="semibold" htmlFor={item}>{item}</Box>
-                                                                    </Flex>
-                                                                )
-                                                            })}
-                                                        </Flex>
-                                                    </Col>
-                                                </Row>
-                                            )
-                                        })}
-                                    </Form.Item>
-                                </Card>
-                            </Col>
-                        </Row>
-                    </Form>
+                                            })}
+                                        </Form.Item>
+                                    </Card>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Spin>
                 </Col>
             </Row>
         </Fragment>

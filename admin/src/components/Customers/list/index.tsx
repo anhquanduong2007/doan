@@ -20,7 +20,7 @@ interface DataType {
     first_name: string
     last_name: string
     phone: string
-    active: number
+    active: boolean
 }
 
 const columns = (
@@ -33,35 +33,43 @@ const columns = (
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+            fixed: 'left',
+            width: '20%'
         },
         {
             title: 'First name',
             dataIndex: 'first_name',
             key: 'first name',
+            width: '20%'
         },
         {
             title: 'Last name',
             dataIndex: 'last_name',
             key: 'last name',
+            width: '20%'
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
             key: 'phone',
+            width: '20%'
         },
         {
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
+            width: '100px',
             render: (active: number) => {
                 return (
-                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Active' : 'Disabled'}</Tag>
                 )
             }
         },
         {
             title: 'Action',
             key: 'action',
+            width: '150px',
+            fixed: 'right',
             render: (_, record) => {
                 return (
                     <Space size="middle">
@@ -215,6 +223,7 @@ const Customers = () => {
                                     columns={columns(setIsModalOpen, customerDelete, setCustomerDelete, navigate)}
                                     dataSource={dataRender()}
                                     loading={customer.list.loading}
+                                    scroll={{x: '100vw'}}
                                     pagination={{
                                         total: customer.list.result?.total,
                                         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,

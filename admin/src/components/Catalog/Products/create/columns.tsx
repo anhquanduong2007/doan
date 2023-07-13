@@ -5,7 +5,7 @@
 import React, { Fragment } from 'react';
 import { Input, InputNumber } from 'antd';
 import { Controller } from "react-hook-form";
-import { Text } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 
 interface DataType {
     sku: JSX.Element;
@@ -20,7 +20,7 @@ export const columns = () => [
         title: 'Sku',
         dataIndex: 'sku',
         key: 'sku',
-        render: (sku: JSX.Element,redcord) => sku
+        render: (sku: JSX.Element) => sku
     },
     {
         title: 'Variant',
@@ -48,14 +48,13 @@ export const columns = () => [
     },
 ];
 
-export const data = ({ control, errors, variantItem, register, setValue, clearErrors }): DataType[] => {
+export const data = ({ control, errors, variantItem, setValue, clearErrors }): DataType[] => {
     return variantItem.map((_item, index) => {
         return {
             sku: (
                 <Controller
                     key={index}
-                    name="sku"
-                    {...register(`sku[${index}]`)}
+                    name={`sku[${index}]`}
                     control={control}
                     rules={{ required: true }}
                     render={({ field: { value, onChange, ...other } }) => {
@@ -64,7 +63,7 @@ export const data = ({ control, errors, variantItem, register, setValue, clearEr
                                 <Input
                                     className='!my-1'
                                     id='sku'
-                                    status={errors?.sku ? 'error' : ''}
+                                    status={'sku' in errors && errors?.sku[index] ? 'error' : ''}
                                     placeholder='Eg: bag-sku-01'
                                     onChange={e => {
                                         setValue(`variant[${index}].sku`, e.target.value);
@@ -74,7 +73,7 @@ export const data = ({ control, errors, variantItem, register, setValue, clearEr
                                     {...other}
                                     value={value || ''}
                                 />
-                                {errors?.sku ? <span className="text-red-500">{errors.sku?.type === 'required' ? "Sku is required!" : errors.sku.message}</span> : null}
+                                {'sku' in errors && errors?.sku[index] ? <Box as="span" textColor="red.500">{errors.sku[index]?.type === 'required' ? "Sku is required!" : errors.sku[index].message}</Box> : null}
                             </Fragment>
                         )
                     }}
@@ -82,30 +81,27 @@ export const data = ({ control, errors, variantItem, register, setValue, clearEr
             ),
             variant: (
                 <Controller
-                name="variant"
-                {...register(`variant[${index}]`)}
-                key={index}
-                control={control}
-                render={({field: {value:{name}}}) => {
-                    return (
-                        <Fragment>
-                           <Text>{name}</Text>
-                        </Fragment>
-                    )
-                }}
-            />
+                    name={`variant[${index}]`}
+                    key={index}
+                    control={control}
+                    render={({ field: { value: { name } } }) => {
+                        return (
+                            <Fragment>
+                                <Text>{name}</Text>
+                            </Fragment>
+                        )
+                    }}
+                />
             ),
             originPrice: (
                 <Controller
-                    name="originPrice"
+                    name={`originPrice[${index}]`}
                     key={index}
                     control={control}
-                    {...register(`originPrice[${index}]`)}
-                    // rules={{ required: true }}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>
-                                <Input
+                                <InputNumber
                                     className='!my-1'
                                     id='originPrice'
                                     type=''
@@ -120,15 +116,13 @@ export const data = ({ control, errors, variantItem, register, setValue, clearEr
             ),
             price: (
                 <Controller
-                    name="price"
+                    name={`price[${index}]`}
                     key={index}
                     control={control}
-                    {...register(`price[${index}]`)}
-                    // rules={{ required: true }}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>
-                                <Input
+                                <InputNumber
                                     className='!my-1'
                                     id='price'
                                     type=''
@@ -143,10 +137,9 @@ export const data = ({ control, errors, variantItem, register, setValue, clearEr
             ),
             stock: (
                 <Controller
-                    name="stock"
+                    name={`stock[${index}]`}
                     key={index}
                     control={control}
-                    {...register(`stock[${index}]`)}
                     render={({ field: { value, ...other } }) => {
                         return (
                             <Fragment>

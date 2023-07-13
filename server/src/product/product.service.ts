@@ -13,7 +13,7 @@ export class ProductService {
         private readonly prisma: PrismaService
     ) { }
 
-    public async productCreate(input: ProductCreateDto, userId: number): Promise<IResponse<product>> {
+    public async productCreate(input: ProductCreateDto): Promise<IResponse<product>> {
         try {
             const { active, category_id, description, name, featured_asset_id } = input
             return {
@@ -26,9 +26,7 @@ export class ProductService {
                         name,
                         category_id,
                         description,
-                        featured_asset_id,
-                        created_by: userId,
-                        modified_by: userId,
+                        featured_asset_id
                     }
                 })
             }
@@ -143,7 +141,7 @@ export class ProductService {
                             },
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                         ...categories && {
                             category_id: { in: Array.isArray(categories) ? [...categories].map((category) => +category) : [+categories] }
@@ -182,7 +180,7 @@ export class ProductService {
                             },
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                         ...categories && {
                             category_id: { in: Array.isArray(categories) ? [...categories].map((category) => +category) : [+categories] }
@@ -238,7 +236,7 @@ export class ProductService {
         }
     }
 
-    public async productUpdate(input: ProductUpdateDto, id: number, userId: number): Promise<IResponse<product>> {
+    public async productUpdate(input: ProductUpdateDto, id: number): Promise<IResponse<product>> {
         try {
             const { active, name, featured_asset_id, description, category_id } = input
             const product = await this.prisma.product.findUnique({
@@ -266,8 +264,7 @@ export class ProductService {
                             ...name && { name },
                             ...description && { description },
                             category_id,
-                            active,
-                            modified_by: userId
+                            active
                         },
                         where: { id }
                     })
@@ -414,7 +411,7 @@ export class ProductService {
         }
     }
 
-    public async optionBulkCreate(input: OptionBulkCreateDto, userId: number): Promise<IResponse<product_option[]>> {
+    public async optionBulkCreate(input: OptionBulkCreateDto): Promise<IResponse<product_option[]>> {
         try {
             const { options } = input
             const opts = options.map((option) => {
@@ -435,9 +432,7 @@ export class ProductService {
                         data: {
                             name: opt.name,
                             value: opt.value,
-                            created_by: userId,
                             product_id: opt.product_id,
-                            modified_by: userId
                         }
                     }))
                 )
@@ -451,7 +446,7 @@ export class ProductService {
         }
     }
 
-    public async optionCreate(input: OptionCreateDto, userId: number): Promise<IResponse<product_option>> {
+    public async optionCreate(input: OptionCreateDto): Promise<IResponse<product_option>> {
         try {
             const { name, value, product_id } = input
             return {
@@ -462,9 +457,7 @@ export class ProductService {
                     data: {
                         name,
                         value,
-                        product_id,
-                        created_by: userId,
-                        modified_by: userId
+                        product_id
                     }
                 })
             }
@@ -477,7 +470,7 @@ export class ProductService {
         }
     }
 
-    public async productVariantCreate(input: ProductVariantCreateDto, userId: number): Promise<IResponse<product_variant>> {
+    public async productVariantCreate(input: ProductVariantCreateDto): Promise<IResponse<product_variant>> {
         try {
             const { option_ids, price, product_id, sku, stock, name, origin_price } = input
             const isSkuValid = await this.prisma.product_variant.findUnique({
@@ -497,8 +490,6 @@ export class ProductService {
                 data: await this.prisma.product_variant.create({
                     data: {
                         sku,
-                        created_by: userId,
-                        modified_by: userId,
                         price,
                         origin_price,
                         stock,
@@ -525,19 +516,21 @@ export class ProductService {
         }
     }
 
-    public async productVariantBulkCreate(input: { variants: ProductVariantCreateDto[] }, userId: number): Promise<IResponse<product_variant[]>> {
+    public async productVariantBulkCreate(input: { variants: ProductVariantCreateDto[] }): Promise<IResponse<product_variant[]>> {
         try {
             const { variants } = input
             const skus = await this.prisma.$transaction(
                 variants.map((variant) => this.prisma.product_variant.findUnique({ where: { sku: variant.sku } }))
             )
             const isSkuNotExist = skus.some(el => el !== null);
+            const skusExist = skus.filter((el) => el !== null)
             if (isSkuNotExist) {
                 return {
                     code: 400,
                     success: false,
                     fieldError: "sku",
-                    message: 'Looks like a certain sku already exists in the system!',
+                    valuesError: skusExist.map((sku) => sku.sku),
+                    message: 'Sku already exists in the system!',
                 }
             }
             return {
@@ -548,8 +541,6 @@ export class ProductService {
                         return this.prisma.product_variant.create({
                             data: {
                                 sku: variant.sku,
-                                created_by: userId,
-                                modified_by: userId,
                                 price: variant.price,
                                 origin_price: variant.origin_price,
                                 name: variant.name,
@@ -888,7 +879,7 @@ export class ProductService {
                     take: 12,
                     skip: 0,
                     where: {
-                        active: 1,
+                        active: true,
                     },
                     orderBy: {
                         created_date: "desc"
@@ -972,7 +963,7 @@ export class ProductService {
                 data: await this.prisma.product_option.findMany({
                     where: {
                         product: {
-                            active: 1
+                            active: true
                         }
                     }
                 })

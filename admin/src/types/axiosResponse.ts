@@ -5,6 +5,7 @@ export interface IAxiosResponse<T> {
         data: T
         access_token?: string
         refresh_token?: string
+        valuesError?: string[]
         fieldError?: string
         message?: string
     }

@@ -6,7 +6,7 @@ export interface Promotion {
     id: number
     coupon_code: string
     name: string
-    active: number
+    active: boolean
     limit: number
     discount: number
 }

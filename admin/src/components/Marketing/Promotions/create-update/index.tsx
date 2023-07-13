@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react';
 import autoAnimate from '@formkit/auto-animate';
-import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, InputNumber, Row, Switch, message } from 'antd';
+import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, InputNumber, Row, Spin, Switch, message } from 'antd';
 import moment from 'moment';
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -21,7 +21,7 @@ const dateFormat = 'YYYY/MM/DD';
 
 const PromotionCreateUpdate = () => {
     // ** State
-    const [active, setActive] = useState<number>(1)
+    const [active, setActive] = useState<boolean>(true)
     const [startsAt, setStartsAt] = useState<string>()
     const [endsAt, setEndsAt] = useState<string>()
 
@@ -139,101 +139,103 @@ const PromotionCreateUpdate = () => {
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
-                    <Card>
-                        <Form onFinish={handleSubmit(onSubmit)} layout="vertical" autoComplete="off">
-                            <Col span={24}>
-                                <Flex justifyContent="space-between" alignItems="center">
-                                    <Flex justifyContent="center" alignItems="center">
-                                        <Switch checked={active === 1} size='small' onChange={() => setActive(active === 1 ? 0 : 1)} />
-                                        <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                    <Spin spinning={promotion.single.loading}>
+                        <Card>
+                            <Form onFinish={handleSubmit(onSubmit)} layout="vertical" autoComplete="off">
+                                <Col span={24}>
+                                    <Flex justifyContent="space-between" alignItems="center">
+                                        <Flex justifyContent="center" alignItems="center">
+                                            <Switch checked={active} size='small' onChange={() => setActive(!active)} />
+                                            <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                                        </Flex>
+                                        {
+                                            id && promotion.update.loading ?
+                                                <Button type="primary" loading>Updating...</Button> :
+                                                promotion.create.loading ?
+                                                    <Button type="primary" loading>Creating...</Button> :
+                                                    id ? <Button htmlType="submit" type="primary">Update</Button> :
+                                                        <Button htmlType="submit" type="primary">Create</Button>
+                                        }
                                     </Flex>
-                                    {
-                                        id && promotion.update.loading ?
-                                            <Button type="primary" loading>Updating...</Button> :
-                                            promotion.create.loading ?
-                                                <Button type="primary" loading>Creating...</Button> :
-                                                id ? <Button htmlType="submit" type="primary">Update</Button> :
-                                                    <Button htmlType="submit" type="primary">Create</Button>
-                                    }
-                                </Flex>
-                            </Col>
-                            <Divider />
-                            <Col span={24}>
-                                <Form.Item label="Promotion name">
-                                    <Controller
-                                        name="name"
-                                        control={control}
-                                        rules={{ required: true }}
-                                        render={({ field }) => {
-                                            return (
-                                                <div ref={nameErrorRef}>
-                                                    <Input {...field} placeholder="Eg: 8/8 discount" />
-                                                    {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Please input your promotion name!" : errors.name.message}</Box> : null}
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item label="Coupon code">
-                                    <Controller
-                                        name="coupon_code"
-                                        control={control}
-                                        rules={{ required: true }}
-                                        render={({ field }) => {
-                                            return (
-                                                <div ref={couponCodeErrorRef}>
-                                                    <Input {...field} placeholder="Eg: ad7dwd58" />
-                                                    {errors?.coupon_code ? <Box as="div" mt={1} textColor="red.600">{errors.coupon_code?.type === 'required' ? "Please input your coupon code!" : errors.coupon_code.message}</Box> : null}
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item label="Starts at">
-                                    <DatePicker style={{ width: "100%" }} value={startsAt ? moment(startsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateStartsAtPicker} />
-                                </Form.Item>
-                                <Form.Item label="Ends at">
-                                    <DatePicker style={{ width: "100%" }} value={endsAt ? moment(endsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateEndsAtPicker} />
-                                </Form.Item>
-                                <Form.Item label="Limit">
-                                    <Controller
-                                        name="limit"
-                                        control={control}
-                                        render={({ field }) => {
-                                            return (
-                                                <div>
-                                                    <InputNumber
-                                                        {...field}
-                                                        style={{ width: "100%" }}
-                                                    />
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item label="Discount">
-                                    <Controller
-                                        name="discount"
-                                        control={control}
-                                        render={({ field }) => {
-                                            return (
-                                                <div>
-                                                    <InputNumber
-                                                        {...field}
-                                                        formatter={value => `${value}%`}
-                                                        min={0}
-                                                        style={{ width: "100%" }}
-                                                        max={100}
-                                                        parser={value => value!.replace('%', '')}
-                                                    />
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                            </Col>
-                        </Form>
-                    </Card>
+                                </Col>
+                                <Divider />
+                                <Col span={24}>
+                                    <Form.Item label="Promotion name">
+                                        <Controller
+                                            name="name"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={nameErrorRef}>
+                                                        <Input {...field} placeholder="Eg: 8/8 discount" />
+                                                        {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Please input your promotion name!" : errors.name.message}</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Coupon code">
+                                        <Controller
+                                            name="coupon_code"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={couponCodeErrorRef}>
+                                                        <Input {...field} placeholder="Eg: ad7dwd58" />
+                                                        {errors?.coupon_code ? <Box as="div" mt={1} textColor="red.600">{errors.coupon_code?.type === 'required' ? "Please input your coupon code!" : errors.coupon_code.message}</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Starts at">
+                                        <DatePicker style={{ width: "100%" }} value={startsAt ? moment(startsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateStartsAtPicker} />
+                                    </Form.Item>
+                                    <Form.Item label="Ends at">
+                                        <DatePicker style={{ width: "100%" }} value={endsAt ? moment(endsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateEndsAtPicker} />
+                                    </Form.Item>
+                                    <Form.Item label="Limit">
+                                        <Controller
+                                            name="limit"
+                                            control={control}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div>
+                                                        <InputNumber
+                                                            {...field}
+                                                            style={{ width: "100%" }}
+                                                        />
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Discount">
+                                        <Controller
+                                            name="discount"
+                                            control={control}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div>
+                                                        <InputNumber
+                                                            {...field}
+                                                            formatter={value => `${value}%`}
+                                                            min={0}
+                                                            style={{ width: "100%" }}
+                                                            max={100}
+                                                            parser={value => value!.replace('%', '')}
+                                                        />
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                </Col>
+                            </Form>
+                        </Card>
+                    </Spin>
                 </Col>
             </Row>
         </Fragment>

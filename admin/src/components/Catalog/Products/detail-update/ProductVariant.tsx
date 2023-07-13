@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Card, Col, Divider, Form, Input, Modal, Popover, Row, message, Tag } from 'antd';
+import { Card, Col, Divider, Form, Input, Modal, Popover, Row, message, Tag, Spin } from 'antd';
 import React, { Fragment, useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
@@ -169,7 +169,10 @@ const ProductVariant = () => {
 
     return (
         <Fragment>
-            {dataToRender()}
+            <Spin spinning={product.single.loading} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', maxHeight: 'unset' }}>
+                {product.single.loading && <Box h='100vh'></Box>}
+                {dataToRender()}
+            </Spin>
             <ModalUpdateProductVariant isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} variant={variant as ProductVariantType} refresh={refresh} setRefresh={setRefresh} />
             <ModalUpdateProductOption isModalUpdateProductOptionOpen={isModalUpdateProductOptionOpen} setIsModalUpdateProductOptionOpen={setIsModalUpdateProductOptionOpen} option={option as ProductOption} refresh={refresh} setRefresh={setRefresh} />
             <Modal title="Delete product variant" open={isModalDeleteProductVariantOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={product.deleteProductVariant.loading}>

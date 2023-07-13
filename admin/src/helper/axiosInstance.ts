@@ -19,7 +19,7 @@ export const createAxiosJwt = () => {
             const decoedToken: JwtPayload = jwtDecode(accessToken || '');
             const axiosClient = createAxiosClient();
             if (decoedToken?.exp && decoedToken?.exp < date.getTime() / 1000) {
-                const res: IAxiosResponse<{}> = await axiosClient.post(`${import.meta.env.VITE_BACKEND_URL}auth/refreshToken`, {}, {
+                const res: IAxiosResponse<{}> = await axiosClient.post(`${import.meta.env.VITE_BACKEND_URL}/auth/refreshToken`, {}, {
                     headers: {
                         Authorization: `Bearer ${refreshToken}`
                     }

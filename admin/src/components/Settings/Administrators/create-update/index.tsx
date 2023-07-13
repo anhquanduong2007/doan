@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react"
 import autoAnimate from "@formkit/auto-animate"
-import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Switch, message } from "antd"
+import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Spin, Switch, message } from "antd"
 import { Fragment, useEffect, useRef, useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import { Link, useNavigate, useParams } from "react-router-dom"
@@ -28,9 +28,9 @@ const dateFormat = 'YYYY/MM/DD';
 
 const AdministratorCreateUpdate = () => {
     // ** State
-    const [active, setActive] = useState<number>(1)
-    const [gender, setGender] = useState<number>(0)
-    const [dateOfBirth, setDateOfBirth] = useState<string>('')
+    const [active, setActive] = useState<boolean>(true)
+    const [gender, setGender] = useState<boolean>(true)
+    const [dateOfBirth, setDateOfBirth] = useState<string>()
     const [roles, setRoles] = useState<number[]>([])
 
     // ** Third party
@@ -50,6 +50,7 @@ const AdministratorCreateUpdate = () => {
     // ** Variables
     const administrator = useAppSelector((state) => state.administrator);
     const role = useAppSelector((state) => state.role);
+    const auth = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
 
@@ -58,6 +59,7 @@ const AdministratorCreateUpdate = () => {
     const lastNameErrorRef = useRef(null);
     const emailErrorRef = useRef(null);
     const passwordErrorRef = useRef(null);
+    const phoneErrorRef = useRef(null);
 
     // ** Effect
     useEffect(() => {
@@ -65,19 +67,23 @@ const AdministratorCreateUpdate = () => {
         lastNameErrorRef.current && autoAnimate(lastNameErrorRef.current);
         emailErrorRef.current && autoAnimate(emailErrorRef.current);
         passwordErrorRef.current && autoAnimate(passwordErrorRef.current);
+        phoneErrorRef.current && autoAnimate(phoneErrorRef.current);
     }, [parent])
 
     useEffect(() => {
         if (id) {
-            getListRole({
-                axiosClientJwt,
-                dispatch,
-                navigate,
-                pagination: {
-                    skip: 0,
-                    take: 999
-                }
-            })
+            if (auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('ReadRole') ||
+                auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) {
+                getListRole({
+                    axiosClientJwt,
+                    dispatch,
+                    navigate,
+                    pagination: {
+                        skip: 0,
+                        take: 999
+                    }
+                })
+            }
             getAdministrator({
                 axiosClientJwt,
                 dispatch,
@@ -104,7 +110,7 @@ const AdministratorCreateUpdate = () => {
     // ** Function handle
     const dataRolesRender = (): ItemProps[] => {
         if (!role.list.loading && role.list.result) {
-            return role.list.result.roles.map((role) => {
+            return role.list.result.roles.filter((ro) => ro.role_name !== 'superadmin').map((role) => {
                 return {
                     label: role.role_name,
                     value: role.id,
@@ -118,7 +124,7 @@ const AdministratorCreateUpdate = () => {
         setDateOfBirth(date?.toISOString() as string)
     };
 
-    const handleChangeGender = (value: number) => {
+    const handleChangeGender = (value: boolean) => {
         setGender(value)
     };
 
@@ -179,146 +185,147 @@ const AdministratorCreateUpdate = () => {
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
-                    <Card>
-                        <Form onFinish={handleSubmit(onSubmit)} layout="vertical" autoComplete="off">
-                            <Col span={24}>
-                                <Flex justifyContent="space-between" alignItems="center">
-                                    <Flex justifyContent="center" alignItems="center">
-                                        <Switch checked={active === 1} size='small' onChange={() => setActive(active === 1 ? 0 : 1)} />
-                                        <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                    <Spin spinning={administrator.single.loading}>
+                        <Card>
+                            <Form onFinish={handleSubmit(onSubmit)} layout="vertical" autoComplete="off">
+                                <Col span={24}>
+                                    <Flex justifyContent="space-between" alignItems="center">
+                                        <Flex justifyContent="center" alignItems="center">
+                                            <Switch checked={active} size='small' onChange={() => setActive(!active)} />
+                                            <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                                        </Flex>
+                                        {
+                                            id && administrator.update.loading ?
+                                                <Button type="primary" loading>Updating...</Button> :
+                                                administrator.create.loading ?
+                                                    <Button type="primary" loading>Creating...</Button> :
+                                                    id ? <Button htmlType="submit" type="primary">Update</Button> :
+                                                        <Button htmlType="submit" type="primary">Create</Button>
+                                        }
                                     </Flex>
+                                </Col>
+                                <Divider />
+                                <Col span={24}>
+                                    <Form.Item label="First name">
+                                        <Controller
+                                            name="first_name"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={firstNameErrorRef}>
+                                                        <Input {...field} placeholder="Eg: Quan" />
+                                                        {errors?.first_name ? <Box as="div" mt={1} textColor="red.600">{errors.first_name?.type === 'required' ? "Please input your first name!" : errors.first_name.message}</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Last name">
+                                        <Controller
+                                            name="last_name"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={lastNameErrorRef}>
+                                                        <Input {...field} placeholder="Eg: Duong" />
+                                                        {errors?.last_name ? <Box as="div" mt={1} textColor="red.600">{errors.last_name?.type === 'required' ? "Please input your last name!" : errors.last_name.message}</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Email">
+                                        <Controller
+                                            name="email"
+                                            control={control}
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={lastNameErrorRef}>
+                                                        <Input type="email" {...field} placeholder="Eg: qunduong2007@gmail.com" />
+                                                        {errors?.email ? <Box as="div" mt={1} textColor="red.600">{errors.email?.type === 'required' ? "Please input your email!" : errors.email.message}</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
                                     {
-                                        id && administrator.update.loading ?
-                                            <Button type="primary" loading>Updating...</Button> :
-                                            administrator.create.loading ?
-                                                <Button type="primary" loading>Creating...</Button> :
-                                                id ? <Button htmlType="submit" type="primary">Update</Button> :
-                                                    <Button htmlType="submit" type="primary">Create</Button>
+                                        !id && (
+                                            <Form.Item label="password">
+                                                <Controller
+                                                    name="password"
+                                                    control={control}
+                                                    rules={{ required: true }}
+                                                    render={({ field }) => {
+                                                        return (
+                                                            <div ref={lastNameErrorRef}>
+                                                                <Input.Password {...field} />
+                                                                {errors?.password ? <Box as="div" mt={1} textColor="red.600">{errors.password?.type === 'required' ? "Please input your password!" : errors.password.message}</Box> : null}
+                                                            </div>
+                                                        )
+                                                    }}
+                                                />
+                                            </Form.Item>
+                                        )
                                     }
-                                </Flex>
-                            </Col>
-                            <Divider />
-                            <Col span={24}>
-                                <Form.Item label="First name">
-                                    <Controller
-                                        name="first_name"
-                                        control={control}
-                                        rules={{ required: true }}
-                                        render={({ field }) => {
-                                            return (
-                                                <div ref={firstNameErrorRef}>
-                                                    <Input {...field} placeholder="Eg: Quan" />
-                                                    {errors?.first_name ? <Box as="div" mt={1} textColor="red.600">{errors.first_name?.type === 'required' ? "Please input your first name!" : errors.first_name.message}</Box> : null}
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item label="Last name">
-                                    <Controller
-                                        name="last_name"
-                                        control={control}
-                                        rules={{ required: true }}
-                                        render={({ field }) => {
-                                            return (
-                                                <div ref={lastNameErrorRef}>
-                                                    <Input {...field} placeholder="Eg: Duong" />
-                                                    {errors?.last_name ? <Box as="div" mt={1} textColor="red.600">{errors.last_name?.type === 'required' ? "Please input your last name!" : errors.last_name.message}</Box> : null}
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item label="Email">
-                                    <Controller
-                                        name="email"
-                                        control={control}
-                                        rules={{ required: true }}
-                                        render={({ field }) => {
-                                            return (
-                                                <div ref={lastNameErrorRef}>
-                                                    <Input type="email" {...field} placeholder="Eg: qunduong2007@gmail.com" />
-                                                    {errors?.email ? <Box as="div" mt={1} textColor="red.600">{errors.email?.type === 'required' ? "Please input your email!" : errors.email.message}</Box> : null}
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                                {
-                                    !id && (
-                                        <Form.Item label="password">
-                                            <Controller
-                                                name="password"
-                                                control={control}
-                                                rules={{ required: true }}
-                                                render={({ field }) => {
-                                                    return (
-                                                        <div ref={lastNameErrorRef}>
-                                                            <Input.Password {...field} />
-                                                            {errors?.password ? <Box as="div" mt={1} textColor="red.600">{errors.password?.type === 'required' ? "Please input your password!" : errors.password.message}</Box> : null}
-                                                        </div>
-                                                    )
-                                                }}
-                                            />
-                                        </Form.Item>
-                                    )
-                                }
-                                <Form.Item label="Phone">
-                                    <Controller
-                                        name="phone"
-                                        control={control}
-                                        render={({ field }) => {
-                                            return (
-                                                <div>
-                                                    <Input {...field} />
-                                                </div>
-                                            )
-                                        }}
-                                    />
-                                </Form.Item>
-                                <Form.Item label="Date of birth">
-                                    <DatePicker value={dateOfBirth ? moment(dateOfBirth?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDatePicker} />
-                                </Form.Item >
-                                <Form.Item label="Gender">
-                                    <Select
-                                        value={gender}
-                                        onChange={handleChangeGender}
-                                        options={[
-                                            {
-                                                value: 0,
-                                                label: 'None',
-                                            },
-                                            {
-                                                value: 1,
-                                                label: "Male",
-                                            },
-                                            {
-                                                value: 2,
-                                                label: 'Female',
-                                            },
-
-                                        ]}
-                                    />
-                                </Form.Item>
-                                {
-                                    id && (
-                                        <Form.Item label="Roles">
-                                            <Select
-                                                mode="multiple"
-                                                placeholder='Select roles...'
-                                                value={roles}
-                                                loading={role.list.loading}
-                                                onChange={(roles: number[]) => {
-                                                    setRoles(roles);
-                                                }}
-                                                options={dataRolesRender()}
-                                            />
-                                        </Form.Item>
-                                    )
-                                }
-                            </Col>
-                        </Form>
-                    </Card>
+                                    <Form.Item label="Phone">
+                                        <Controller
+                                            name="phone"
+                                            control={control}
+                                            rules={{ maxLength: 10, minLength: 10 }}
+                                            render={({ field }) => {
+                                                return (
+                                                    <div ref={phoneErrorRef}>
+                                                        <Input {...field} />
+                                                        {errors?.phone ? <Box as="div" mt={1} textColor="red.600">Enter the wrong phone number format</Box> : null}
+                                                    </div>
+                                                )
+                                            }}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item label="Date of birth">
+                                        <DatePicker value={dateOfBirth ? moment(dateOfBirth?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDatePicker} />
+                                    </Form.Item >
+                                    <Form.Item label="Gender">
+                                        <Select
+                                            value={gender}
+                                            onChange={handleChangeGender}
+                                            options={[
+                                                {
+                                                    value: true,
+                                                    label: "Male",
+                                                },
+                                                {
+                                                    value: false,
+                                                    label: 'Female',
+                                                },
+                                            ]}
+                                        />
+                                    </Form.Item>
+                                    {
+                                        id &&
+                                        (auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('ReadRole') ||
+                                            auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                                            <Form.Item label="Roles">
+                                                <Select
+                                                    mode="multiple"
+                                                    placeholder='Select roles...'
+                                                    value={roles}
+                                                    loading={role.list.loading}
+                                                    onChange={(roles: number[]) => {
+                                                        setRoles(roles);
+                                                    }}
+                                                    options={dataRolesRender()}
+                                                />
+                                            </Form.Item>
+                                        )
+                                    }
+                                </Col>
+                            </Form>
+                        </Card>
+                    </Spin>
                 </Col>
             </Row>
         </Fragment>

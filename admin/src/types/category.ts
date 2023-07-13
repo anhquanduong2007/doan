@@ -5,10 +5,9 @@ export interface Cateogry {
     category_code: string
     description: string
     id: number
-    active: number
+    active: boolean
     created_date: string
     modified_date: string
-    created_by: number
-    modified_by: string
+    parent_id: number
     product: Array<Product>
 }

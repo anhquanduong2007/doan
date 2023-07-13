@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import autoAnimate from '@formkit/auto-animate';
-import { Form, Input, Modal, Select, message } from 'antd';
+import { Form, Input, Modal, Select, Spin, message } from 'antd';
 import React, { Fragment, useRef, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -39,7 +39,7 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
     const params = useParams()
     const { id } = params
     const navigate = useNavigate()
-    const { control, handleSubmit, setValue, formState: { errors } } = useForm<FormValuesCustomerAddress>({
+    const { control, handleSubmit, setValue, formState: { errors }, reset } = useForm<FormValuesCustomerAddress>({
         defaultValues: {
             street_line_1: '',
             street_line_2: '',
@@ -82,6 +82,8 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
             setValue("street_line_1", store.single.result.street_line_1)
             setValue("street_line_2", store.single.result.street_line_2)
             setCountry(store.single.result.country)
+        } else {
+            reset()
         }
     }, [id, mode, store.single.loading, store.single.result])
 
@@ -139,93 +141,95 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
     return (
         <Fragment>
             <Modal title="Create new address" open={addressModal} onOk={handleSubmit(onSubmit)} onCancel={() => setAddressModal(false)} centered confirmLoading={mode ? store.update.loading : store.create.loading}>
-                <Form layout="vertical">
-                    <Form.Item label="Street line 1">
-                        <Controller
-                            name="street_line_1"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => {
-                                return (
-                                    <div ref={streetLine1ErrorRef}>
-                                        <Input {...field} />
-                                        {errors?.street_line_1 ? <Box as="div" mt={1} textColor="red.600">{errors.street_line_1?.type === 'required' ? "Please input your street line 1!" : errors.street_line_1.message}</Box> : null}
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Street line 2">
-                        <Controller
-                            name="street_line_2"
-                            control={control}
-                            render={({ field }) => {
-                                return (
-                                    <div>
-                                        <Input {...field} />
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="City">
-                        <Controller
-                            name="city"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => {
-                                return (
-                                    <div ref={cityErrorRef}>
-                                        <Input {...field} />
-                                        {errors?.city ? <Box as="div" mt={1} textColor="red.600">{errors.city?.type === 'required' ? "Please input your city!" : errors.city.message}</Box> : null}
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Province">
-                        <Controller
-                            name="province"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => {
-                                return (
-                                    <div ref={provinceErrorRef}>
-                                        <Input {...field} />
-                                        {errors?.province ? <Box as="div" mt={1} textColor="red.600">{errors.province?.type === 'required' ? "Please input your province!" : errors.province.message}</Box> : null}
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Postal code">
-                        <Controller
-                            name="postal_code"
-                            control={control}
-                            rules={{ required: true }}
-                            render={({ field }) => {
-                                return (
-                                    <div ref={postalCodeErrorRef}>
-                                        <Input {...field} />
-                                        {errors?.postal_code ? <Box as="div" mt={1} textColor="red.600">{errors.postal_code?.type === 'required' ? "Please input your postal code!" : errors.postal_code.message}</Box> : null}
-                                    </div>
-                                )
-                            }}
-                        />
-                    </Form.Item>
-                    <Form.Item label="Country">
-                        <Select
-                            value={country}
-                            onChange={handleChange}
-                            options={countries.map((country) => {
-                                return {
-                                    value: country.code,
-                                    label: country.name,
-                                }
-                            })}
-                        />
-                    </Form.Item>
-                </Form>
+                <Spin spinning={store.single.loading}>
+                    <Form layout="vertical">
+                        <Form.Item label="Street line 1">
+                            <Controller
+                                name="street_line_1"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => {
+                                    return (
+                                        <div ref={streetLine1ErrorRef}>
+                                            <Input {...field} />
+                                            {errors?.street_line_1 ? <Box as="div" mt={1} textColor="red.600">{errors.street_line_1?.type === 'required' ? "Please input your street line 1!" : errors.street_line_1.message}</Box> : null}
+                                        </div>
+                                    )
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Street line 2">
+                            <Controller
+                                name="street_line_2"
+                                control={control}
+                                render={({ field }) => {
+                                    return (
+                                        <div>
+                                            <Input {...field} />
+                                        </div>
+                                    )
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item label="City">
+                            <Controller
+                                name="city"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => {
+                                    return (
+                                        <div ref={cityErrorRef}>
+                                            <Input {...field} />
+                                            {errors?.city ? <Box as="div" mt={1} textColor="red.600">{errors.city?.type === 'required' ? "Please input your city!" : errors.city.message}</Box> : null}
+                                        </div>
+                                    )
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Province">
+                            <Controller
+                                name="province"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => {
+                                    return (
+                                        <div ref={provinceErrorRef}>
+                                            <Input {...field} />
+                                            {errors?.province ? <Box as="div" mt={1} textColor="red.600">{errors.province?.type === 'required' ? "Please input your province!" : errors.province.message}</Box> : null}
+                                        </div>
+                                    )
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Postal code">
+                            <Controller
+                                name="postal_code"
+                                control={control}
+                                rules={{ required: true }}
+                                render={({ field }) => {
+                                    return (
+                                        <div ref={postalCodeErrorRef}>
+                                            <Input {...field} />
+                                            {errors?.postal_code ? <Box as="div" mt={1} textColor="red.600">{errors.postal_code?.type === 'required' ? "Please input your postal code!" : errors.postal_code.message}</Box> : null}
+                                        </div>
+                                    )
+                                }}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Country">
+                            <Select
+                                value={country}
+                                onChange={handleChange}
+                                options={countries.map((country) => {
+                                    return {
+                                        value: country.code,
+                                        label: country.name,
+                                    }
+                                })}
+                            />
+                        </Form.Item>
+                    </Form>
+                </Spin>
             </Modal>
         </Fragment>
     );

@@ -1,20 +1,20 @@
 import { Input } from 'antd';
 import React, { Fragment } from 'react';
-import { Control, Controller, FieldErrors, UseFormSetValue, useFieldArray } from 'react-hook-form';
+import { Control, Controller, FieldErrors, UseFormSetValue } from 'react-hook-form';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { Box } from '@chakra-ui/react';
 
 interface ProductCreateProps {
     control: Control<any>
-    errors: FieldErrors<any>
+    errors: FieldErrors<{ name: string }>
     setValue: UseFormSetValue<any>
 }
 const ProductCreate = ({ control, errors, setValue }: ProductCreateProps) => {
     return (
         <Fragment>
             <Box mb={3}>
-                <Box as="label" htmlFor='name' fontWeight="semibold">Product name <Box as="span" textColor="red.500" fontWeight="light">*</Box></Box>
+                <Box as="label" htmlFor='name' fontWeight="semibold">Product name</Box>
                 <Controller
                     name="name"
                     control={control}

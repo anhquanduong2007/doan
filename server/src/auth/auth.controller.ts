@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, Get, Req, UsePipes, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Res, Get, Req, UseGuards } from '@nestjs/common';
 import { LoginDto, RegisterDto } from './dto';
 import { AuthService } from './auth.service';
 import { Response, Request } from 'express';
@@ -28,7 +28,6 @@ export class AuthController {
   async logout(@Req() req: Request, @Res() res: Response) {
     const response = await this.authService.logout(req.user['userId']);
     return res.json({ response });
-
   }
 
   @Post('customer/register')
@@ -43,7 +42,6 @@ export class AuthController {
     const response = await this.authService.me(req.user['userId']);
     return res.json({ response });
   }
-
 
   @Post('refreshToken')
   @UseGuards(RefreshTokenGuard)

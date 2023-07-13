@@ -20,6 +20,7 @@ export class PromotionController {
     }
 
     @Post('/check-code')
+    @Permission()
     async checkPromotionCode(@Body() dto: CheckPromotionCodeDto, @Res() res: Response) {
         const response = await this.promotionService.checkPromotionCode(dto);
         return res.json({ response });

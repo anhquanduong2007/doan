@@ -1,4 +1,3 @@
-import { AppDispatch } from "src/app/store";
 import {
     getListCustomerStart,
     getListCustomerSuccess,
@@ -17,59 +16,10 @@ import {
     updateCustomerFailed
 } from "./customerSlice";
 import { Inotification } from 'src/common';
-import { AxiosInstance } from "axios";
-import { Pagination } from "src/types";
 import { IAxiosResponse } from "src/types/axiosResponse";
 import { User } from "src/types/user";
-import { NavigateFunction } from "react-router-dom";
-import { MessageApi } from "antd/lib/message";
-import { UseFormSetError } from "react-hook-form";
 import { FormValuesCustomer } from "src/components/Customers/create-update";
-
-type CreateCustomerParams = Omit<GetListCustomerParams, "pagination"> & {
-    customer: CustomerCreate,
-    setError: UseFormSetError<FormValuesCustomer>,
-    message: MessageApi
-}
-
-interface CustomerCreate {
-    password: string
-    first_name: string
-    last_name: string
-    gender: number
-    date_of_birth?: string
-    email: string
-    phone?: string
-    active: number
-}
-
-interface UpdateCustomerParams {
-    id: number
-    customer: Omit<CustomerCreate, "password">,
-    setError: UseFormSetError<Omit<FormValuesCustomer, "password">>,
-    message: MessageApi
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    navigate: NavigateFunction
-}
-
-interface GetListCustomerParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction
-}
-
-export type DeleteCustomerParams = Omit<GetListCustomerParams, "pagination">
-    & {
-        id: number,
-        setIsModalOpen: (open: boolean) => void,
-        setRefresh: (refresh: boolean) => void,
-        refresh: boolean,
-        message: MessageApi
-    }
-
-export type GetCustomerParams = Omit<GetListCustomerParams, "pagination"> & { id: number }
+import { CreateCustomerParams, DeleteCustomerParams, GetCustomerParams, GetListCustomerParams, UpdateCustomerParams } from "./type";
 
 export const getListCustomer = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListCustomerParams) => {
     try {

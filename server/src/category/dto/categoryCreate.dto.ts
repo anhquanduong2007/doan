@@ -1,5 +1,5 @@
 
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max, IsDateString, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max, IsDateString, IsNumber, IsBoolean } from 'class-validator';
 
 export class CategoryCreateDto {
     @IsString()
@@ -13,10 +13,8 @@ export class CategoryCreateDto {
     @IsString()
     @IsOptional()
     description: string;
-    
-    @IsInt()
-    @Min(0)
-    @Max(1)
+
+    @IsBoolean()
     @IsOptional()
-    active: number;
+    active: boolean;
 }

@@ -31,21 +31,26 @@ const columns = (
             title: 'Name',
             dataIndex: 'role_name',
             key: 'name',
+            width: '15%',
+            fixed: 'left',
         },
         {
             title: 'Code',
             dataIndex: 'role_code',
             key: 'code',
+            width: '15%',
         },
         {
             title: 'Description',
             dataIndex: 'description',
             key: 'description',
+            width: '25%',
         },
         {
             title: 'Permissions',
             dataIndex: 'permissions',
             key: 'permissions',
+            width: '35%',
             render: (permissions: string[]) => {
                 return (
                     <Space wrap>
@@ -71,6 +76,8 @@ const columns = (
         {
             title: 'Action',
             key: 'action',
+            width: 150,
+            fixed: 'right',
             render: (_, record) => {
                 if (record.role_code === "superadmin" || record.role_code === "customer") {
                     return null
@@ -153,7 +160,11 @@ const RoleList = () => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
-    };
+    }
+
+    const handleOnChangePagination = (e: number) => {
+        setSkip((e - 1) * take)
+    }
 
     return (
         <Fragment>
@@ -183,7 +194,21 @@ const RoleList = () => {
                         <Divider />
                         <Col span={24}>
                             <Card>
-                                <Table bordered columns={columns(setIsModalOpen, roleDelete, setRoleDelete, navigate)} dataSource={dataRender()} loading={role.list.loading} />
+                                <Table
+                                    bordered
+                                    columns={columns(setIsModalOpen, roleDelete, setRoleDelete, navigate)}
+                                    dataSource={dataRender()}
+                                    loading={role.list.loading}
+                                    scroll={{ x: '100vw' }}
+                                    pagination={{
+                                        total: role.list.result?.total,
+                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                                        defaultCurrent: skip + 1,
+                                        onChange: handleOnChangePagination,
+                                        defaultPageSize: take,
+                                        responsive: true
+                                    }}
+                                />
                             </Card>
                         </Col>
                     </Row>

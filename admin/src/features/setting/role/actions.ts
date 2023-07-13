@@ -1,6 +1,4 @@
-import { AppDispatch } from "src/app/store";
 import { Inotification } from 'src/common';
-import type { AxiosInstance } from "axios";
 import {
     getListRoleFailed,
     getListRoleStart,
@@ -18,48 +16,10 @@ import {
     updateRoleSuccess,
     updateRoleFailed
 } from "./roleSlice";
-import { Pagination, Role } from "src/types";
+import { Role } from "src/types";
 import { IAxiosResponse } from "src/types/axiosResponse";
-import { NavigateFunction } from "react-router-dom";
-import { MessageApi } from "antd/lib/message";
-import { UseFormSetError } from "react-hook-form";
 import { FormValuesRole } from "src/components/Settings/Roles/create-update";
-
-type CreateRoleParams = Omit<GetListRoleParams, "pagination"> & {
-    role: RoleCreate,
-    setError: UseFormSetError<FormValuesRole>,
-    message: MessageApi
-}
-
-export type RoleCreate = {
-    role_code: string
-    role_name: string
-    description?: string
-    permissions: string[]
-}
-
-interface GetListRoleParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction
-}
-
-export type DeleteRoleParams = Omit<GetListRoleParams, "pagination">
-    & {
-        id: number,
-        setIsModalOpen: (open: boolean) => void,
-        setRefresh: (refresh: boolean) => void,
-        refresh: boolean,
-        message: MessageApi
-    }
-
-export type GetRoleParams = Omit<GetListRoleParams, "pagination"> & { id: number }
-
-
-interface UpdateRoleParams extends CreateRoleParams {
-    id: number
-}
+import { CreateRoleParams, DeleteRoleParams, GetListRoleParams, GetRoleParams, UpdateRoleParams } from './type';
 
 export const getListRole = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListRoleParams) => {
     try {

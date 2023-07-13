@@ -1,4 +1,3 @@
-import { MessageApi } from "antd/lib/message";
 import {
     getListCategoryStart,
     getListCategorySuccess,
@@ -16,50 +15,10 @@ import {
     updateCategorySuccess,
     updateCategoryFailed,
 } from "./categorySlice";
-import { AxiosInstance } from "axios";
-import { NavigateFunction } from "react-router-dom";
-import { AppDispatch } from "src/app/store";
 import { Inotification } from "src/common";
-import { Pagination } from "src/types";
 import { IAxiosResponse } from "src/types/axiosResponse";
-import { UseFormSetError } from "react-hook-form";
 import { FormValuesCategory } from "src/components/Catalog/Categories/create-update";
-
-interface GetListCategoryParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction
-}
-
-export type DeleteCategoryParams = Omit<GetListCategoryParams, "pagination">
-    & {
-        id: number,
-        setIsModalOpen: (open: boolean) => void,
-        setRefresh: (refresh: boolean) => void,
-        refresh: boolean,
-        message: MessageApi
-    }
-
-type CreateCategoryParams = Omit<GetListCategoryParams, "pagination"> & {
-    category: CategoryCreate,
-    setError: UseFormSetError<FormValuesCategory>,
-    message: MessageApi
-}
-
-export type CategoryCreate = {
-    category_name: string
-    category_code: string
-    description?: string
-    active: number
-    parent_id?: number
-}
-
-export type GetCategoryParams = Omit<GetListCategoryParams, "pagination"> & { id: number }
-
-interface UpdateCategoryParams extends CreateCategoryParams {
-    id: number
-}
+import { CreateCategoryParams, DeleteCategoryParams, GetCategoryParams, GetListCategoryParams, UpdateCategoryParams } from "./type";
 
 export const getListCategory = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListCategoryParams) => {
     try {

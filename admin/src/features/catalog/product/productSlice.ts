@@ -11,17 +11,12 @@ interface ProductState {
         result: Product | null;
         loading: boolean;
         error: boolean;
-    }
-    createProductOption: {
-        result: any;
+    },
+    createProductVariantOption: {
+        result: null;
         loading: boolean;
         error: boolean;
-    }
-    createProductVariant: {
-        result: any;
-        loading: boolean;
-        error: boolean;
-    }
+    },
     list: {
         result: {
             products: Array<Product>
@@ -71,16 +66,6 @@ const initialState: ProductState = {
         loading: false,
         error: false,
     },
-    createProductOption: {
-        result: null,
-        loading: false,
-        error: false,
-    },
-    createProductVariant: {
-        result: null,
-        loading: false,
-        error: false,
-    },
     list: {
         result: null,
         loading: false,
@@ -115,6 +100,11 @@ const initialState: ProductState = {
         result: null,
         loading: false,
         error: false
+    },
+    createProductVariantOption: {
+        result: null,
+        loading: false,
+        error: false
     }
 } as ProductState;
 
@@ -135,34 +125,6 @@ export const productSlice = createSlice({
             state.createProduct.loading = false;
             state.createProduct.result = action.payload;
             state.createProduct.error = true;
-        },
-        // ** Create product option
-        createProductOptionStart: (state) => {
-            state.createProductOption.loading = true;
-        },
-        createProductOptionSuccess: (state, action) => {
-            state.createProductOption.loading = false;
-            state.createProductOption.result = action.payload;
-            state.createProductOption.error = false
-        },
-        createProductOptionFailed: (state, action) => {
-            state.createProductOption.loading = false;
-            state.createProductOption.result = action.payload;
-            state.createProductOption.error = true;
-        },
-        // ** Create product variant
-        createProductVariantStart: (state) => {
-            state.createProductVariant.loading = true;
-        },
-        createProductVariantSuccess: (state, action) => {
-            state.createProductVariant.loading = false;
-            state.createProductVariant.result = action.payload;
-            state.createProductVariant.error = false
-        },
-        createProductVariantFailed: (state, action) => {
-            state.createProductVariant.loading = false;
-            state.createProductVariant.result = action.payload;
-            state.createProductVariant.error = true;
         },
         // ** Get list product
         getListProductStart: (state) => {
@@ -262,6 +224,20 @@ export const productSlice = createSlice({
             state.deleteProductVariant.result = action.payload;
             state.deleteProductVariant.error = true;
         },
+        // ** Create product variant option
+        createProductVariantOptionStart: (state) => {
+            state.createProductVariantOption.loading = true;
+        },
+        createProductVariantOptionSuccess: (state, action) => {
+            state.createProductVariantOption.loading = false;
+            state.createProductVariantOption.result = action.payload;
+            state.createProductVariantOption.error = false
+        },
+        createProductVariantOptionFailed: (state, action) => {
+            state.createProductVariantOption.loading = false;
+            state.createProductVariantOption.result = action.payload;
+            state.createProductVariantOption.error = true;
+        },
     }
 });
 
@@ -269,12 +245,6 @@ export const {
     createProductStart,
     createProductSuccess,
     createProductFailed,
-    createProductOptionStart,
-    createProductOptionSuccess,
-    createProductOptionFailed,
-    createProductVariantStart,
-    createProductVariantSuccess,
-    createProductVariantFailed,
     getListProductStart,
     getListProductSuccess,
     getListProductFailed,
@@ -295,7 +265,10 @@ export const {
     updateProductOptionFailed,
     deleteProductVariantStart,
     deleteProductVariantSuccess,
-    deleteProductVariantFailed
+    deleteProductVariantFailed,
+    createProductVariantOptionStart,
+    createProductVariantOptionSuccess,
+    createProductVariantOptionFailed
 } = productSlice.actions;
 
 export default productSlice.reducer;

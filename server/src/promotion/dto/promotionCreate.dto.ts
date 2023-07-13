@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max, IsNumber, } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsNumber, IsBoolean } from 'class-validator';
 
 export class PromotionCreateDto {
     @IsString()
@@ -25,9 +25,7 @@ export class PromotionCreateDto {
     @IsOptional()
     discount: number;
 
-    @IsInt()
-    @Min(0)
-    @Max(1)
+    @IsBoolean()
     @IsOptional()
-    active: number
+    active: boolean
 }

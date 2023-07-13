@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Card, Col, Divider, Input, Modal, Row, Select, Space, Table, Tag, message } from 'antd';
+import { Breadcrumb, Button, Card, Col, Divider, Input, Modal, Row, Select, Space, Table, Tag, Tooltip, message } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import {
@@ -20,7 +20,8 @@ interface DataType {
     first_name: string
     last_name: string
     phone: string
-    active: number
+    active: boolean
+    permissions: string[]
 }
 
 const columns = (
@@ -33,35 +34,70 @@ const columns = (
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+            fixed: 'left',
+            width: '20%'
         },
         {
             title: 'First name',
             dataIndex: 'first_name',
             key: 'first name',
+            width: '12%',
         },
         {
             title: 'Last name',
             dataIndex: 'last_name',
             key: 'last name',
+            width: '12%',
         },
         {
             title: 'Phone',
             dataIndex: 'phone',
             key: 'phone',
+            width: '12%',
         },
         {
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
-            render: (active: number) => {
+            width: '100px',
+            render: (active: boolean) => {
                 return (
-                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Active' : 'Disabled'}</Tag>
+                )
+            }
+        },
+        {
+            title: 'Permissions',
+            dataIndex: 'permissions',
+            key: 'permissions',
+            width: '35%',
+            render: (permissions: string[]) => {
+                return (
+                    <Space wrap>
+                        {permissions.map((permission, index) => {
+                            if (index + 1 <= 4) {
+                                return <Tag key={index}>{permission}</Tag>
+                            }
+                        })}
+                        {
+                            permissions.length > 4 && (
+                                <Tooltip title={permissions.map((permission, index) => {
+                                    if (index >= 4) {
+                                        return permission
+                                    }
+                                }).filter(notUndefined => notUndefined !== undefined).join(', ')}>
+                                    <Tag style={{ cursor: "pointer" }}>+{permissions.length - 4}</Tag>
+                                </Tooltip>)
+                        }
+                    </Space>
                 )
             }
         },
         {
             title: 'Action',
             key: 'action',
+            width: '150px',
+            fixed: 'right',
             render: (_, record) => {
                 if (record.email === "superadmin@gmail.com") {
                     return null
@@ -98,7 +134,7 @@ const AdministratorList = () => {
     const navigate = useNavigate()
 
     // ** Variables
-    const store = useAppSelector((state) => state.administrator);
+    const administrator = useAppSelector((state) => state.administrator);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
 
@@ -119,8 +155,9 @@ const AdministratorList = () => {
 
     // ** Function handle
     const dataRender = (): DataType[] => {
-        if (!store.list.loading && store.list.result) {
-            return store.list.result.administrators.map((administrator, index: number) => {
+        if (!administrator.list.loading && administrator.list.result) {
+            return administrator.list.result.administrators.map((administrator, index: number) => {
+                const permissions = administrator?.users_role?.map((ur) => ur.role.permissions).flat()
                 return {
                     key: index,
                     id: administrator.id,
@@ -128,11 +165,16 @@ const AdministratorList = () => {
                     first_name: administrator.first_name,
                     last_name: administrator.last_name,
                     phone: administrator.phone,
-                    active: administrator.active
+                    active: administrator.active,
+                    permissions
                 }
             })
         }
         return []
+    }
+
+    const handleOnChangePagination = (e: number) => {
+        setSkip((e - 1) * take)
     }
 
     const handleOk = async () => {
@@ -208,17 +250,30 @@ const AdministratorList = () => {
                         <Divider />
                         <Col span={24}>
                             <Card>
-                                <Table bordered columns={columns(setIsModalOpen, administratorDelete, setAdministratorDelete, navigate)} dataSource={dataRender()} loading={store.list.loading} />
+                                <Table
+                                    bordered
+                                    columns={columns(setIsModalOpen, administratorDelete, setAdministratorDelete, navigate)}
+                                    dataSource={dataRender()}
+                                    loading={administrator.list.loading}
+                                    scroll={{ x: '100vw' }}
+                                    pagination={{
+                                        total: administrator.list.result?.total,
+                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                                        defaultCurrent: skip + 1,
+                                        onChange: handleOnChangePagination,
+                                        defaultPageSize: take,
+                                        responsive: true
+                                    }}
+                                />
                             </Card>
                         </Col>
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
+            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={administrator.delete.loading}>
                 <p>Do you want to delete this administrator (<span style={{ fontWeight: "bold" }}>{administratorDelete?.email}</span>) ?</p>
             </Modal>
         </Fragment>
-
     );
 };
 

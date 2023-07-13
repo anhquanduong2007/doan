@@ -19,7 +19,7 @@ interface DataType {
     starts_at: string;
     ends_at: string
     coupon_code: string
-    active: number
+    active: boolean
     name: string
 }
 
@@ -33,11 +33,14 @@ const columns = (
             title: 'Promotion name',
             dataIndex: 'name',
             key: 'name',
+            width: '12%',
+            fixed: 'left'
         },
         {
             title: 'Coupon code',
             dataIndex: 'coupon_code',
             key: 'coupon_code',
+            width: '18%',
             render: (coupon_code: string) => {
                 return (
                     <Tag>{coupon_code}</Tag>
@@ -47,6 +50,7 @@ const columns = (
         {
             title: 'Starts at',
             dataIndex: 'starts_at',
+            width: '15%',
             key: 'starts_at',
             render: (starts_at: string) => {
                 return (
@@ -58,6 +62,7 @@ const columns = (
             title: 'Ends at',
             dataIndex: 'ends_at',
             key: 'ends_at',
+            width: '15%',
             render: (ends_at: string) => {
                 return (
                     <span>{new Date(ends_at).toISOString().substring(0, 10)}</span>
@@ -68,15 +73,18 @@ const columns = (
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
+            width: '100px',
             render: (active: number) => {
                 return (
-                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Active' : 'Disabled'}</Tag>
                 )
             }
         },
         {
             title: 'Action',
             key: 'action',
+            width: '150px',
+            fixed: 'right',
             render: (_, record) => {
                 return (
                     <Space size="middle">
@@ -229,6 +237,7 @@ const Promotions = () => {
                                     columns={columns(setIsModalOpen, promotionDelete, setPromotionDelete, navigate)}
                                     dataSource={dataRender()}
                                     loading={promotion.list.loading}
+                                    scroll={{ x: '100vw' }}
                                     pagination={{
                                         total: promotion.list.result?.total,
                                         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,

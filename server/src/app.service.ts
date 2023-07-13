@@ -40,6 +40,7 @@ export class AppService implements OnApplicationBootstrap {
                     email: "superadmin@gmail.com",
                     first_name: "super",
                     last_name: "admin",
+                    active: true,
                     password: await argon2.hash("superadmin"),
                     users_role: {
                         createMany: {
@@ -82,6 +83,7 @@ export class AppService implements OnApplicationBootstrap {
                     email: "superadmin@gmail.com",
                     first_name: "super",
                     last_name: "admin",
+                    active: true,
                     password: await argon2.hash("superadmin"),
                     users_role: {
                         createMany: {

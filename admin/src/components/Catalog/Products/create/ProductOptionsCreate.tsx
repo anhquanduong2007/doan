@@ -1,16 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 // @ts-nocheck
-
 import { Box, Flex } from "@chakra-ui/react";
 import React, { Fragment, useEffect } from "react";
-import { Form, Input, Select } from "antd";
+import { Input, Select } from "antd";
 import { MinusCircleOutlined } from "@ant-design/icons";
 import Button from "antd-button-color";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { getValueByName } from "src/hooks/catalog";
 
-const ProductOptionsCreate = ({ control, register, setVariantItem, setValue, watch }) => {
+const ProductOptionsCreate = ({ control, setVariantItem, setValue, watch, errors }) => {
     const { fields, append, remove } = useFieldArray({
         control,
         name: "option",
@@ -36,13 +35,14 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue, wat
                     })
                     sizeMap && variantArr.push(...sizeMap);
                 })
-            } else {
+            } else if (colorOption) {
                 colorOption && colorOption?.map((color) => {
                     const variantCode = `${watchNameProduct}-${color}`
                     return variantArr.push({
                         variantCode: variantCode,
                     })
                 })
+            } else {
                 sizeOption && sizeOption?.map((color) => {
                     const variantCode = `${watchNameProduct}-${color}`
                     return variantArr.push({
@@ -68,69 +68,50 @@ const ProductOptionsCreate = ({ control, register, setVariantItem, setValue, wat
     return (
         <Fragment>
             <Flex mb={3} flexDirection={"column"}>
-                <Box
-                    as="span"
-                    fontWeight="semibold"
-                    mb={1}
-                    sx={{ display: "inline-block" }}
-                >
-                    Options
-                </Box>
+                <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Options</Box>
                 {fields.map((field, index) => {
                     return (
-                        <Flex
-                            key={index}
-                            alignItems="center"
-                            gap={2}
-                            justifyContent="flex-start"
-                            mb={2}
-                        >
-                            <Box>
-                                <Controller
-                                    name={`option[${index}].name`}
-                                    {...register(`option[${index}].name`)}
-                                    control={control}
-                                    render={({ field: { value, ...other } }) => {
-                                        return (
-                                            <Box>
-                                                <Select style={{ width: 120 }} value={value} {...other}>
-                                                    <Select.Option value="Size">Size</Select.Option>
-                                                    <Select.Option value="Color">Color</Select.Option>
-                                                    {/* <Select.Option value="Material">Material</Select.Option>
-                          <Select.Option value="Style">Style</Select.Option> */}
-                                                </Select>
-                                            </Box>
-                                        );
-                                    }}
-                                />
-                            </Box>
-                            <Box>
-                                <Controller
-                                    name={`option[${index}].value`}
-                                    {...register(`option[${index}].value`)}
-                                    control={control}
-                                    render={({ field: { value, ...other } }) => {
-                                        return (
-                                            <Box>
-                                                <Input {...other} value={value || ""} />
-                                            </Box>
-                                        );
-                                    }}
-                                />
-                            </Box>
-                            <Box>
-                                <MinusCircleOutlined onClick={() => remove(index)} />
-                            </Box>
-                        </Flex>
+                        <Box mb={2}>
+                            <Flex key={index} alignItems="center" gap={2} justifyContent="flex-start">
+                                <Box>
+                                    <Controller
+                                        name={`option[${index}].name`}
+                                        control={control}
+                                        render={({ field: { value, ...other } }) => {
+                                            return (
+                                                <Box>
+                                                    <Select style={{ width: 120 }} value={value} {...other}>
+                                                        <Select.Option value="Size">Size</Select.Option>
+                                                        <Select.Option value="Color">Color</Select.Option>
+                                                    </Select>
+                                                </Box>
+                                            );
+                                        }}
+                                    />
+                                </Box>
+                                <Box>
+                                    <Controller
+                                        name={`option[${index}].value`}
+                                        control={control}
+                                        rules={{ required: true }}
+                                        render={({ field: { value, ...other } }) => {
+                                            return (
+                                                <Fragment>
+                                                    <Input {...other} value={value || ""} />
+                                                </Fragment>
+                                            );
+                                        }}
+                                    />
+                                </Box>
+                                <Box>
+                                    <MinusCircleOutlined onClick={() => remove(index)} />
+                                </Box>
+                            </Flex>
+                            {'option' in errors && errors?.option[index] ? <Box as="span" textColor="red.500">{errors.option[index]?.value?.type === 'required' ? "This field is required!" : errors.option[index].value.message}</Box> : null}
+                        </Box>
                     );
                 })}
-                <Button
-                    onClick={() => {
-                        append({ name: "", value: "" });
-                    }}
-                >
-                    Add Option
-                </Button>
+                <Button onClick={() => { append({ name: "", value: "" }) }}>Add Option</Button>
             </Flex>
         </Fragment>
     );

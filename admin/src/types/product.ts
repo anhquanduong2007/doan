@@ -7,7 +7,7 @@ export interface Product {
     description: string
     slug: string
     category_id: number
-    active: number
+    active: boolean
     created_date: number
     modified_date: number
     featured_asset_id: number

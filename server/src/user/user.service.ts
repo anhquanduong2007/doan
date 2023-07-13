@@ -105,7 +105,8 @@ export class UserService {
         }
 
     }
-    // ** Administrators
+
+    /* Administrators */
     public async administrators(input: PaginationDto, userId: number): Promise<IResponse<{ administrators: Omit<users, "hashed_rt" | "password">[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
             const { skip, take, search, status } = input;
@@ -155,7 +156,7 @@ export class UserService {
                             ]
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                     },
                 }),
@@ -206,7 +207,7 @@ export class UserService {
                             ]
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                     },
                     select: {
@@ -220,8 +221,11 @@ export class UserService {
                         active: true,
                         created_date: true,
                         modified_date: true,
-                        created_by: true,
-                        modified_by: true,
+                        users_role: {
+                            include: {
+                                role: true
+                            }
+                        }
                     }
                 }),
             ])
@@ -261,8 +265,6 @@ export class UserService {
                     active: true,
                     created_date: true,
                     modified_date: true,
-                    created_by: true,
-                    modified_by: true,
                     users_role: {
                         select: {
                             role_id: true
@@ -347,8 +349,6 @@ export class UserService {
                             active: true,
                             created_date: true,
                             modified_date: true,
-                            created_by: true,
-                            modified_by: true,
                             users_role: {
                                 select: {
                                     role_id: true
@@ -372,7 +372,7 @@ export class UserService {
         }
     }
 
-    // ** Customer
+    /* Customer */
     public async customers(input: PaginationDto): Promise<IResponse<{ customers: Omit<users, "hashed_rt" | "password">[], totalPage: number, skip: number, take: number, total: number }>> {
         try {
             const { skip, take, search, status } = input;
@@ -407,7 +407,7 @@ export class UserService {
                             ]
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                         users_role: {
                             some: {
@@ -445,7 +445,7 @@ export class UserService {
                             ]
                         },
                         ...status && status !== 'all' && {
-                            active: status === 'active' ? 1 : 0
+                            active: status === 'active' ? true : false
                         },
                         users_role: {
                             some: {
@@ -464,8 +464,6 @@ export class UserService {
                         active: true,
                         created_date: true,
                         modified_date: true,
-                        created_by: true,
-                        modified_by: true
                     }
                 }),
             ])
@@ -505,8 +503,6 @@ export class UserService {
                     active: true,
                     created_date: true,
                     modified_date: true,
-                    created_by: true,
-                    modified_by: true,
                     address: {
                         select: {
                             city: true,
@@ -600,8 +596,6 @@ export class UserService {
                             active: true,
                             created_date: true,
                             modified_date: true,
-                            created_by: true,
-                            modified_by: true,
                             address: {
                                 select: {
                                     city: true,

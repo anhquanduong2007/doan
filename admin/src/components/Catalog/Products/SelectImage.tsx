@@ -40,7 +40,6 @@ interface DataType {
     url: string
 }
 
-
 const columns = (
     setFeaturedAsset: (asset: Asset) => void,
     setIsModalAssetOpen: (open: boolean) => void,

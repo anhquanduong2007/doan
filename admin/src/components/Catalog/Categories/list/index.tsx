@@ -19,7 +19,7 @@ interface DataType {
     category_name: string;
     category_code: string
     description: string
-    active: number
+    active: boolean
 }
 
 const columns = (
@@ -33,12 +33,15 @@ const columns = (
             dataIndex: 'category_name',
             ellipsis: true,
             key: 'category_name',
+            width: '15%',
+            fixed: 'left'
         },
         {
             title: 'Category code',
             dataIndex: 'category_code',
             ellipsis: true,
             key: 'category_code',
+            width: '15%',
         },
         {
             title: 'Description',
@@ -50,15 +53,18 @@ const columns = (
             dataIndex: 'active',
             ellipsis: true,
             key: 'active',
+            width: '100px',
             render: (active: number) => {
                 return (
-                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Active' : 'Disabled'}</Tag>
                 )
             }
         },
         {
             title: 'Action',
             key: 'action',
+            width: '150px',
+            fixed: 'right',
             render: (_, record) => {
                 return (
                     <Space size="middle">
@@ -209,6 +215,7 @@ const Categories = () => {
                                     bordered
                                     columns={columns(setIsModalOpen, categoryDelete, setCategoryDelete, navigate)}
                                     dataSource={dataRender()}
+                                    scroll={{ x: '100vw' }}
                                     loading={category.list.loading}
                                     pagination={{
                                         total: category.list.result?.total,

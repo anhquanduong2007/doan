@@ -47,11 +47,11 @@ export class AuthService {
             const user = await this.prisma.users.create({
                 data: {
                     email,
-                    ...(phone && { phone }),
-                    ...date_of_birth && { date_of_birth },
-                    ...first_name && { first_name },
+                    phone,
+                    date_of_birth,
+                    first_name,
                     gender,
-                    ...last_name && { last_name },
+                    last_name,
                     password: hashedPassword,
                     active,
                 },
@@ -110,7 +110,12 @@ export class AuthService {
             const user = await this.prisma.users.findUnique({
                 where: { email: email },
                 include: {
-                    address: true
+                    address: true,
+                    users_role: {
+                        include: {
+                            role: true
+                        }
+                    }
                 }
             })
             if (!user) {

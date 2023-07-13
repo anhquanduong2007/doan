@@ -148,7 +148,6 @@ export class RateService {
     public async update(
         input: RateUpdateDto,
         id: number,
-        userId: number,
     ): Promise<IResponse<rate>> {
         try {
             const { content, stars, title } = input;
@@ -165,7 +164,6 @@ export class RateService {
                             ...(title && { title }),
                             ...(stars && { stars }),
                             ...(content && { content }),
-                            modified_by: userId,
                         },
                         where: { id },
                     }),

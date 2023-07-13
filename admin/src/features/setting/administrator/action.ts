@@ -1,4 +1,3 @@
-import { AppDispatch } from "src/app/store";
 import {
     getListAdministratorStart,
     getListAdministratorSuccess,
@@ -17,64 +16,10 @@ import {
     updateAdministratorFailed
 } from "./administratorSlice";
 import { Inotification } from 'src/common';
-import { AxiosInstance } from "axios";
-import { Pagination } from "src/types";
 import { IAxiosResponse } from "src/types/axiosResponse";
 import { User } from "src/types/user";
-import { NavigateFunction } from "react-router-dom";
-import { MessageApi } from "antd/lib/message";
-import { UseFormSetError } from "react-hook-form";
 import { FormValuesAdministrator } from "src/components/Settings/Administrators/create-update";
-
-
-type CreateAdministratorParams = Omit<GetListAdministratorParams, "pagination"> & {
-    administrator: AdministratorCreate,
-    setError: UseFormSetError<FormValuesAdministrator>,
-    message: MessageApi
-}
-
-interface AdministratorCreate {
-    password: string
-    first_name: string
-    last_name: string
-    gender: number
-    date_of_birth?: string
-    email: string
-    phone?: string
-    active: number
-}
-
-interface AdministratorCreateUpdate extends Omit<AdministratorCreate, "password"> {
-    role_ids: number[]
-}
-
-interface UpdateAdministratorParams {
-    id: number
-    administrator: AdministratorCreateUpdate,
-    setError: UseFormSetError<Omit<FormValuesAdministrator, "password">>,
-    message: MessageApi
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    navigate: NavigateFunction
-}
-
-interface GetListAdministratorParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction
-}
-
-export type DeleteAdministratorParams = Omit<GetListAdministratorParams, "pagination">
-    & {
-        id: number,
-        setIsModalOpen: (open: boolean) => void,
-        setRefresh: (refresh: boolean) => void,
-        refresh: boolean,
-        message: MessageApi
-    }
-
-export type GetAdministratorParams = Omit<GetListAdministratorParams, "pagination"> & { id: number }
+import { CreateAdministratorParams, DeleteAdministratorParams, GetAdministratorParams, GetListAdministratorParams, UpdateAdministratorParams } from "./type";
 
 export const getListAdministrator = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListAdministratorParams) => {
     try {

@@ -12,7 +12,7 @@ export class AssetService {
         private readonly prisma: PrismaService
     ) { }
 
-    public async upload(files: Array<Express.Multer.File>, userId: number): Promise<IResponse<asset[]>> {
+    public async upload(files: Array<Express.Multer.File>): Promise<IResponse<asset[]>> {
         try {
             const images = await Promise.all(files.map(async (file) => {
                 return await this.cloudinaryService.uploadImage(file);
@@ -27,8 +27,6 @@ export class AssetService {
                         format: image.format,
                         cloudinary_asset_id: image.asset_id,
                         cloudinary_public_id: image.public_id,
-                        created_by: userId,
-                        modified_by: userId
                     }
                 }))
             )

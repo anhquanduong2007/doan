@@ -12,12 +12,12 @@ model address {
   id                       Int      @id @default(autoincrement())
   created_date             DateTime @default(now())
   modified_date            DateTime @updatedAt
-  street_line_1            String   @db.VarChar(255)
-  street_line_2            String?  @db.VarChar(255)
-  city                     String   @db.VarChar(255)
-  province                 String   @db.VarChar(255)
-  postal_code              String   @db.VarChar(255)
-  country                  String   @db.VarChar(255)
+  street_line_1            String   @db.VarChar(100)
+  street_line_2            String?  @db.VarChar(100)
+  city                     String   @db.VarChar(100)
+  province                 String   @db.VarChar(100)
+  postal_code              String   @db.VarChar(100)
+  country                  String   @db.VarChar(100)
   default_shipping_address Boolean  @default(false)
   users_id                 Int?
   users                    users?   @relation(fields: [users_id], references: [id])
@@ -28,49 +28,44 @@ model address {
 
 model category {
   id            Int       @id @default(autoincrement())
-  category_name String    @db.VarChar(255)
-  category_code String    @unique @db.VarChar(255)
-  description   String?
-  active        Int       @default(1)
+  category_name String    @db.VarChar(100)
+  category_code String    @unique @db.VarChar(50)
+  description   String?   @db.LongText
+  active        Boolean   @default(false)
   created_date  DateTime? @default(now())
   modified_date DateTime? @updatedAt
-  created_by    Int?
-  modified_by   Int?
   product       product[]
 }
 
 model asset {
   id                   Int               @id @default(autoincrement())
   name                 String
-  url                  String
+  url                  String            @db.LongText
   width                Int
   height               Int
   format               String
   cloudinary_asset_id  String
   cloudinary_public_id String
-  created_date         DateTime?         @db.Timestamp(0)
-  modified_date        DateTime?         @db.Timestamp(0)
-  created_by           Int?
-  modified_by          Int?
+  created_date         DateTime?
+  modified_date        DateTime?
   product              product[]
   product_variant      product_variant[]
 }
 
 model product {
   id                Int               @id @default(autoincrement())
-  name              String            @db.VarChar(255)
+  name              String            @db.VarChar(150)
   description       String?           @db.LongText
   category_id       Int?
-  active            Int               @default(1)
+  active            Boolean           @default(false)
   created_date      DateTime?         @default(now())
   modified_date     DateTime?         @updatedAt
-  created_by        Int?
-  modified_by       Int?
   featured_asset_id Int?
   category          category?         @relation(fields: [category_id], references: [id], onUpdate: Restrict, map: "fk_product_cate")
   featured_asset    asset?            @relation(fields: [featured_asset_id], references: [id])
   product_option    product_option[]
   product_variants  product_variant[]
+  rate              rate[]
 
   @@index([category_id], map: "fk_product_cate")
   @@index([featured_asset_id], map: "product_featured_asset_id_fkey")
@@ -79,20 +74,18 @@ model product {
 model product_variant {
   id                Int                      @id @default(autoincrement())
   stock             Int                      @default(0)
-  sku               String                   @unique @db.VarChar(255)
-  price             Int                      @default(0)
-  origin_price      Int                      @default(0)
+  sku               String                   @unique @db.VarChar(100)
+  price             Float                    @default(0)
+  origin_price      Float                    @default(0)
   created_date      DateTime?                @default(now())
   modified_date     DateTime?                @updatedAt
-  created_by        Int?
-  modified_by       Int?
-  name              String
-  product_id        Int?
+  name              String                   @unique @db.VarChar(150)
   featured_asset_id Int?
   carts             cart[]
   order             order[]
   featured_asset    asset?                   @relation(fields: [featured_asset_id], references: [id])
-  product           product?                 @relation(fields: [product_id], references: [id])
+  product           product                  @relation(fields: [product_id], references: [id])
+  product_id        Int
   product_options   product_variant_option[]
 
   @@index([featured_asset_id], map: "product_variant_featured_asset_id_fkey")
@@ -114,15 +107,14 @@ model rate {
   id            Int      @id @default(autoincrement())
   product_id    Int
   user_id       Int
-  title         String   @db.VarChar(255)
+  title         String   @db.VarChar(150)
   stars         Float    @default(0)
   cmt_datetime  DateTime @default(now())
-  content       String
+  content       String   @db.LongText
   created_date  DateTime @default(now())
   modified_date DateTime @updatedAt
-  created_by    Int?
-  modified_by   Int?
   users         users    @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "fk_users_cmt")
+  product       product  @relation(fields: [product_id], references: [id])
 
   @@unique([product_id, user_id, cmt_datetime], map: "unique_comments")
   @@index([user_id], map: "fk_users_cmt")
@@ -130,13 +122,11 @@ model rate {
 
 model role {
   id            Int          @id @default(autoincrement())
-  role_name     String       @db.VarChar(255)
-  role_code     String       @unique @db.VarChar(255)
-  description   String?
+  role_name     String       @db.VarChar(150)
+  role_code     String       @unique @db.VarChar(100)
+  description   String?      @db.LongText
   created_date  DateTime     @default(now())
   modified_date DateTime     @updatedAt
-  created_by    Int?
-  modified_by   Int?
   permissions   Json?
   users_role    users_role[]
 }
@@ -144,11 +134,9 @@ model role {
 model product_option {
   id               Int                      @id @default(autoincrement())
   name             OptionName
-  value            String
+  value            String                   @db.VarChar(100)
   created_date     DateTime                 @default(now())
   modified_date    DateTime                 @updatedAt
-  created_by       Int?
-  modified_by      Int?
   product_id       Int
   product          product                  @relation(fields: [product_id], references: [id])
   product_variants product_variant_option[]
@@ -159,18 +147,16 @@ model product_option {
 model users {
   id            Int          @id @default(autoincrement())
   hashed_rt     String?
-  password      String       @db.VarChar(255)
-  first_name    String?      @db.VarChar(255)
-  last_name     String?      @db.VarChar(255)
-  gender        Int          @default(0)
+  password      String       @db.VarChar(100)
+  first_name    String?      @db.VarChar(100)
+  last_name     String?      @db.VarChar(100)
+  gender        Boolean      @default(true)
   date_of_birth DateTime?
-  email         String       @unique @db.VarChar(125)
+  email         String       @unique @db.VarChar(100)
   phone         String?      @db.VarChar(10)
-  active        Int          @default(1)
+  active        Boolean      @default(false)
   created_date  DateTime     @default(now())
   modified_date DateTime     @updatedAt
-  created_by    Int?
-  modified_by   Int?
   address       address[]
   carts         cart[]
   orders        order[]
@@ -196,8 +182,8 @@ model promotion {
   starts_at     DateTime
   ends_at       DateTime
   coupon_code   String   @unique @db.VarChar(100)
-  name          String   @db.VarChar(255)
-  active        Int      @default(1)
+  name          String   @db.VarChar(150)
+  active        Boolean  @default(false)
   limit         Int      @default(0)
   discount      Int      @default(0)
   orders        order[]
@@ -205,7 +191,7 @@ model promotion {
 
 model cart {
   id                 Int             @id @default(autoincrement())
-  quantity           Int             @default(1)
+  quantity           Int
   users_id           Int
   created_date       DateTime        @default(now())
   product_variant_id Int
@@ -224,7 +210,6 @@ model order {
   payment            Boolean         @default(false)
   status             OrderStatus
   users_id           Int
-  address_id         Int
   promotion_id       Int?
   payment_method     PaymentMethod
   quantity           Int
@@ -232,13 +217,13 @@ model order {
   product_variant_id Int
   payer_id           String?
   payment_id         String?         @unique
-  billing_address    address         @relation(fields: [address_id], references: [id])
   product_variant    product_variant @relation(fields: [product_variant_id], references: [id])
   promotion          promotion?      @relation(fields: [promotion_id], references: [id])
   users              users           @relation(fields: [users_id], references: [id])
   order_history      order_history[]
+  billing_address    address         @relation(fields: [address_id], references: [id])
+  address_id         Int
 
-  @@index([address_id], map: "order_address_id_fkey")
   @@index([product_variant_id], map: "order_product_variant_id_fkey")
   @@index([promotion_id], map: "order_promotion_id_fkey")
   @@index([users_id], map: "order_users_id_fkey")
@@ -248,7 +233,7 @@ model order_history {
   id           Int      @id @default(autoincrement())
   created_date DateTime @default(now())
   order_id     Int
-  content      String
+  content      String?  @db.LongText
   order        order    @relation(fields: [order_id], references: [id])
 
   @@index([order_id], map: "order_history_order_id_fkey")

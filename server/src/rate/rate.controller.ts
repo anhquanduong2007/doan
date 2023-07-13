@@ -45,7 +45,7 @@ export class RateController {
     @Permission(Permissions.UpdateRate)
     async editRate(@Req() req: Request, @Body() dto: RateUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const userId = req.user['userId']
-        const response = await this.rateService.update(dto, id, userId)
+        const response = await this.rateService.update(dto, id)
         res.json({ response })
     }
 }

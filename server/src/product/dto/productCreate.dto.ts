@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max, IsNumber, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsInt, Min, Max, IsNumber, IsArray, IsBoolean } from 'class-validator';
 
 export class ProductCreateDto {
     @IsString()
@@ -17,9 +17,7 @@ export class ProductCreateDto {
     @IsOptional()
     featured_asset_id: number
     
-    @IsInt()
-    @Min(0)
-    @Max(1)
+    @IsBoolean()
     @IsOptional()
-    active: number;
+    active: boolean;
 }

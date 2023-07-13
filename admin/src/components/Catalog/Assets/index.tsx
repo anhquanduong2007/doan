@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { deleteAsset, getListAsset } from 'src/features/catalog/asset/actions';
 import { createAxiosJwt } from "src/helper/axiosInstance";
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Image } from '@chakra-ui/react';
 import type { ColumnsType } from 'antd/es/table';
 import {
     DeleteOutlined
@@ -47,15 +47,21 @@ const columns = (
     setAssetDelete: (id: number) => void,
 ): ColumnsType<DataType> => [
         {
-            title: 'name',
+            title: 'Name',
             dataIndex: 'name',
             ellipsis: true,
             key: 'name',
+            width: '30%',
             render: (name, record) => {
                 return (
                     <Flex alignItems={"center"}>
-                        <Avatar src={<img src={record.url} style={{ width: 40 }} />} />
-                        <Box ml={2}>{name}</Box>
+                        <Image
+                            borderRadius='full'
+                            boxSize='80px'
+                            src={record.url}
+                            objectFit='contain'
+                        />
+                        <Box ml={2} fontWeight='semibold'>{name}</Box>
                     </Flex>
                 )
             }
@@ -69,6 +75,7 @@ const columns = (
         {
             title: 'Action',
             key: 'action',
+            width: 150,
             render: (_, record) => {
                 return (
                     <Space size="middle">
@@ -163,7 +170,7 @@ const Asset = () => {
                         <Col span={24}>
                             <Flex>
                                 <Box mr={3} flex={1}>
-                                    <Input type='text' placeholder='Search by asset name' onChange={(e) => { setSearch(e.target.value); }} />
+                                    <Input type='text' placeholder='Search by asset name' onChange={(e) => { setSearch(e.target.value) }} />
                                 </Box>
                                 <Upload {...props(refresh, setRefresh, setLoading)}>
                                     <Button type="primary" loading={loading}>Upload Assets</Button>

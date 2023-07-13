@@ -1,4 +1,3 @@
-import { AppDispatch } from "src/app/store";
 import {
     getListAssetStart,
     getListAssetSuccess,
@@ -7,27 +6,8 @@ import {
     deleteAssetSuccess,
 } from "./assetSlice";
 import { Inotification } from 'src/common';
-import type { AxiosInstance } from "axios";
-import { Pagination } from "src/types";
-import { NavigateFunction } from "react-router-dom";
 import { IAxiosResponse } from "src/types/axiosResponse";
-import { MessageApi } from "antd/lib/message";
-
-interface GetListAssetParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction
-}
-
-export type DeleteAssetParams = Omit<GetListAssetParams, "pagination">
-    & {
-        id: number,
-        setIsModalOpen: (open: boolean) => void,
-        setRefresh: (refresh: boolean) => void,
-        refresh: boolean,
-        message: MessageApi
-    }
+import { DeleteAssetParams, GetListAssetParams } from "./type";
 
 export const getListAsset = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListAssetParams) => {
     try {

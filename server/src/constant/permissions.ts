@@ -17,9 +17,9 @@ export enum Permissions {
   DeleteAdministrator = 'DeleteAdministrator',
   UpdateAdministrator = 'UpdateAdministrator',
   // Role
-  ReadRole = 'UpdateRole',
-  CreateRole = 'UpdateRole',
-  DeleteRole = 'UpdateRole',
+  ReadRole = 'ReadRole',
+  CreateRole = 'CreateRole',
+  DeleteRole = 'DeleteRole',
   UpdateRole = 'UpdateRole',
   // Campaign
   ReadCampaign = 'ReadCampaign',
@@ -34,7 +34,6 @@ export enum Permissions {
   // Asset
   ReadAsset = 'ReadAsset',
   DeleteAsset = 'DeleteAsset',
-  UpdateAsset = 'UpdateAsset',
   CreateAsset = 'CreateAsset',
   // Rate
   ReadRate = 'ReadRate',

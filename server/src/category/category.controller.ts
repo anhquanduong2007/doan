@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Res, Query } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { CategoryCreateDto, CategoryUpdateDto } from './dto';
 import { PaginationDto } from 'src/common/dto';
 
@@ -14,9 +14,8 @@ export class CategoryController {
 
     @Post("create")
     @Permission(Permissions.CreateCategory)
-    async createCategory(@Req() req: Request, @Body() dto: CategoryCreateDto, @Res() res: Response) {
-        const userId = req.user['userId']
-        const response = await this.categoryService.create(dto, userId)
+    async createCategory(@Body() dto: CategoryCreateDto, @Res() res: Response) {
+        const response = await this.categoryService.create(dto)
         res.json({ response })
     }
 
@@ -36,13 +35,13 @@ export class CategoryController {
 
     @Put("update/:id")
     @Permission(Permissions.UpdateCategory)
-    async editCategory(@Req() req: Request, @Body() dto: CategoryUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
-        const userId = req.user['userId']
-        const response = await this.categoryService.update(dto, id, userId)
+    async editCategory(@Body() dto: CategoryUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.categoryService.update(dto, id)
         res.json({ response })
     }
 
     @Get()
+    @Permission(Permissions.ReadCategory, Permissions.Anonymous)
     async getCategories(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.categoryService.categories(pagination);
         return res.json({ response });

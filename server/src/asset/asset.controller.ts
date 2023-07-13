@@ -15,9 +15,8 @@ export class AssetController {
     @Post('/upload')
     @Permission(Permissions.CreateAsset)
     @UseInterceptors(AnyFilesInterceptor())
-    async upload(@Req() req: Request, @UploadedFiles() files: Array<Express.Multer.File>, @Res() res: Response) {
-        const userId = req.user['userId']
-        const response = await this.assetService.upload(files, userId);
+    async upload(@UploadedFiles() files: Array<Express.Multer.File>, @Res() res: Response) {
+        const response = await this.assetService.upload(files);
         return res.json({ response });
     }
 

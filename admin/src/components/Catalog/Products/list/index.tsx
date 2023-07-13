@@ -1,20 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import {
-    Avatar,
-    Breadcrumb,
-    Button,
-    Card,
-    Col,
-    Divider,
-    Input,
-    Modal,
-    Row,
-    Select,
-    Space,
-    Table,
-    Tag,
-    message
-} from "antd";
+import { Avatar, Breadcrumb, Button, Card, Col, Divider, Input, Modal, Row, Select, Space, Table, Tag, message } from "antd";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import type { ColumnsType } from "antd/es/table";
 import { Flex } from "@chakra-ui/react";
@@ -34,7 +19,7 @@ interface DataType {
     id: number
     name: string;
     url: string
-    active: number
+    active: boolean
 }
 
 const columns = (
@@ -60,15 +45,17 @@ const columns = (
             title: 'Active',
             dataIndex: 'active',
             key: 'active',
+            width: '100px',
             render: (active: number) => {
                 return (
-                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Active' : 'Disabled'}</Tag>
                 )
             }
         },
         {
             title: 'Action',
             key: 'action',
+            width: '150px',
             render: (_, record) => {
                 return (
                     <Space size="middle">
@@ -96,7 +83,6 @@ const Products: React.FC = () => {
     const [search, setSearch] = useState<string>('')
     const [value] = useDebounce(search, 1000);
     const [status, setStatus] = useState<string>('all')
-
 
     // ** Third party
     const navigate = useNavigate()

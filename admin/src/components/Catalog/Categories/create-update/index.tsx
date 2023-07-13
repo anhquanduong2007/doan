@@ -23,7 +23,7 @@ interface ItemProps {
 
 const CategoryCreateUpdate = () => {
     // ** State
-    const [active, setActive] = useState<number>(1)
+    const [active, setActive] = useState<boolean>(true)
     const [parentId, setParentId] = useState<number | null>(null)
 
     // ** Third party
@@ -139,7 +139,7 @@ const CategoryCreateUpdate = () => {
                             <Col span={24}>
                                 <Flex justifyContent="space-between" alignItems="center">
                                     <Flex justifyContent="center" alignItems="center">
-                                        <Switch checked={active === 1} size='small' onChange={() => setActive(active === 1 ? 0 : 1)} />
+                                        <Switch checked={active} size='small' onChange={() => setActive(!active)} />
                                         <Box as="span" ml={2} fontWeight="semibold">Active</Box>
                                     </Flex>
                                     {
