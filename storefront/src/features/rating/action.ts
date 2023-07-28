@@ -58,7 +58,8 @@ export const getListRating = async ({ pagination, dispatch, axiosClient, toast, 
             status: 'error',
             title: 'Something went wrong!',
             isClosable: true,
-            position: "top"
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -99,7 +100,8 @@ export const createRating = async ({ axiosClientJwt, dispatch, navigate, rating,
                 status: 'warning',
                 title: 'You do not have permission to perform this action!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
             setTimeout(function () {
                 navigate('/')
@@ -109,7 +111,8 @@ export const createRating = async ({ axiosClientJwt, dispatch, navigate, rating,
                 status: 'error',
                 title: 'Something went wrong!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
         }
     }

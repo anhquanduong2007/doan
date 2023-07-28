@@ -58,13 +58,9 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
         if (products && products?.products && products.products.length) {
             return (
                 <Row gutter={[16, 16]}>
-                    {
-                        products?.products?.map((p, index) => {
-                            const variants = p.product_variants.map((variant) => variant.name)
-                            const price = p.product_variants.map((variant) => variant.price)
-                            return <CardProduct key={index} span={6} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} variants={variants} category={p?.category?.category_name} />
-                        })
-                    }
+                    {products?.products?.map((p, index) => {
+                        return <CardProduct key={index} span={6} product={p} />
+                    })}
                 </Row>
             )
         }

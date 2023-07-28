@@ -7,43 +7,9 @@ import {
     createOrderSuccess,
     createOrderFailed
 } from './checkoutSlice'
-import { CreateToastFnReturn } from "@chakra-ui/react";
-import { Axios, AxiosInstance } from "axios";
-import { AppDispatch } from "src/app/store";
-import { PaymentMethod } from 'src/pages/CheckoutPage';
+import { AxiosInstance } from "axios";
 import { IAxiosResponse } from 'src/shared/types';
-
-interface CheckPromotionParams {
-    dispatch: AppDispatch,
-    setError: Function,
-    axiosClient: Axios
-    toast: CreateToastFnReturn,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-    coupon_code: string
-}
-
-interface ResetPromotionActionParams {
-    dispatch: AppDispatch,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-}
-
-interface CreateOrderParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    toast: CreateToastFnReturn,
-    navigate: Function
-    order: OrderCreate
-}
-
-interface OrderCreate {
-    address_id: number,
-    payment_method: PaymentMethod,
-    product_variant_id: number,
-    quantity: number,
-    promotion_id?: number
-}
+import { CheckPromotionParams, CreateOrderParams, OrderCreate, ResetPromotionActionParams } from './type';
 
 export const checkPromotion = async ({ axiosClient, dispatch, refresh, setError, setRefresh, toast, coupon_code }: CheckPromotionParams) => {
     try {
@@ -76,6 +42,7 @@ export const checkPromotion = async ({ axiosClient, dispatch, refresh, setError,
             title: "Something went wrong!",
             isClosable: true,
             position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -131,6 +98,7 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
                     status: 'success',
                     title: "Successfully!",
                     position: "top-right",
+                    variant: 'left-accent',
                     isClosable: true,
                 })
                 navigate('/account')
@@ -146,6 +114,7 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
                 title: "You do not have permission to perform this action!",
                 isClosable: true,
                 position: "top-right",
+                variant: 'left-accent',
             })
         } else {
             toast({
@@ -153,6 +122,7 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
                 title: "Something went wrong!",
                 isClosable: true,
                 position: "top-right",
+                variant: 'left-accent',
             })
         }
     }

@@ -1,15 +1,8 @@
 import * as React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, ShoppingBag } from "react-feather"
+import { ShoppingBag } from "react-feather"
 import Logo from "../../assets/logo/logo-01.png";
 import {
-    Card,
-    Drawer,
-    DrawerBody,
-    DrawerCloseButton,
-    DrawerContent,
-    DrawerHeader,
-    DrawerOverlay,
     useDisclosure,
     useToast,
     Menu,
@@ -19,10 +12,8 @@ import {
 } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "src/app/hooks";
 import { createAxiosJwt } from "src/axios/axiosInstance";
-import { deleteFromCart, getListProductOnCart } from "src/features/cart/action";
-import { Button, Row, Col } from 'antd'
-import formatMoney from "src/shared/utils/formatMoney";
 import { logOut } from "src/features/auth/action";
+import Cart from "./Cart";
 
 const Header = () => {
     // ** State
@@ -30,11 +21,10 @@ const Header = () => {
     const [refresh, setRefresh] = React.useState<boolean>(false)
 
     // ** Variables
-    const cart = useAppSelector((state) => state.cart);
     const auth = useAppSelector((state) => state.auth)
-    const checkout = useAppSelector((state) => state.checkout)
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
+    const cart = useAppSelector((state) => state.cart)
 
     // ** Third party
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -50,16 +40,6 @@ const Header = () => {
         };
     }, []);
 
-    React.useEffect(() => {
-        if (localStorage.getItem("accessToken")) {
-            getListProductOnCart({
-                axiosClientJwt,
-                dispatch,
-                toast
-            })
-        }
-    }, [localStorage.getItem("accessToken"), refresh, cart.addToCart.loading, checkout.createOrder.result])
-
     // ** Function handle
     const controlNavbar = () => {
         if (window.scrollY > 80) {
@@ -68,58 +48,6 @@ const Header = () => {
             setShow("");
         }
     };
-
-    const dataCartToRender = () => {
-        if (!cart.listProductOnCart.loading && cart.listProductOnCart.result && cart.listProductOnCart.result.length) {
-            return cart.listProductOnCart.result.map((p, index) => {
-                return (
-                    <Card key={index} variant="outline" padding="10px">
-                        <Row gutter={[16, 0]}>
-                            <Col span={8}>
-                                <img src={p.product_variant?.featured_asset ? p.product_variant.featured_asset?.url : "https://inantemnhan.com.vn/wp-content/uploads/2017/10/no-image.png"} className="w-full object-cover" />
-                            </Col>
-                            <Col span={16}>
-                                <p className="font-bold">{p.product_variant.name}</p>
-                                <p className="text-xs text-[#808080]">{p.product_variant.sku}</p>
-                                <p>Quantity: <span className="font-semibold">{p.quantity}</span></p>
-                                <p>Price: {formatMoney(p.product_variant.price)}</p>
-                                <p className="font-bold">Total: {formatMoney(p.product_variant.price * p.quantity)}</p>
-                            </Col>
-                        </Row>
-                        <div className="flex justify-end">
-                            <Button
-                                type="primary"
-                                onClick={() => {
-                                    navigate(`/checkout/${p.id}`)
-                                    onClose()
-                                }}
-                            >
-                                Checkout
-                            </Button>
-                            <Button
-                                type="primary"
-                                className="ml-2"
-                                danger
-                                loading={cart.deleteProductFromCart.loading}
-                                onClick={() => {
-                                    deleteFromCart({
-                                        axiosClientJwt,
-                                        dispatch,
-                                        id: p.product_variant.id,
-                                        refresh,
-                                        setRefresh,
-                                        toast
-                                    })
-                                }}>
-                                Delete
-                            </Button>
-                        </div>
-                    </Card>
-                )
-            })
-        }
-        return null
-    }
 
     return (
         <React.Fragment>
@@ -173,16 +101,7 @@ const Header = () => {
                     </div>
                 </div>
             </header>
-            <Drawer onClose={onClose} isOpen={isOpen} size='sm'>
-                <DrawerOverlay />
-                <DrawerContent>
-                    <DrawerCloseButton />
-                    <DrawerHeader className="font-bold uppercase" borderBottomWidth='1px'>your cart</DrawerHeader>
-                    <DrawerBody marginTop={'30px'} display='flex' flexDirection='column' gap='20px' height='500px' overflowY='auto'>
-                        {dataCartToRender()}
-                    </DrawerBody>
-                </DrawerContent>
-            </Drawer>
+            <Cart isOpen={isOpen} onClose={onClose} refresh={refresh} setRefresh={setRefresh} />
         </React.Fragment>
     );
 };

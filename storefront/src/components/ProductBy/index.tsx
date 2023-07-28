@@ -14,33 +14,29 @@ const ProductBy = ({ title, url }: ProductByProps) => {
     const axiosClient = createAxiosClient();
 
     // ** State
-    const [product, setProduct] = React.useState<Product[]>([])
+    const [products, setProducts] = React.useState<Product[]>([])
 
     // ** Effect
     React.useEffect(() => {
         axiosClient.get(url).then((res) => {
             const result = { ...res } as unknown as IAxiosResponse<Product[]>
-            setProduct(result.response.data)
+            setProducts(result.response.data)
         })
     }, [])
 
     // ** Function handle
     const dataToRender = () => {
-        if (product && product.length) {
+        if (products && products.length) {
             return (
-                <Row style={{marginBottom: "2rem"}}>
+                <Row style={{ marginBottom: "2rem" }}>
                     <Col span={24}>
                         <p className='font-bold text-3xl uppercase text-center'>{title}</p>
                     </Col>
                     <Col span={24}>
                         <Row gutter={[16, 16]}>
-                            {
-                                product.map((p, index) => {
-                                    const variants = p.product_variants.map((variant) => variant.name)
-                                    const price = p.product_variants.map((variant) => variant.price)
-                                    return <CardProduct key={index} span={4} name={p.name} id={p.id} img={p?.featured_asset?.url} max={Math.max(...price)} min={Math.min(...price)} variants={variants} category={p?.category?.category_name} />
-                                })
-                            }
+                            {products.map((p, index) => {
+                                return <CardProduct key={index} span={4} product={p} />
+                            })}
                         </Row>
 
                     </Col>

@@ -45,14 +45,16 @@ export const getListPromotion = async ({ pagination, dispatch, axiosClientJwt, t
                 status: 'warning',
                 title: 'You do not have permission to perform this action!',
                 isClosable: true,
-                position: "top-right"
+                position: "top-right",
+                variant: 'left-accent',
             })
         } else {
             toast({
                 status: 'error',
                 title: 'Something went wrong!',
                 isClosable: true,
-                position: "top-right"
+                position: "top-right",
+                variant: 'left-accent',
             })
         }
     }

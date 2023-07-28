@@ -209,9 +209,13 @@ export class ProductService {
                         }
                     },
                     include: {
-                        product_variants: true,
                         featured_asset: true,
-                        category: true
+                        category: true,
+                        product_variants: {
+                            include: {
+                                featured_asset: true
+                            }
+                        },
                     }
                 }),
             ])
@@ -886,7 +890,11 @@ export class ProductService {
                     },
                     include: {
                         featured_asset: true,
-                        product_variants: true
+                        product_variants: {
+                            include: {
+                                featured_asset: true
+                            }
+                        },
                     }
                 }),
             ])

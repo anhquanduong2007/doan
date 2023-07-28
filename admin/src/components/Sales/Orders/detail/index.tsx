@@ -1,21 +1,18 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Breadcrumb, Button, Card, Col, Divider, Modal, Popover, Row, Tag, Timeline, Tooltip, message } from 'antd';
+import { Breadcrumb, Button, Card, Col, Divider, Popover, Row, Spin, Tag, message } from 'antd';
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { cancelOrder, completedOrder, confirmOrder, deleteOrder, getOrder, refundOrder, shippedOrder } from 'src/features/sale/order/action';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
-import { currency } from 'src/helper/currencyPrice';
-import {
-    UserOutlined
-} from '@ant-design/icons';
-import moment from 'moment';
 import { StatusOrder } from 'src/types'
+import OrderInfo from './OrderInfo';
+import UserOrderAddress from './UserOrderAddress';
+import OrderHistory from './OrderHistory';
 
 const OrderDetail = () => {
     // ** State
     const [refresh, setRefresh] = useState<boolean>(false)
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     // ** Third party
     const navigate = useNavigate()
@@ -38,16 +35,6 @@ const OrderDetail = () => {
             })
         }
     }, [id, refresh])
-
-
-    // ** Function handle
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
 
     return (
         <Fragment>
@@ -91,7 +78,7 @@ const OrderDetail = () => {
                                         }
                                     </Box>
                                     <Box>
-                                        {!order.single.loading && order.single.result ? order.single.result.payment ? <Tag>Paid</Tag> : <Tag>Unpaid</Tag> : 0}
+                                        {!order.single.loading && order.single.result ? order.single.result.payment ? <Tag>Paid</Tag> : <Tag>Unpaid</Tag> : null}
                                     </Box>
                                 </Flex>
                                 <Popover placement="leftTop" content={
@@ -236,107 +223,21 @@ const OrderDetail = () => {
                         </Col>
                         <Divider />
                         <Col span={24}>
-                            <Card>
-                                <Row>
-                                    <Col span={24}>
-                                        <Flex borderBottom={"1px solid #dbdbdb"} padding={"10px 0"} justifyContent={"center"} alignItems={"center"}>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Product name</Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>SKU</Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Quantity</Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Total</Flex>
-                                        </Flex>
-                                        <Flex borderBottom={"1px dashed #dbdbdb"} padding={"10px 0"} justifyContent={"center"} alignItems={"center"}>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}>
-                                                <img style={{ width: "32px", borderRadius: "100%" }} src={!order.single.loading && order.single.result ? order.single.result.product_variant.featured_asset?.url ? order.single.result.product_variant.featured_asset?.url : 'https://static.thenounproject.com/png/504708-200.png' : ''} />
-                                            </Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}>{!order.single.loading && order.single.result ? order.single.result.product_variant.name : null}</Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}>{!order.single.loading && order.single.result ? order.single.result.product_variant.sku : null}</Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}>{!order.single.loading && order.single.result ? order.single.result.quantity : null}</Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"semibold"}>{!order.single.loading && order.single.result ? currency(order.single.result.quantity * order.single.result.product_variant.price) : "0"}</Flex>
-                                        </Flex>
-                                        <Flex borderBottom={"1px dashed #dbdbdb"} padding={"10px 0"} justifyContent={"center"} alignItems={"center"}>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>
-                                                {!order.single.loading && order.single.result ? order.single.result?.promotion ? order.single.result.promotion.coupon_code : null : null}
-                                            </Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"semibold"}>{!order.single.loading && order.single.result ? order.single.result.promotion ? `-${order.single.result.promotion.discount}% (-${currency(order.single.result.quantity * order.single.result.product_variant.price * (1 - (100 - order.single.result.promotion.discount) / 100))})` : '0' : '0'}</Flex>
-                                        </Flex>
-                                        <Flex padding={"10px 0"} justifyContent={"center"} alignItems={"center"}>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                                            <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"semibold"}>{!order.single.loading && order.single.result ? currency(order.single.result.total_price) : 0}</Flex>
-                                        </Flex>
-                                    </Col>
-                                    <Divider />
-                                    <Col span={24}>
-                                        <Row gutter={[12, 12]}>
-                                            <Col span={12}>
-                                                <Row gutter={[0, 12]}>
-                                                    <Col span={24}>
-                                                        <Card title={
-                                                            !order.single.loading && order.single.result ? (
-                                                                <Flex alignItems={"center"}>
-                                                                    <UserOutlined />
-                                                                    <Link to={`customers/update/${order.single.result.users.id}`} style={{ marginLeft: "5px" }}>{order.single.result.users.first_name + order.single.result.users.last_name}</Link>
-                                                                </Flex>
-                                                            ) : null
-                                                        }>
-                                                            <Tooltip title={`Street line 1: ${!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_1 : null}`}>
-                                                                <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Street line 1: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_1 : null}
-                                                                </p>
-                                                            </Tooltip>
-                                                            <Tooltip title={`Street line 2: ${!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_2 ? order.single.result.billing_address.street_line_2 : '-' : null}`}>
-                                                                <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Street line 2: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_2 ? order.single.result.billing_address.street_line_2 : '-' : null}
-                                                                </p>
-                                                            </Tooltip>
-                                                            <Tooltip title={`City: ${!order.single.loading && order.single.result ? order.single.result.billing_address.city : null}`}>
-                                                                <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">City: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.city : null}
-                                                                </p>
-                                                            </Tooltip>
-                                                            <Tooltip title={`Country: ${!order.single.loading && order.single.result ? order.single.result.billing_address.country : null}`}>
-                                                                <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Country: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.country : null}
-                                                                </p>
-                                                            </Tooltip>
-                                                            <Tooltip title={`Postal code: ${!order.single.loading && order.single.result ? order.single.result.billing_address.postal_code : null}`}>
-                                                                <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Postal code: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.postal_code : null}
-                                                                </p>
-                                                            </Tooltip>
-                                                            <Tooltip title={`Province: ${!order.single.loading && order.single.result ? order.single.result.billing_address.province : null}`}>
-                                                                <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Province: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.province : null}
-                                                                </p>
-                                                            </Tooltip>
-                                                        </Card>
-                                                    </Col>
-                                                </Row>
-                                            </Col>
-                                            <Col span={12}>
-                                                <Timeline>
-                                                    {
-                                                        !order.single.loading && order.single.result ? (
-                                                            order.single.result.order_history.map((history, index) => {
-                                                                return (
-                                                                    <Timeline.Item key={index}>{`${history.content} at ${new Date(history.created_date).toISOString().substring(0, 10)} - ${moment(history.created_date).utc().format('HH:mm:ss')}`}</Timeline.Item>
-                                                                )
-                                                            })
-                                                        ) : ''
-                                                    }
-                                                </Timeline>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                </Row>
-                            </Card>
+                            <Spin spinning={order.single.loading} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',maxHeight: 'unset' }}>
+                                <Card>
+                                    <Row>
+                                        <OrderInfo />
+                                        <Divider />
+                                        <Col span={24}>
+                                            <Row gutter={[12, 12]}>
+                                                <UserOrderAddress />
+                                                <OrderHistory />
+                                            </Row>
+                                        </Col>
+
+                                    </Row>
+                                </Card>
+                            </Spin>
                         </Col>
                     </Row>
                 </Col>

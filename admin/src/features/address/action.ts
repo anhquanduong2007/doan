@@ -1,4 +1,3 @@
-import { AppDispatch } from "src/app/store";
 import {
     deleteAddressStart,
     deleteAddressSuccess,
@@ -17,54 +16,9 @@ import {
     setDefaultShippingFailed
 } from "./addressSlice";
 import { Inotification } from 'src/common';
-import { AxiosInstance } from "axios";
 import { IAxiosResponse } from "src/types/axiosResponse";
 import { UserAddress } from "src/types/user";
-import { NavigateFunction } from "react-router-dom";
-import { MessageApi } from "antd/lib/message";
-
-export type DeleteAddressParams = {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    navigate: NavigateFunction
-    id: number,
-    setIsModalOpen: (open: boolean) => void,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-    message: MessageApi
-}
-
-export interface CreateAddressParams extends Omit<DeleteAddressParams, "id"> {
-    address: AddressCreate
-}
-
-export interface GetAddressParams extends Omit<DeleteAddressParams, "setIsModalOpen" | "setRefresh" | "refresh" | "message"> { }
-
-interface AddressCreate {
-    street_line_1: string
-    street_line_2: string
-    country: string
-    city: string
-    postal_code: string
-    province: string
-    customer_id: number
-}
-
-interface UpdateAddressParams extends CreateAddressParams {
-    id: number
-}
-
-interface SetDefaultShippingAddressParams {
-    id: number
-    customer_id: number
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    navigate: NavigateFunction
-    message: MessageApi,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-}
-
+import { CreateAddressParams, DeleteAddressParams, GetAddressParams, SetDefaultShippingAddressParams, UpdateAddressParams } from "./type";
 
 export const deleteAddress = async ({ id, dispatch, axiosClientJwt, navigate, message, refresh, setIsModalOpen, setRefresh }: DeleteAddressParams) => {
     try {

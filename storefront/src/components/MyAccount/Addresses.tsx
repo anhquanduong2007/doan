@@ -49,24 +49,22 @@ const Addresses = () => {
                         </Button>
                     </div>
                 </Col>
-                {
-                    !auth.me.loading && auth.me.result && (
-                        auth.me.result.address.map((address, index) => {
-                            return (
-                                <Col span={8} style={{ display: "flex" }} key={index}>
-                                    <AddressItem
-                                        address={address}
-                                        setRefresh={setRefresh}
-                                        refresh={refresh}
-                                        setUpdateAddress={setUpdateAddress}
-                                        setMode={setMode}
-                                        setAddressModal={setAddressModal}
-                                    />
-                                </Col>
-                            )
-                        })
-                    )
-                }
+                {!auth.me.loading && auth.me.result && (
+                    auth.me.result.address.map((address, index) => {
+                        return (
+                            <Col span={8} style={{ display: "flex" }} key={index}>
+                                <AddressItem
+                                    address={address}
+                                    setRefresh={setRefresh}
+                                    refresh={refresh}
+                                    setUpdateAddress={setUpdateAddress}
+                                    setMode={setMode}
+                                    setAddressModal={setAddressModal}
+                                />
+                            </Col>
+                        )
+                    })
+                )}
             </Row>
             <AddressModal
                 addressModal={addressModal}

@@ -3,15 +3,13 @@ import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
 import { Response, Request } from 'express';
 import { OrderService } from './order.service';
-import { OrderConfirmRefund, OrderCreateDto } from './dto';
+import { OrderCreateDto } from './dto';
 import { PaginationDto } from 'src/common/dto';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { OrderStatus, PaymentMethod, promotion } from '@prisma/client';
 import { fromString } from 'uuidv4';
 const paypal = require('paypal-rest-sdk');
-
-
 
 @Controller('order')
 export class OrderController implements OnApplicationBootstrap {
@@ -20,6 +18,8 @@ export class OrderController implements OnApplicationBootstrap {
         private readonly config: ConfigService,
         private readonly prisma: PrismaService,
     ) { }
+
+    public orderId: number | null
 
     async onApplicationBootstrap() {
         paypal.configure({
@@ -115,17 +115,18 @@ export class OrderController implements OnApplicationBootstrap {
 
     @Get('/cancel')
     async paymentFailed(@Res() res: Response) {
-        return res.json({
-            code: 400,
-            success: false,
-            message: 'Payment failed!',
-        });
+        if (this.orderId) {
+            await this.prisma.order.delete({ where: { id: this.orderId } })
+            return res.redirect('http://localhost:4200/products');
+        }
+
     }
 
     @Post('payment')
     @Permission(Permissions.CreateOrder)
     async payment(@Req() req: Request, @Body() dto: OrderCreateDto, @Res() res: Response) {
         try {
+            this.orderId = null
             const userId = req.user['userId']
             const { address_id, payment_method, product_variant_id, promotion_id, quantity } = dto
             if (payment_method !== PaymentMethod.Card) {
@@ -215,7 +216,7 @@ export class OrderController implements OnApplicationBootstrap {
                 } else {
                     for (let i = 0; i < payment.links.length; i++) {
                         if (payment.links[i].rel === 'approval_url') {
-                            await this.prisma.order.create({
+                            const order = await this.prisma.order.create({
                                 data: {
                                     payment_method,
                                     quantity,
@@ -229,6 +230,7 @@ export class OrderController implements OnApplicationBootstrap {
                                     payment_id: payment.id
                                 }
                             })
+                            this.orderId = order.id
                             return res.json({ paymentUrl: payment.links[i].href })
                         }
                     }
@@ -307,8 +309,6 @@ export class OrderController implements OnApplicationBootstrap {
         const response = await this.orderService.delete(id);
         return res.json({ response });
     }
-
-
 
     @Get()
     @Permission(Permissions.ReadOrder)

@@ -47,17 +47,20 @@ const columns = (
             ellipsis: true,
             dataIndex: 'code',
             key: 'code',
+            width: '20%',
+            fixed: 'left'
         },
         {
             title: 'Customer',
             dataIndex: 'customer_name',
             ellipsis: true,
+            width: '20%',
             key: 'customer_name',
             render: (customer_name: string, record) => {
                 return (
                     <Flex alignItems={"center"}>
                         <UserOutlined />
-                        <Link to={`customers/update/${record.users_id}`} style={{ marginLeft: "5px" }}>{customer_name}</Link>
+                        <Link to={`/customers/update/${record.users_id}`} style={{ marginLeft: "5px" }}>{customer_name}</Link>
                     </Flex>
                 )
             }
@@ -67,6 +70,7 @@ const columns = (
             dataIndex: 'status',
             ellipsis: true,
             key: 'status',
+            width: '100px',
             render: (status: string) => {
                 return (
                     <span>
@@ -95,6 +99,7 @@ const columns = (
             dataIndex: 'total_price',
             ellipsis: true,
             key: 'total_price',
+            width: '100px',
             render: (total_price: number) => {
                 return (
                     <span>{currency(total_price)}</span>
@@ -105,9 +110,10 @@ const columns = (
             title: 'Profit',
             ellipsis: true,
             key: 'profit',
+            width: '100px',
             render: (_, record) => {
                 return (
-                    <span style={{color: '#389e0d'}}>+{record.promotion ? currency((record.price - record.origin_price) * record.quantity * (100 - record.promotion.discount) / 100) : currency((record.price - record.origin_price) * record.quantity)}</span>
+                    <span style={{ color: '#389e0d' }}>+{record.promotion ? currency((record.price - record.origin_price) * record.quantity * (100 - record.promotion.discount) / 100) : currency((record.price - record.origin_price) * record.quantity)}</span>
                 )
             }
         },
@@ -116,6 +122,7 @@ const columns = (
             dataIndex: 'modified_date',
             ellipsis: true,
             key: 'modified_date',
+            width: '150px',
             render: (modified_date: string) => {
                 return (
                     <span>{timeAgo.format(new Date(modified_date))}</span>
@@ -127,6 +134,7 @@ const columns = (
             dataIndex: 'created_date',
             ellipsis: true,
             key: 'created_date',
+            width: '150px',
             render: (created_date: string) => {
                 return (
                     <span>{timeAgo.format(new Date(created_date))}</span>
@@ -138,6 +146,7 @@ const columns = (
             dataIndex: 'payment_method',
             ellipsis: true,
             key: 'payment_method',
+            width: '100px',
             render: (payment_method: string) => {
                 return (
                     <span>
@@ -149,6 +158,8 @@ const columns = (
         {
             title: 'Action',
             key: 'action',
+            width: '100px',
+            fixed: 'right',
             render: (_, record) => {
                 return (
                     <Space size="middle">
@@ -289,6 +300,7 @@ const Orders = () => {
                                     columns={columns(navigate)}
                                     dataSource={dataRender()}
                                     loading={order.list.loading}
+                                    scroll={{ x: '100vw' }}
                                     pagination={{
                                         total: order.list.result?.total,
                                         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,

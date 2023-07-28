@@ -6,7 +6,6 @@ import { Divider } from 'antd'
 import Icon1 from '../../assets/icon-footer/icon-pay-01.png'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from 'react-hook-form';
-import autoAnimate from '@formkit/auto-animate';
 import { checkPromotion, createOrder, createOrderByPayment, resetPromotionAction } from 'src/features/checkout/action';
 import { createAxiosClient, createAxiosJwt } from 'src/axios/axiosInstance';
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
@@ -17,13 +16,15 @@ import { UserAddress } from 'src/shared/types';
 import { ChevronRight } from 'react-feather';
 import { resetPromotion } from 'src/features/checkout/checkoutSlice';
 import CouponModal from 'src/components/Checkout/CouponModal';
+import ProductCheckout from 'src/components/Checkout/ProductCheckout';
+import Coupon from 'src/components/Checkout/Coupon';
 
 export enum PaymentMethod {
     Standard = "Standard",
     Card = "Card"
 }
 
-interface FormValues {
+export interface FormValues {
     coupon_code: string
     quantity: number
 }
@@ -33,10 +34,9 @@ const CheckoutPage = () => {
     const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>(PaymentMethod.Standard)
     const [refresh, setRefresh] = useState<boolean>(false)
     const [address, setAddress] = useState<UserAddress>()
-    const [couponModal, setCouponModal] = useState<boolean>(false)
+    const [couponModal, setCouponModal] = React.useState<boolean>(false)
 
     // ** Variables
-    const axiosClient = createAxiosClient();
     const axiosClientJwt = createAxiosJwt();
     const dispatch = useAppDispatch();
     const checkout = useAppSelector((state) => state.checkout);
@@ -50,17 +50,9 @@ const CheckoutPage = () => {
     const { control, handleSubmit, setValue, setError, formState: { errors }, resetField } = useForm<FormValues>({
         defaultValues: {
             coupon_code: '',
-            quantity: 1
+            quantity: !cart.cart.loading && cart.cart.result ? cart.cart.result.quantity : 1
         }
     });
-
-    // ** Ref
-    const couponCodeErrorRef = useRef(null);
-
-    // ** Effect
-    useEffect(() => {
-        couponCodeErrorRef.current && autoAnimate(couponCodeErrorRef.current);
-    }, [parent])
 
     useEffect(() => {
         if (!checkout.promotion.loading && checkout.promotion.result) {
@@ -87,20 +79,6 @@ const CheckoutPage = () => {
         }
     }, [id, refresh])
 
-    // ** Funtion handle
-    const onApplyPromotion = (data: FormValues) => {
-        checkPromotion({
-            axiosClient,
-            coupon_code: data.coupon_code,
-            dispatch,
-            refresh,
-            setError,
-            setRefresh,
-            toast
-        })
-    }
-
-
     return (
         <Fragment>
             <div className='py-8 px-10 mt-16'>
@@ -119,138 +97,26 @@ const CheckoutPage = () => {
                         <Row gutter={[16, 0]}>
                             <Col span={18}>
                                 {/* Item */}
-                                <div className='mb-[1rem]'>
-                                    <Card variant="outline" padding={8}>
-                                        <div className='text-center font-bold'>Item</div>
-                                        <Divider />
-                                        <Row gutter={[16, 0]}>
-                                            <Col span={6}>
-                                                <img
-                                                    alt=''
-                                                    src={!cart.cart.loading && cart.cart.result ?
-                                                        cart.cart.result.product_variant?.featured_asset ?
-                                                            cart.cart.result.product_variant.featured_asset.url :
-                                                            'https://inantemnhan.com.vn/wp-content/uploads/2017/10/no-image.png' :
-                                                        'https://inantemnhan.com.vn/wp-content/uploads/2017/10/no-image.png'}
-                                                    className='w-full object-cover p-2 rounded-lg'
-                                                />
-                                            </Col>
-                                            <Col span={18}>
-                                                <div className='text-2xl font-bold mb-1'>{!cart.cart.loading && cart.cart.result ? cart.cart.result.product_variant.name : ''}</div>
-                                                <div className='text-[#808080] mb-1'>{!cart.cart.loading && cart.cart.result ? cart.cart.result.product_variant.sku : ''}</div>
-                                                <div className='mb-1'>Stock: {!cart.cart.loading && cart.cart.result ? cart.cart.result.product_variant.stock : ''}</div>
-                                                <Form>
-                                                    <Controller
-                                                        name='quantity'
-                                                        control={control}
-                                                        render={({ field: { value, ...other } }) => (
-                                                            <Fragment>
-                                                                <HStack maxW='320px'>
-                                                                    <Button
-                                                                        loading={cart.update.loading}
-                                                                        onClick={() => {
-                                                                            resetField('quantity')
-                                                                            updateCart({
-                                                                                axiosClientJwt,
-                                                                                cart: {
-                                                                                    quantity: value - 1
-                                                                                },
-                                                                                dispatch,
-                                                                                id: !cart.cart.loading && cart.cart.result ? cart.cart.result.product_variant.id : 0,
-                                                                                refresh,
-                                                                                setError,
-                                                                                setRefresh,
-                                                                                toast
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        -
-                                                                    </Button>
-                                                                    <Input type="number" width={'30px'} {...other} value={value} disabled={cart.update.loading} />
-                                                                    <Button
-                                                                        loading={cart.update.loading}
-                                                                        onClick={() => {
-                                                                            resetField('quantity')
-                                                                            updateCart({
-                                                                                axiosClientJwt,
-                                                                                cart: {
-                                                                                    quantity: value + 1
-                                                                                },
-                                                                                dispatch,
-                                                                                id: !cart.cart.loading && cart.cart.result ? cart.cart.result.product_variant.id : 0,
-                                                                                refresh,
-                                                                                setError,
-                                                                                setRefresh,
-                                                                                toast
-                                                                            })
-                                                                        }}
-                                                                    >
-                                                                        +
-                                                                    </Button>
-                                                                </HStack>
-                                                                {errors?.quantity ? <Box as="div" mt={1} textColor="red.600">{errors.quantity.message}</Box> : null}
-                                                            </Fragment>
-                                                        )}
-                                                    />
-                                                </Form>
-                                            </Col>
-                                        </Row>
-                                    </Card>
-                                </div>
+                                <ProductCheckout
+                                    control={control}
+                                    refresh={refresh}
+                                    setRefresh={setRefresh}
+                                    resetField={resetField}
+                                    setError={setError}
+                                />
                                 {/* Address */}
                                 <Address address={address as UserAddress} setAddress={setAddress} />
                                 {/* Coupon */}
-                                <div className='mb-[1rem]'>
-                                    <Card variant="outline" padding={8} >
-                                        <Flex justifyContent="flex-end">
-                                            <Button onClick={() => setCouponModal(true)}>See available coupons</Button>
-                                        </Flex>
-                                        <div className='text-center font-bold'>Coupon code</div>
-                                        <Divider />
-                                        <Form className='flex'>
-                                            <Controller
-                                                name="coupon_code"
-                                                control={control}
-                                                render={({ field }) => {
-                                                    return (
-                                                        <div ref={couponCodeErrorRef} className='flex-1'>
-                                                            <Input {...field} />
-                                                            {errors?.coupon_code ? <Box as="div" mt={1} textColor="red.600">{errors.coupon_code.message}</Box> : null}
-                                                        </div>
-                                                    )
-                                                }}
-                                            />
-                                            <Button
-                                                className='ml-2'
-                                                type='primary'
-                                                onClick={handleSubmit(onApplyPromotion)}
-                                                disabled={!checkout.promotion.loading && checkout.promotion.result ? true : false}
-                                                loading={checkout.promotion.loading}
-                                            >
-                                                Apply
-                                            </Button>
-                                            {
-                                                !checkout.promotion.loading && checkout.promotion.result ? (
-                                                    <Button
-                                                        className='ml-2'
-                                                        type='primary'
-                                                        danger
-                                                        onClick={() => {
-                                                            setValue("coupon_code", '')
-                                                            resetPromotionAction({
-                                                                dispatch,
-                                                                refresh,
-                                                                setRefresh
-                                                            })
-                                                        }}
-                                                    >
-                                                        Cancel application
-                                                    </Button>
-                                                ) : null
-                                            }
-                                        </Form>
-                                    </Card>
-                                </div>
+                                <Coupon
+                                    control={control}
+                                    errors={errors}
+                                    handleSubmit={handleSubmit}
+                                    refresh={refresh}
+                                    setCouponModal={setCouponModal}
+                                    setError={setError}
+                                    setRefresh={setRefresh}
+                                    setValue={setValue}
+                                />
                                 {/* Payment method */}
                                 <div className='mb-[1rem]'>
                                     <Card variant="outline" padding={8}>
@@ -357,7 +223,7 @@ const CheckoutPage = () => {
                     </Col>
                 </Row>
             </div>
-            <CouponModal couponModal = {couponModal} setCouponModal = {setCouponModal}/>
+            <CouponModal couponModal={couponModal} setCouponModal={setCouponModal} />
         </Fragment>
     );
 };

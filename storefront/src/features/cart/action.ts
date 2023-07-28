@@ -1,4 +1,3 @@
-import { AppDispatch } from "src/app/store";
 import {
     addToCartStart,
     addToCartSuccess,
@@ -16,34 +15,8 @@ import {
     updateCartSuccess,
     updateCartFailed
 } from "./cartSlice";
-import type { AxiosInstance } from "axios";
 import { IAxiosResponse } from "src/shared/types/axiosResponse";
-import { CreateToastFnReturn } from "@chakra-ui/react";
-
-export type AddToCartParams = {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    cart: {
-        quantity: number
-    },
-    id: number,
-    toast: CreateToastFnReturn
-}
-
-export type GetListProductOnCartParams = Omit<AddToCartParams, "cart" | "id">
-
-export type DeleteFromCartParams = Omit<AddToCartParams, "cart"> & {
-    refresh: boolean,
-    setRefresh: (refresh: boolean) => void
-}
-
-export type GetCartParams = Omit<AddToCartParams, "cart">
-
-export type UpdateCartParams = AddToCartParams & {
-    refresh: boolean,
-    setRefresh: (refresh: boolean) => void,
-    setError: Function
-}
+import { AddToCartParams, DeleteFromCartParams, GetCartParams, GetListProductOnCartParams, UpdateCartParams } from "./type";
 
 export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: AddToCartParams) => {
     try {
@@ -63,6 +36,7 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: A
                     dispatch(addToCartSuccess(res.response.data));
                     toast({
                         status: 'success',
+                        variant: 'left-accent',
                         title: "Added in card!",
                         isClosable: true,
                         position: "top-right"
@@ -74,6 +48,7 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: A
                     status: 'warning',
                     title: res?.response?.message,
                     isClosable: true,
+                    variant: 'left-accent',
                     position: "top-right"
                 })
             } else {
@@ -83,6 +58,7 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: A
             toast({
                 status: 'error',
                 title: "You need to login to perform this action!",
+                variant: 'left-accent',
                 isClosable: true,
                 position: "top-right"
             })
@@ -91,6 +67,7 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: A
         dispatch(addToCartFailed(null));
         toast({
             status: 'error',
+            variant: 'left-accent',
             title: "Something went wrong!",
             isClosable: true,
         })
@@ -139,7 +116,8 @@ export const deleteFromCart = async ({ axiosClientJwt, dispatch, id, toast, refr
                     status: 'success',
                     title: "Deleted from card!",
                     isClosable: true,
-                    position: "top"
+                    position: "top-right",
+                    variant: 'left-accent',
                 })
                 setRefresh(!refresh)
             }, 1000);
@@ -152,6 +130,8 @@ export const deleteFromCart = async ({ axiosClientJwt, dispatch, id, toast, refr
             status: 'error',
             title: "Something went wrong!",
             isClosable: true,
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -183,7 +163,6 @@ export const getCart = async ({ axiosClientJwt, dispatch, id, toast }: GetCartPa
 export const updateCart = async ({ axiosClientJwt, dispatch, id, toast, cart, refresh, setRefresh, setError }: UpdateCartParams) => {
     try {
         const { quantity } = cart
-        console.log(quantity)
         const accessToken = localStorage.getItem("accessToken")
         dispatch(updateCartStart());
         const res: IAxiosResponse<{}> = await axiosClientJwt.put(`product/cart/update/${id}`, {

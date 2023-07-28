@@ -1,5 +1,5 @@
 import { Card, Flex, useToast, Box, Menu, MenuButton, MenuList, MenuItem } from '@chakra-ui/react';
-import { Col, Collapse, Pagination, Row, Timeline, Card as CardAntd, Tooltip, Tag, Button } from 'antd';
+import { Col, Collapse, Pagination, Row, Timeline, Card as CardAntd, Tooltip, Tag, Button, Spin } from 'antd';
 import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -51,6 +51,7 @@ const Purchase = () => {
             return order.list.result.orders?.map((order, index) => {
                 return (
                     <Card variant="outline" padding={5} mb={8} key={index}>
+
                         <Row gutter={[12, 12]}>
                             <Col span={24}>
                                 <Row>
@@ -225,27 +226,27 @@ const Purchase = () => {
         }
         return null
     }
-    
+
     return (
         <Fragment>
             <Row>
                 <Col span={24}></Col>
                 <Col span={24}>
-                    {dataToRender()}
+                    <Spin spinning={order.list.loading} style={{ maxHeight: 'unset', height: '100vh' }}>
+                        {dataToRender()}
+                    </Spin>
                 </Col>
                 <Col span={24}>
                     <Flex justifyContent="flex-end">
-                        {
-                            order.list.result && (
-                                <Pagination
-                                    total={order.list.result.total}
-                                    defaultCurrent={skip + 1}
-                                    onChange={handleOnChangePagination}
-                                    defaultPageSize={take}
-                                    responsive={true}
-                                />
-                            )
-                        }
+                        {!order.list.loading && order.list.result && (
+                            <Pagination
+                                total={order.list.result.total}
+                                defaultCurrent={skip + 1}
+                                onChange={handleOnChangePagination}
+                                defaultPageSize={take}
+                                responsive={true}
+                            />
+                        )}
                     </Flex>
                 </Col>
             </Row>

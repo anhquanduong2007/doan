@@ -91,7 +91,7 @@ export const registeUser = async (user: { email: string, password: string, first
                 toast({
                     status: 'success',
                     title: "Register customer successfully!",
-                    position: "top-right",
+                    variant: 'left-accent',
                     isClosable: true,
                 })
                 navigate('/');

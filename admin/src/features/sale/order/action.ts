@@ -1,7 +1,3 @@
-import { AxiosInstance } from "axios";
-import { NavigateFunction } from "react-router-dom";
-import { AppDispatch } from "src/app/store";
-import { Pagination } from "src/types";
 import {
     deleteOrderStart,
     deleteOrderSuccess,
@@ -30,39 +26,7 @@ import {
 } from './actionSlice';
 import { IAxiosResponse } from "src/types/axiosResponse";
 import { Inotification } from "src/common";
-import { MessageApi } from "antd/lib/message";
-
-interface GetListOrderParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction
-}
-
-export type GetOrderParams = Omit<GetListOrderParams, "pagination"> & { id: number }
-
-export interface CancelOrderParams extends GetOrderParams {
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-    message: MessageApi
-}
-
-export interface ConfirmOrderParams extends CancelOrderParams { }
-
-export interface ShippedOrderParams extends CancelOrderParams { }
-
-export interface CompletedOrderParams extends CancelOrderParams { }
-
-export interface RefundOrderParams extends CancelOrderParams { }
-
-export type DeleteOrderParams = Omit<GetListOrderParams, "pagination">
-    & {
-        id: number,
-        setRefresh: (refresh: boolean) => void,
-        refresh: boolean,
-        message: MessageApi
-    }
-
+import { CancelOrderParams, CompletedOrderParams, ConfirmOrderParams, DeleteOrderParams, GetListOrderParams, GetOrderParams, RefundOrderParams, ShippedOrderParams } from './type';
 
 export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navigate }: GetListOrderParams) => {
     try {

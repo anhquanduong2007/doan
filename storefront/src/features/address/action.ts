@@ -1,4 +1,3 @@
-import { AppDispatch } from "src/app/store";
 import {
     deleteAddressStart,
     deleteAddressSuccess,
@@ -16,53 +15,8 @@ import {
     setDefaultShippingSuccess,
     setDefaultShippingFailed
 } from "./addressSlice";
-import { AxiosInstance } from "axios";
-import { NavigateFunction } from "react-router-dom";
-import { MessageApi } from "antd/lib/message";
 import { IAxiosResponse } from "src/shared/types";
-import { CreateToastFnReturn } from "@chakra-ui/react";
-
-export type DeleteAddressParams = {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    id: number,
-    toast: CreateToastFnReturn,
-    setIsModalOpen: (open: boolean) => void,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-}
-
-export interface CreateAddressParams extends Omit<DeleteAddressParams, "id"> {
-    address: AddressCreate
-}
-
-export interface GetAddressParams extends Omit<DeleteAddressParams, "setIsModalOpen" | "setRefresh" | "refresh" | "message"> { }
-
-interface AddressCreate {
-    street_line_1: string
-    street_line_2: string
-    country: string
-    city: string
-    postal_code: string
-    province: string
-    customer_id: number
-}
-
-interface UpdateAddressParams extends CreateAddressParams {
-    id: number
-}
-
-interface SetDefaultShippingAddressParams {
-    id: number
-    customer_id: number
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    message: MessageApi,
-    toast: CreateToastFnReturn,
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-}
-
+import { CreateAddressParams, DeleteAddressParams, GetAddressParams, SetDefaultShippingAddressParams, UpdateAddressParams } from "./type";
 
 export const deleteAddress = async ({ id, dispatch, axiosClientJwt, refresh, setIsModalOpen, setRefresh, toast }: DeleteAddressParams) => {
     try {
@@ -79,7 +33,8 @@ export const deleteAddress = async ({ id, dispatch, axiosClientJwt, refresh, set
                 toast({
                     status: 'success',
                     title: "Delete address successfully!",
-                    position: "top",
+                    position: "top-right",
+                    variant: 'left-accent',
                     isClosable: true,
                 })
                 setIsModalOpen(false)
@@ -135,6 +90,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, refresh
                     status: 'success',
                     title: "Create address successfully!",
                     position: "top-right",
+                    variant: 'left-accent',
                     isClosable: true,
                 })
                 setIsModalOpen(false)
@@ -189,6 +145,7 @@ export const getAddress = async ({ id, dispatch, axiosClientJwt, toast }: GetAdd
                     title: "You do not have permission to perform this action!",
                     isClosable: true,
                     position: "top-right",
+                    variant: 'left-accent',
                 })
             }, 1000);
         } else {
@@ -228,6 +185,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
                     status: 'success',
                     title: "Update address successfully!",
                     position: "top-right",
+                    variant: 'left-accent',
                     isClosable: true,
                 })
                 setIsModalOpen(false)
@@ -247,6 +205,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
                 title: "You do not have permission to perform this action!",
                 isClosable: true,
                 position: "top-right",
+                variant: 'left-accent',
             })
         } else {
             toast({
@@ -254,6 +213,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
                 title: "Something went wrong!",
                 isClosable: true,
                 position: "top-right",
+                variant: 'left-accent',
             })
         }
     }
@@ -280,6 +240,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
                     title: 'Set default shipping address successfully!',
                     isClosable: true,
                     position: "top-right",
+                    variant: 'left-accent',
                 })
                 setRefresh(!refresh)
             }, 1000)
@@ -294,6 +255,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
                 title: "You do not have permission to perform this action!",
                 isClosable: true,
                 position: "top-right",
+                variant: 'left-accent',
             })
         } else {
             toast({
@@ -301,6 +263,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
                 title: "Something went wrong!",
                 isClosable: true,
                 position: "top-right",
+                variant: 'left-accent',
             })
         }
     }

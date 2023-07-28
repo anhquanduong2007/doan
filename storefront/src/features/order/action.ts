@@ -1,8 +1,4 @@
-import { CreateToastFnReturn } from "@chakra-ui/react";
-import { AxiosInstance } from "axios";
-import { NavigateFunction } from "react-router-dom";
-import { AppDispatch } from "src/app/store";
-import { IAxiosResponse, Pagination } from "src/shared/types";
+import { IAxiosResponse } from "src/shared/types";
 import {
     getListOrderStart,
     getListOrderSuccess,
@@ -14,23 +10,7 @@ import {
     refundOrderSuccess,
     refundOrderFailed
 } from './orderSlice';
-
-interface GetListOrderParams {
-    dispatch: AppDispatch,
-    axiosClientJwt: AxiosInstance,
-    pagination: Pagination,
-    navigate: NavigateFunction,
-    toast: CreateToastFnReturn
-}
-
-export interface CancelOrderParams extends Omit<GetListOrderParams, "pagination"> {
-    setRefresh: (refresh: boolean) => void,
-    refresh: boolean,
-    id: number
-}
-
-export interface RefundOrderParams extends CancelOrderParams { }
-
+import { CancelOrderParams, GetListOrderParams, RefundOrderParams } from "./type";
 
 export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navigate, toast }: GetListOrderParams) => {
     try {
@@ -60,7 +40,8 @@ export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navig
                 status: 'warning',
                 title: 'You do not have permission to perform this action!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
             setTimeout(function () {
                 navigate('/')
@@ -70,7 +51,8 @@ export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navig
                 status: 'error',
                 title: 'Something went wrong!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
         }
     }
@@ -92,7 +74,8 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                     status: 'success',
                     title: 'Order has been cancelled!',
                     isClosable: true,
-                    position: "top"
+                    position: "top-right",
+                    variant: 'left-accent',
                 })
                 setRefresh(!refresh)
             }, 1000)
@@ -106,7 +89,8 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                 status: 'warning',
                 title: 'You do not have permission to perform this action!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
             setTimeout(function () {
                 navigate('/')
@@ -116,7 +100,8 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                 status: 'warning',
                 title: 'Something went wrong!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
         }
     }
@@ -138,7 +123,8 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                     status: 'success',
                     title: 'Order has been refund!',
                     isClosable: true,
-                    position: "top"
+                    position: "top-right",
+                    variant: 'left-accent',
                 })
                 setRefresh(!refresh)
             }, 1000)
@@ -152,7 +138,8 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                 status: 'warning',
                 title: 'You do not have permission to perform this action!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
             setTimeout(function () {
                 navigate('/')
@@ -162,7 +149,8 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                 status: 'warning',
                 title: 'Something went wrong!',
                 isClosable: true,
-                position: "top"
+                position: "top-right",
+                variant: 'left-accent',
             })
         }
     }
