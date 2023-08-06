@@ -37,6 +37,7 @@ interface DataType {
     price: number
     origin_price: number
     promotion: Promotion
+    payment: boolean
 }
 
 const columns = (
@@ -47,14 +48,14 @@ const columns = (
             ellipsis: true,
             dataIndex: 'code',
             key: 'code',
-            width: '20%',
+            width: '15%',
             fixed: 'left'
         },
         {
             title: 'Customer',
             dataIndex: 'customer_name',
             ellipsis: true,
-            width: '20%',
+            width: '15%',
             key: 'customer_name',
             render: (customer_name: string, record) => {
                 return (
@@ -95,6 +96,42 @@ const columns = (
             }
         },
         {
+            title: 'Origin price',
+            dataIndex: 'origin_price',
+            ellipsis: true,
+            key: 'origin_price',
+            width: '150px',
+            render: (origin_price: number) => {
+                return (
+                    <span>{currency(origin_price)}</span>
+                )
+            }
+        },
+        {
+            title: 'Price',
+            dataIndex: 'price',
+            ellipsis: true,
+            key: 'price',
+            width: '100px',
+            render: (price: number) => {
+                return (
+                    <span>{currency(price)}</span>
+                )
+            }
+        },
+        {
+            title: 'Quantity',
+            dataIndex: 'quantity',
+            ellipsis: true,
+            key: 'quantity',
+            width: '100px',
+            render: (quantity: number) => {
+                return (
+                    <span>{quantity}</span>
+                )
+            }
+        },
+        {
             title: 'Total',
             dataIndex: 'total_price',
             ellipsis: true,
@@ -113,7 +150,7 @@ const columns = (
             width: '100px',
             render: (_, record) => {
                 return (
-                    <span style={{ color: '#389e0d' }}>+{record.promotion ? currency((record.price - record.origin_price) * record.quantity * (100 - record.promotion.discount) / 100) : currency((record.price - record.origin_price) * record.quantity)}</span>
+                    <span style={{ color: record.payment ? 'green' : 'red' }}>+{record.promotion ? currency((record.price - record.origin_price) * record.quantity * (100 - record.promotion.discount) / 100) : currency((record.price - record.origin_price) * record.quantity)}</span>
                 )
             }
         },
@@ -213,7 +250,6 @@ const Orders = () => {
     const dataRender = (): DataType[] => {
         if (!order.list.loading && order.list.result) {
             return order.list.result.orders.map((order, index: number) => {
-                console.log(order)
                 return {
                     key: index,
                     id: order.id,
@@ -228,7 +264,8 @@ const Orders = () => {
                     quantity: order.quantity,
                     price: order.product_variant.price,
                     origin_price: order.product_variant.origin_price,
-                    promotion: order.promotion
+                    promotion: order.promotion,
+                    payment: order.payment
                 }
             })
         }
@@ -300,7 +337,7 @@ const Orders = () => {
                                     columns={columns(navigate)}
                                     dataSource={dataRender()}
                                     loading={order.list.loading}
-                                    scroll={{ x: '100vw' }}
+                                    scroll={{ x: '120vw' }}
                                     pagination={{
                                         total: order.list.result?.total,
                                         showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,

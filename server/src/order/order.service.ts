@@ -46,10 +46,13 @@ export class OrderService {
                 }
             }
             let price: number = 0
+            let profit: number = 0
             if (promotion_id) {
                 price = isValidProductVariant.price * quantity * ((100 - isValidPromotion.discount) / 100)
+                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity * (100 - isValidPromotion.discount) / 100
             } else {
                 price = isValidProductVariant.price * quantity
+                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity
             }
             if (payment_method === PaymentMethod.Standard) {
                 const order = await this.prisma.order.create({
@@ -58,6 +61,7 @@ export class OrderService {
                         quantity,
                         status: OrderStatus.Open,
                         address_id,
+                        profit,
                         ...promotion_id && { promotion_id },
                         code: fromString(`${userId} ${Date.now()}`),
                         users_id: userId,

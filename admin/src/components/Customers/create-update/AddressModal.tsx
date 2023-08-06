@@ -140,10 +140,10 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
 
     return (
         <Fragment>
-            <Modal title="Create new address" open={addressModal} onOk={handleSubmit(onSubmit)} onCancel={() => setAddressModal(false)} centered confirmLoading={mode ? store.update.loading : store.create.loading}>
+            <Modal title="Tạo địa chỉ mới" open={addressModal} okText={'Tạo'} cancelText={'Hủy'} onOk={handleSubmit(onSubmit)} onCancel={() => setAddressModal(false)} centered confirmLoading={mode ? store.update.loading : store.create.loading}>
                 <Spin spinning={store.single.loading}>
                     <Form layout="vertical">
-                        <Form.Item label="Street line 1">
+                        <Form.Item label="Tuyến phố 1">
                             <Controller
                                 name="street_line_1"
                                 control={control}
@@ -158,7 +158,7 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="Street line 2">
+                        <Form.Item label="Tuyến phố 2">
                             <Controller
                                 name="street_line_2"
                                 control={control}
@@ -171,7 +171,7 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="City">
+                        <Form.Item label="Thành phố">
                             <Controller
                                 name="city"
                                 control={control}
@@ -186,7 +186,7 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="Province">
+                        <Form.Item label="Tình">
                             <Controller
                                 name="province"
                                 control={control}
@@ -201,7 +201,7 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="Postal code">
+                        <Form.Item label="Mã bưu điện">
                             <Controller
                                 name="postal_code"
                                 control={control}
@@ -216,7 +216,7 @@ const AddressModal = ({ addressModal, setAddressModal, mode, updateAddress, setR
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="Country">
+                        <Form.Item label="Quốc gia">
                             <Select
                                 value={country}
                                 onChange={handleChange}

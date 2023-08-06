@@ -37,36 +37,36 @@ const columns = (
             width: '20%'
         },
         {
-            title: 'First name',
+            title: 'Tên',
             dataIndex: 'first_name',
             key: 'first name',
             width: '20%'
         },
         {
-            title: 'Last name',
+            title: 'Họ',
             dataIndex: 'last_name',
             key: 'last name',
             width: '20%'
         },
         {
-            title: 'Phone',
+            title: 'Số điện thoại',
             dataIndex: 'phone',
             key: 'phone',
             width: '20%'
         },
         {
-            title: 'Active',
+            title: 'Hoạt động',
             dataIndex: 'active',
             key: 'active',
             width: '100px',
             render: (active: number) => {
                 return (
-                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Hoạt động' : 'Vô hiệu hóa'}</Tag>
                 )
             }
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             width: '150px',
             fixed: 'right',
@@ -172,9 +172,9 @@ const Customers = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>Customers</Breadcrumb.Item>
+                        <Breadcrumb.Item>Khách hàng</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -182,7 +182,7 @@ const Customers = () => {
                         <Col span={24}>
                             <Flex justifyContent={"flex-end"} alignItems={"center"}>
                                 <Box mr={3} flex={1}>
-                                    <Input type='text' placeholder='Search...' onChange={(e) => { setSearch(e.target.value); }} />
+                                    <Input type='text' placeholder='Tìm kiếm...' onChange={(e) => { setSearch(e.target.value); }} />
                                 </Box>
                                 <Box mr={3} flex={1}>
                                     <Select
@@ -192,15 +192,15 @@ const Customers = () => {
                                         options={[
                                             {
                                                 value: 'all',
-                                                label: 'All',
+                                                label: 'Tất cả',
                                             },
                                             {
                                                 value: 'active',
-                                                label: 'Active',
+                                                label: 'Hoạt động',
                                             },
                                             {
                                                 value: 'disabled',
-                                                label: 'Disabled',
+                                                label: 'Vô hiệu hóa',
                                             },
                                         ]}
                                     />
@@ -211,7 +211,7 @@ const Customers = () => {
                                     onClick={() => navigate('create')}
                                     icon={<PlusCircleOutlined />}
                                 >
-                                    Create new Customer
+                                    Tạo khách hàng mới
                                 </Button>
                             </Flex>
                         </Col>
@@ -238,8 +238,8 @@ const Customers = () => {
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete customer" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={customer.delete.loading}>
-                <p>Do you want to delete this customer (<span style={{ fontWeight: "bold" }}>{customerDelete?.email}</span>) ?</p>
+            <Modal title="Xóa khách hàng" open={isModalOpen} onOk={handleOk} okText={'Xóa'} cancelText={'Hủy'} onCancel={handleCancel} centered confirmLoading={customer.delete.loading}>
+                <p>Bán có muốn xóa khách hàng này (<span style={{ fontWeight: "bold" }}>{customerDelete?.email}</span>) ?</p>
             </Modal>
         </Fragment>
 

@@ -70,7 +70,7 @@ const ProductCheckout = ({ control, refresh, setRefresh, resetField, setError }:
                                             >
                                                 -
                                             </Button>
-                                            <Input type="number" {...other} value={value} disabled={cart.update.loading} style={{ width: '30px', border: 'none', pointerEvents: 'none' }} />
+                                            <Input type="number" {...other} value={value} disabled={cart.update.loading} style={{ width: '50px', border: 'none', pointerEvents: 'none' }} />
                                             <Button
                                                 size='sm'
                                                 borderRadius='50%'

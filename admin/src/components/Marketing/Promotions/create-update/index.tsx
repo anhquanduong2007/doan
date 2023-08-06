@@ -130,12 +130,12 @@ const PromotionCreateUpdate = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/marketing/promotions'>Promotions</Link>
+                            <Link to='/marketing/promotions'>Khuyến mãi</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>{id ? 'Update' : 'Create'}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{id ? 'Cập nhật' : 'Tạo'}</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -146,21 +146,21 @@ const PromotionCreateUpdate = () => {
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Flex justifyContent="center" alignItems="center">
                                             <Switch checked={active} size='small' onChange={() => setActive(!active)} />
-                                            <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                                            <Box as="span" ml={2} fontWeight="semibold">Hoạt động</Box>
                                         </Flex>
                                         {
                                             id && promotion.update.loading ?
-                                                <Button type="primary" loading>Updating...</Button> :
+                                                <Button type="primary" loading>Đang cập nhật...</Button> :
                                                 promotion.create.loading ?
-                                                    <Button type="primary" loading>Creating...</Button> :
-                                                    id ? <Button htmlType="submit" type="primary">Update</Button> :
-                                                        <Button htmlType="submit" type="primary">Create</Button>
+                                                    <Button type="primary" loading>Đang tạo...</Button> :
+                                                    id ? <Button htmlType="submit" type="primary">Cập nhật</Button> :
+                                                        <Button htmlType="submit" type="primary">Tạo</Button>
                                         }
                                     </Flex>
                                 </Col>
                                 <Divider />
                                 <Col span={24}>
-                                    <Form.Item label="Promotion name">
+                                    <Form.Item label="Tên khuyến mãi">
                                         <Controller
                                             name="name"
                                             control={control}
@@ -168,14 +168,14 @@ const PromotionCreateUpdate = () => {
                                             render={({ field }) => {
                                                 return (
                                                     <div ref={nameErrorRef}>
-                                                        <Input {...field} placeholder="Eg: 8/8 discount" />
-                                                        {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Please input your promotion name!" : errors.name.message}</Box> : null}
+                                                        <Input {...field} placeholder="Ví dụ: Ngày 8/8 giảm giá" />
+                                                        {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Vui lòng điền tên khuyến mãi!" : errors.name.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Coupon code">
+                                    <Form.Item label="Mã khuyến mãi">
                                         <Controller
                                             name="coupon_code"
                                             control={control}
@@ -183,20 +183,20 @@ const PromotionCreateUpdate = () => {
                                             render={({ field }) => {
                                                 return (
                                                     <div ref={couponCodeErrorRef}>
-                                                        <Input {...field} placeholder="Eg: ad7dwd58" />
-                                                        {errors?.coupon_code ? <Box as="div" mt={1} textColor="red.600">{errors.coupon_code?.type === 'required' ? "Please input your coupon code!" : errors.coupon_code.message}</Box> : null}
+                                                        <Input {...field} placeholder="Ví dụ: ad7dwd58" />
+                                                        {errors?.coupon_code ? <Box as="div" mt={1} textColor="red.600">{errors.coupon_code?.type === 'required' ? "Vui lòng điền mã khuyến mãi!" : errors.coupon_code.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Starts at">
-                                        <DatePicker style={{ width: "100%" }} value={startsAt ? moment(startsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateStartsAtPicker} />
+                                    <Form.Item label="Thời gian bắt đầu">
+                                        <DatePicker placeholder={'Chọn ngày bắt đầu'} style={{ width: "100%" }} value={startsAt ? moment(startsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateStartsAtPicker} />
                                     </Form.Item>
-                                    <Form.Item label="Ends at">
-                                        <DatePicker style={{ width: "100%" }} value={endsAt ? moment(endsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateEndsAtPicker} />
+                                    <Form.Item label="Thời gian kết thúc">
+                                        <DatePicker placeholder={'Chọn ngày kết thúc'} style={{ width: "100%" }} value={endsAt ? moment(endsAt?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDateEndsAtPicker} />
                                     </Form.Item>
-                                    <Form.Item label="Limit">
+                                    <Form.Item label="Giới hạn">
                                         <Controller
                                             name="limit"
                                             control={control}
@@ -212,7 +212,7 @@ const PromotionCreateUpdate = () => {
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Discount">
+                                    <Form.Item label="Giảm giá">
                                         <Controller
                                             name="discount"
                                             control={control}
@@ -222,9 +222,9 @@ const PromotionCreateUpdate = () => {
                                                         <InputNumber
                                                             {...field}
                                                             formatter={value => `${value}%`}
-                                                            min={0}
+                                                            min={'0'}
                                                             style={{ width: "100%" }}
-                                                            max={100}
+                                                            max={'100'}
                                                             parser={value => value!.replace('%', '')}
                                                         />
                                                     </div>

@@ -154,7 +154,7 @@ model users {
   date_of_birth DateTime?
   email         String       @unique @db.VarChar(100)
   phone         String?      @db.VarChar(10)
-  active        Boolean      @default(false)
+  active        Boolean      @default(true)
   created_date  DateTime     @default(now())
   modified_date DateTime     @updatedAt
   address       address[]
@@ -214,6 +214,7 @@ model order {
   payment_method     PaymentMethod
   quantity           Int
   total_price        Float           @default(0)
+  profit             Float           @default(0)
   product_variant_id Int
   payer_id           String?
   payment_id         String?         @unique

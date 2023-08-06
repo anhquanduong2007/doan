@@ -35,12 +35,12 @@ const HomePage = () => {
                     </Col>
                     <Col span={20}>
                         <Menu mode="horizontal" style={{ border: 0, justifyContent: "end" }}>
-                            <Menu.SubMenu key="info-user" title={`Hi, ${!currentUser.loading && currentUser.result && currentUser.result.first_name} ${!currentUser.loading && currentUser.result && currentUser.result.last_name}`}>
+                            <Menu.SubMenu key="info-user" title={`Xin chào, ${!currentUser.loading && currentUser.result && currentUser.result.first_name} ${!currentUser.loading && currentUser.result && currentUser.result.last_name}`}>
                                 <Menu.Item key="home" onClick={() => navigate('/dashboard')}>
-                                    Home
+                                    Trang chủ
                                 </Menu.Item>
                                 <Menu.Item key="logout" onClick={handleLogout}>
-                                    Logout
+                                    Đăng xuất
                                 </Menu.Item>
                             </Menu.SubMenu>
                         </Menu>

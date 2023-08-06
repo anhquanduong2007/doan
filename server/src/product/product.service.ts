@@ -583,25 +583,6 @@ export class ProductService {
                 await this.prisma.product_variant_option.deleteMany({
                     where: { product_variant_id: id }
                 })
-                const product = await this.prisma.product.findFirst({
-                    where: {
-                        product_variants: {
-                            some: {
-                                id: productVariant.id
-                            }
-                        }
-                    }
-                })
-                await this.prisma.product.update({
-                    where: { id: product.id },
-                    data: {
-                        product_variants: {
-                            delete: {
-                                id: productVariant.id
-                            }
-                        }
-                    }
-                })
                 return {
                     code: 200,
                     message: 'Success',
@@ -834,6 +815,7 @@ export class ProductService {
                 data: carts
             }
         } catch (error) {
+            console.log(error)
             return {
                 code: 500,
                 message: "An error occurred in the system!",

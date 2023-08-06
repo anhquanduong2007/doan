@@ -49,7 +49,7 @@ export const getListAdministrator = async ({ pagination, dispatch, axiosClientJw
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -75,7 +75,7 @@ export const deleteAdministrator = async ({ id, dispatch, axiosClientJwt, naviga
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteAdministratorSuccess(res.response.data))
-                message.success('Delete administrator successfully!')
+                message.success('Xóa quản trị viên thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
@@ -91,7 +91,7 @@ export const deleteAdministrator = async ({ id, dispatch, axiosClientJwt, naviga
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -127,7 +127,7 @@ export const getAdministrator = async ({ id, dispatch, axiosClientJwt, navigate 
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -163,7 +163,7 @@ export const createAdministrator = async ({ administrator, axiosClientJwt, dispa
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createAdministratorSuccess(res.response.data));
-                message.success('Create administrator successfully!');
+                message.success('Tạo quản trị viên thành công!');
                 navigate("/settings/administrators")
             }, 1000)
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -177,7 +177,7 @@ export const createAdministrator = async ({ administrator, axiosClientJwt, dispa
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -220,7 +220,7 @@ export const updateAdministrator = async ({ administrator, axiosClientJwt, dispa
         if (res?.response?.code === 200 && res?.response?.success && assign?.response?.code === 200 && assign?.response?.success) {
             setTimeout(function () {
                 dispatch(updateAdministratorSuccess(res.response.data));
-                message.success('Update administrator successfully!');
+                message.success('Cập nhật quản trị viên thành công!');
                 navigate("/settings/administrators")
             }, 1000)
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -234,7 +234,7 @@ export const updateAdministrator = async ({ administrator, axiosClientJwt, dispa
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')

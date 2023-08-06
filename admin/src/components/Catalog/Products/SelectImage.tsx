@@ -143,7 +143,7 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
     }
 
     return (
-        <Modal title="Basic Modal" open={isModalAssetOpen} onOk={handleOk} onCancel={handleCancel} centered width={"90%"}>
+        <Modal title="Basic Modal" open={isModalAssetOpen} onOk={handleOk} onCancel={handleCancel} centered width={"90%"} footer={null}>
             <Row>
                 <Col span={24}>
                     <Flex>

@@ -32,7 +32,7 @@ export const deleteAddress = async ({ id, dispatch, axiosClientJwt, navigate, me
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteAddressSuccess(res.response.data))
-                message.success('Delete address successfully!')
+                message.success('Xóa địa chỉ thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
@@ -48,7 +48,7 @@ export const deleteAddress = async ({ id, dispatch, axiosClientJwt, navigate, me
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -84,7 +84,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, navigat
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createAddressSuccess(res.response.data));
-                message.success('Create address successfully!');
+                message.success('Tạo đỉa chỉ thành công!');
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000)
@@ -99,7 +99,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, navigat
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -134,7 +134,7 @@ export const getAddress = async ({ id, dispatch, axiosClientJwt, navigate }: Get
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -171,7 +171,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, navigat
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updateAddressSuccess(res.response.data));
-                message.success('Update address successfully!');
+                message.success('Cập nhật địa chỉ thành công!');
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000)
@@ -186,7 +186,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, navigat
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -216,7 +216,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(setDefaultShippingSuccess(res.response.data));
-                message.success('Set default shipping address successfully!');
+                message.success('Đặt làm địa chỉ giao hàng mặc định thành công!');
                 setRefresh(!refresh)
             }, 1000)
         } else {
@@ -227,7 +227,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')

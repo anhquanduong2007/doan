@@ -242,7 +242,7 @@ export class PromotionService {
             fieldError: "coupon_code",
           }
         }
-        if (promotion.active) {
+        if (!promotion.active) {
           return {
             code: 400,
             message: 'Promotion has been disabled!',

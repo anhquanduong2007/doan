@@ -174,10 +174,13 @@ export class OrderController implements OnApplicationBootstrap {
                 }
             }
             let price: number = 0
+            let profit: number = 0
             if (promotion_id) {
                 price = isValidProductVariant.price * quantity * ((100 - isValidPromotion.discount) / 100)
+                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity * (100 - isValidPromotion.discount) / 100
             } else {
                 price = isValidProductVariant.price * quantity
+                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity
             }
             const create_payment_json = {
                 "intent": "authorize",
@@ -222,6 +225,7 @@ export class OrderController implements OnApplicationBootstrap {
                                     quantity,
                                     status: OrderStatus.Open,
                                     address_id,
+                                    profit,
                                     ...promotion_id && { promotion_id },
                                     code: fromString(`${userId} ${Date.now()}`),
                                     users_id: userId,

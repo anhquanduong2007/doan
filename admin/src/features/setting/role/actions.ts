@@ -45,7 +45,7 @@ export const getListRole = async ({ pagination, dispatch, axiosClientJwt, naviga
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -71,7 +71,7 @@ export const deleteRole = async ({ id, dispatch, axiosClientJwt, navigate, messa
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteRoleSuccess(res.response.data));
-                message.success('Delete role successfully!')
+                message.success('Xóa vai trò thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
@@ -99,7 +99,7 @@ export const deleteRole = async ({ id, dispatch, axiosClientJwt, navigate, messa
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -131,7 +131,7 @@ export const createRole = async ({ role, dispatch, axiosClientJwt, navigate, mes
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createRoleSuccess(res.response.data));
-                message.success('Create role successfully!');
+                message.success('Tạo vai trò thành công!');
                 navigate("/settings/roles")
             }, 1000);
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -145,7 +145,7 @@ export const createRole = async ({ role, dispatch, axiosClientJwt, navigate, mes
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -180,7 +180,7 @@ export const getSingleRole = async ({ axiosClientJwt, dispatch, id, navigate }: 
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -212,7 +212,7 @@ export const updateRole = async ({ axiosClientJwt, dispatch, id, role, message, 
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updateRoleSuccess(res.response.data));
-                message.success('Update role successfully!');
+                message.success('Cập nhật vai trò thành công!');
                 navigate("/settings/roles")
             }, 1000);
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -226,7 +226,7 @@ export const updateRole = async ({ axiosClientJwt, dispatch, id, role, message, 
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')

@@ -71,7 +71,7 @@ const ProductVariant = () => {
                                             >
                                                 Update
                                             </Box>
-                                            {/* <Box
+                                            <Box
                                                 _hover={{ background: '#dbdbdb' }}
                                                 cursor={"pointer"}
                                                 padding={"2px 5px"}
@@ -86,7 +86,7 @@ const ProductVariant = () => {
                                                 }}
                                             >
                                                 Delete
-                                            </Box> */}
+                                            </Box>
                                         </Fragment>
                                     }
                                     title="Action"

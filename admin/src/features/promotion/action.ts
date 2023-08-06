@@ -48,7 +48,7 @@ export const getListPromotion = async ({ pagination, dispatch, axiosClientJwt, n
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -74,7 +74,7 @@ export const deletePromotion = async ({ id, dispatch, axiosClientJwt, navigate, 
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deletePromotionSuccess(res.response.data))
-                message.success('Delete category successfully!')
+                message.success('Xóa khuyến mãi thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
@@ -90,7 +90,7 @@ export const deletePromotion = async ({ id, dispatch, axiosClientJwt, navigate, 
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -126,7 +126,7 @@ export const createPromotion = async ({ promotion, dispatch, axiosClientJwt, nav
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createPromotionSuccess(res.response.data));
-                message.success('Create promotion successfully!');
+                message.success('Tạo khuyến mãi thành công!');
                 navigate("/marketing/promotions")
             }, 1000);
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -140,7 +140,7 @@ export const createPromotion = async ({ promotion, dispatch, axiosClientJwt, nav
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -175,7 +175,7 @@ export const getPromotion = async ({ id, dispatch, axiosClientJwt, navigate }: G
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -212,7 +212,7 @@ export const updatePromotion = async ({ promotion, axiosClientJwt, dispatch, nav
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updatePromotionSuccess(res.response.data));
-                message.success('Update promotion successfully!');
+                message.success('Cập nhật khuyến mãi thành công!');
                 navigate("/marketing/promotions")
             }, 1000)
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -226,7 +226,7 @@ export const updatePromotion = async ({ promotion, axiosClientJwt, dispatch, nav
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')

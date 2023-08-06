@@ -6,7 +6,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 import { persistStore } from 'redux-persist'
-import './index.scss';
+import './index.css';
 import "antd/dist/antd.css";
 import "antd-button-color/dist/css/style.css";
 

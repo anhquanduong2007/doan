@@ -1,14 +1,29 @@
-import { Box, Flex } from "@chakra-ui/react"
+import {Box, Flex} from "@chakra-ui/react"
 import autoAnimate from "@formkit/auto-animate"
-import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Spin, Switch, message } from "antd"
-import { Fragment, useEffect, useRef, useState } from "react"
-import { Controller, useForm } from "react-hook-form"
-import { Link, useNavigate, useParams } from "react-router-dom"
-import { useAppDispatch, useAppSelector } from "src/app/hooks"
-import { createAxiosJwt } from "src/helper/axiosInstance"
-import type { DatePickerProps } from 'antd';
+import {
+    Breadcrumb,
+    Button,
+    Card,
+    Col,
+    DatePicker,
+    Divider,
+    Form,
+    Input,
+    Modal,
+    Row,
+    Select,
+    Spin,
+    Switch,
+    message
+} from "antd"
+import {Fragment, useEffect, useRef, useState} from "react"
+import {Controller, useForm} from "react-hook-form"
+import {Link, useNavigate, useParams} from "react-router-dom"
+import {useAppDispatch, useAppSelector} from "src/app/hooks"
+import {createAxiosJwt} from "src/helper/axiosInstance"
+import type {DatePickerProps} from 'antd';
 import moment from 'moment';
-import { createCustomer, getCustomer, updateCustomer } from "src/features/customer/action"
+import {createCustomer, getCustomer, updateCustomer} from "src/features/customer/action"
 import {
     PlusCircleOutlined
 } from '@ant-design/icons';
@@ -38,8 +53,8 @@ const CustomerCreateUpdate = () => {
     // ** Third party
     const navigate = useNavigate()
     const params = useParams()
-    const { id } = params
-    const { control, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormValuesCustomer>({
+    const {id} = params
+    const {control, handleSubmit, setValue, setError, formState: {errors}} = useForm<FormValuesCustomer>({
         defaultValues: {
             email: '',
             first_name: '',
@@ -148,12 +163,12 @@ const CustomerCreateUpdate = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/customers'>Customers</Link>
+                            <Link to='/customers'>Khách hàng</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>{id ? 'Update' : 'Create'}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{id ? 'Cập nhật' : 'Tạo'}</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -163,46 +178,48 @@ const CustomerCreateUpdate = () => {
                                 <Col span={24}>
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Flex justifyContent="center" alignItems="center">
-                                            <Switch checked={active} size='small' onChange={() => setActive(!active)} />
-                                            <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                                            <Switch checked={active} size='small' onChange={() => setActive(!active)}/>
+                                            <Box as="span" ml={2} fontWeight="semibold">Hoạt động</Box>
                                         </Flex>
                                         {
                                             id && customer.update.loading ?
-                                                <Button type="primary" loading>Updating...</Button> :
+                                                <Button type="primary" loading>Đang cập nhật...</Button> :
                                                 customer.create.loading ?
-                                                    <Button type="primary" loading>Creating...</Button> :
-                                                    id ? <Button htmlType="submit" type="primary">Update</Button> :
-                                                        <Button htmlType="submit" type="primary">Create</Button>
+                                                    <Button type="primary" loading>Đang tạo...</Button> :
+                                                    id ? <Button htmlType="submit" type="primary">Cập nhật</Button> :
+                                                        <Button htmlType="submit" type="primary">Tạo</Button>
                                         }
                                     </Flex>
                                 </Col>
-                                <Divider />
+                                <Divider/>
                                 <Col span={24}>
-                                    <Form.Item label="First name">
+                                    <Form.Item label="Tên">
                                         <Controller
                                             name="first_name"
                                             control={control}
-                                            rules={{ required: true }}
-                                            render={({ field }) => {
+                                            rules={{required: true}}
+                                            render={({field}) => {
                                                 return (
                                                     <div ref={firstNameErrorRef}>
-                                                        <Input {...field} placeholder="Eg: Quan" />
-                                                        {errors?.first_name ? <Box as="div" mt={1} textColor="red.600">{errors.first_name?.type === 'required' ? "Please input your first name!" : errors.first_name.message}</Box> : null}
+                                                        <Input {...field} placeholder="Ví dụ: Quan"/>
+                                                        {errors?.first_name ? <Box as="div" mt={1}
+                                                                                   textColor="red.600">{errors.first_name?.type === 'required' ? "Vui lòng điền tiền của bạn!" : errors.first_name.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Last name">
+                                    <Form.Item label="Họ">
                                         <Controller
                                             name="last_name"
                                             control={control}
-                                            rules={{ required: true }}
-                                            render={({ field }) => {
+                                            rules={{required: true}}
+                                            render={({field}) => {
                                                 return (
                                                     <div ref={lastNameErrorRef}>
-                                                        <Input {...field} placeholder="Eg: Duong" />
-                                                        {errors?.last_name ? <Box as="div" mt={1} textColor="red.600">{errors.last_name?.type === 'required' ? "Please input your last name!" : errors.last_name.message}</Box> : null}
+                                                        <Input {...field} placeholder="Ví dụ: Duong"/>
+                                                        {errors?.last_name ? <Box as="div" mt={1}
+                                                                                  textColor="red.600">{errors.last_name?.type === 'required' ? "Vui lòng điền họ của bạn!" : errors.last_name.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
@@ -212,12 +229,14 @@ const CustomerCreateUpdate = () => {
                                         <Controller
                                             name="email"
                                             control={control}
-                                            rules={{ required: true }}
-                                            render={({ field }) => {
+                                            rules={{required: true}}
+                                            render={({field}) => {
                                                 return (
                                                     <div ref={lastNameErrorRef}>
-                                                        <Input type="email" {...field} placeholder="Eg: qunduong2007@gmail.com" />
-                                                        {errors?.email ? <Box as="div" mt={1} textColor="red.600">{errors.email?.type === 'required' ? "Please input your email!" : errors.email.message}</Box> : null}
+                                                        <Input type="email" {...field}
+                                                               placeholder="Eg: qunduong2007@gmail.com"/>
+                                                        {errors?.email ? <Box as="div" mt={1}
+                                                                              textColor="red.600">{errors.email?.type === 'required' ? "Vui lòng điền email!" : errors.email.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
@@ -225,16 +244,17 @@ const CustomerCreateUpdate = () => {
                                     </Form.Item>
                                     {
                                         !id && (
-                                            <Form.Item label="password">
+                                            <Form.Item label="Mật khẩu">
                                                 <Controller
                                                     name="password"
                                                     control={control}
-                                                    rules={{ required: true }}
-                                                    render={({ field }) => {
+                                                    rules={{required: true}}
+                                                    render={({field}) => {
                                                         return (
                                                             <div ref={lastNameErrorRef}>
                                                                 <Input.Password {...field} />
-                                                                {errors?.password ? <Box as="div" mt={1} textColor="red.600">{errors.password?.type === 'required' ? "Please input your password!" : errors.password.message}</Box> : null}
+                                                                {errors?.password ? <Box as="div" mt={1}
+                                                                                         textColor="red.600">{errors.password?.type === 'required' ? "Vui lòng điền mật khẩu!" : errors.password.message}</Box> : null}
                                                             </div>
                                                         )
                                                     }}
@@ -242,36 +262,39 @@ const CustomerCreateUpdate = () => {
                                             </Form.Item>
                                         )
                                     }
-                                    <Form.Item label="Phone">
+                                    <Form.Item label="Số điện thoại">
                                         <Controller
                                             name="phone"
                                             control={control}
-                                            rules={{ maxLength: 10, minLength: 10 }}
-                                            render={({ field }) => {
+                                            rules={{maxLength: 10, minLength: 10}}
+                                            render={({field}) => {
                                                 return (
                                                     <div ref={phoneErrorRef}>
                                                         <Input {...field} />
-                                                        {errors?.phone ? <Box as="div" mt={1} textColor="red.600">Enter the wrong phone number format</Box> : null}
+                                                        {errors?.phone ?
+                                                            <Box as="div" mt={1} textColor="red.600">Sai định dạng số điện thoại</Box> : null}
                                                     </div>
                                                 )
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Date of birth">
-                                        <DatePicker value={dateOfBirth ? moment(dateOfBirth?.substring(0, 10), dateFormat) : '' as any} onChange={onChangeDatePicker} />
-                                    </Form.Item >
-                                    <Form.Item label="Gender">
+                                    <Form.Item label="Ngày sinh">
+                                        <DatePicker
+                                            value={dateOfBirth ? moment(dateOfBirth?.substring(0, 10), dateFormat) : '' as any}
+                                            onChange={onChangeDatePicker}/>
+                                    </Form.Item>
+                                    <Form.Item label="Giới tính">
                                         <Select
                                             value={gender}
                                             onChange={handleChangeGender}
                                             options={[
                                                 {
                                                     value: true,
-                                                    label: "Male",
+                                                    label: "Nam giới",
                                                 },
                                                 {
                                                     value: false,
-                                                    label: 'Female',
+                                                    label: 'Nữ giới',
                                                 },
                                             ]}
                                         />
@@ -279,10 +302,11 @@ const CustomerCreateUpdate = () => {
                                     {
                                         id && (
                                             <Form.Item>
-                                                <Button style={{ textTransform: "uppercase" }} type="primary" icon={<PlusCircleOutlined />} onClick={() => {
+                                                <Button style={{textTransform: "uppercase"}} type="primary"
+                                                        icon={<PlusCircleOutlined/>} onClick={() => {
                                                     setAddressModal(true)
                                                     setMode(false)
-                                                }}>Create new address</Button>
+                                                }}>Tạo địa chỉ</Button>
                                             </Form.Item>
                                         )
                                     }
@@ -294,7 +318,7 @@ const CustomerCreateUpdate = () => {
                                                         !customer.single.loading && customer.single.result && (
                                                             customer.single.result.address.map((address, index) => {
                                                                 return (
-                                                                    <Col span={8} style={{ display: "flex" }} key={index}>
+                                                                    <Col span={8} style={{display: "flex"}} key={index}>
                                                                         <Address
                                                                             address={address}
                                                                             setRefresh={setRefresh}

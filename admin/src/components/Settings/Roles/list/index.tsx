@@ -28,26 +28,26 @@ const columns = (
     navigate: NavigateFunction
 ): ColumnsType<DataType> => [
         {
-            title: 'Name',
+            title: 'Tên vai trò',
             dataIndex: 'role_name',
             key: 'name',
             width: '15%',
             fixed: 'left',
         },
         {
-            title: 'Code',
+            title: 'Mã vai trò',
             dataIndex: 'role_code',
             key: 'code',
             width: '15%',
         },
         {
-            title: 'Description',
+            title: 'Chú thích',
             dataIndex: 'description',
             key: 'description',
             width: '25%',
         },
         {
-            title: 'Permissions',
+            title: 'Các quyền',
             dataIndex: 'permissions',
             key: 'permissions',
             width: '35%',
@@ -74,7 +74,7 @@ const columns = (
             }
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             width: 150,
             fixed: 'right',
@@ -172,9 +172,9 @@ const RoleList = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>Roles</Breadcrumb.Item>
+                        <Breadcrumb.Item>Vai trò</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -187,7 +187,7 @@ const RoleList = () => {
                                     onClick={() => navigate('create')}
                                     icon={<PlusCircleOutlined />}
                                 >
-                                    Create new role
+                                    Tạo vai trò mới
                                 </Button>
                             </div>
                         </Col>
@@ -214,8 +214,8 @@ const RoleList = () => {
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={role.delete.loading}>
-                <p>Do you want to delete this role (<span style={{ fontWeight: "bold" }}>{roleDelete?.code}</span>) ?</p>
+            <Modal title="Xóa vai trò" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={role.delete.loading}>
+                <p>Bạn có muốn xóa vai trò này (<span style={{ fontWeight: "bold" }}>{roleDelete?.code}</span>) ?</p>
             </Modal>
         </Fragment>
     );

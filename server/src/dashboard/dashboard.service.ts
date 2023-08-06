@@ -95,22 +95,24 @@ export class DashboardService {
                             {
                                 created_date: {
                                     lte: end_day || new Date().toISOString(),
-
                                 }
                             },
                             {
                                 created_date: {
-                                    gte: start_day || new Date().toISOString(),
+                                    gte: start_day,
                                 }
                             }
                         ]
+                    },
+                    include: {
+                        product_variant: true
                     }
                 }),
                 // @ts-ignore: Unreachable code error
                 this.prisma.order.groupBy({
                     by: ['product_variant_id'],
                     _sum: {
-                       quantity: true
+                        quantity: true
                     },
                     orderBy: {
                         _sum: {
@@ -134,7 +136,7 @@ export class DashboardService {
             for (const element of hotSellingProducts) {
                 const variant = await this.prisma.product_variant.findUnique(
                     {
-                        where:{
+                        where: {
                             id: element.product_variant_id
                         },
                         include: {
@@ -165,3 +167,4 @@ export class DashboardService {
         }
     }
 }
+

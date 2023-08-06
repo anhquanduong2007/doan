@@ -37,6 +37,7 @@ const CartItem = ({ cartItem, onClose, refresh, setRefresh }: CartItemProps) => 
     const axiosClientJwt = createAxiosJwt();
 
     React.useEffect(() => {
+        console.log(cartItem.quantity)
         setValue('quantity', cartItem.quantity)
     }, [])
 
@@ -55,55 +56,58 @@ const CartItem = ({ cartItem, onClose, refresh, setRefresh }: CartItemProps) => 
                         <Controller
                             name='quantity'
                             control={control}
-                            render={({ field: { value, ...other } }) => (
-                                <React.Fragment>
-                                    <HStack maxW='320px'>
-                                        <Button
-                                            size='sm'
-                                            borderRadius='50%'
-                                            onClick={() => {
-                                                resetField('quantity')
-                                                updateCart({
-                                                    axiosClientJwt,
-                                                    cart: {
-                                                        quantity: value - 1
-                                                    },
-                                                    dispatch,
-                                                    id: cartItem.product_variant.id,
-                                                    refresh,
-                                                    setError,
-                                                    setRefresh,
-                                                    toast
-                                                })
-                                            }}
-                                        >
-                                            -
-                                        </Button>
-                                        <Input type="number" {...other} value={value} disabled={cart.update.loading} style={{ width: '30px', border: 'none', pointerEvents: 'none' }} />
-                                        <Button
-                                            size='sm'
-                                            borderRadius='50%'
-                                            onClick={() => {
-                                                resetField('quantity')
-                                                updateCart({
-                                                    axiosClientJwt,
-                                                    cart: {
-                                                        quantity: value + 1
-                                                    },
-                                                    dispatch,
-                                                    id: cartItem.product_variant.id,
-                                                    refresh,
-                                                    setError,
-                                                    setRefresh,
-                                                    toast
-                                                })
-                                            }}
-                                        >
-                                            +
-                                        </Button>
-                                    </HStack>
-                                </React.Fragment>
-                            )}
+                            render={({ field: { value, ...other } }) => {
+                                console.log(value)
+                                return (
+                                    <React.Fragment>
+                                        <HStack maxW='320px'>
+                                            <Button
+                                                size='sm'
+                                                borderRadius='50%'
+                                                onClick={() => {
+                                                    resetField('quantity')
+                                                    updateCart({
+                                                        axiosClientJwt,
+                                                        cart: {
+                                                            quantity: value - 1
+                                                        },
+                                                        dispatch,
+                                                        id: cartItem.product_variant.id,
+                                                        refresh,
+                                                        setError,
+                                                        setRefresh,
+                                                        toast
+                                                    })
+                                                }}
+                                            >
+                                                -
+                                            </Button>
+                                            <Input  {...other} value={value} disabled={cart.update.loading} style={{ width: '50px', border: 'none', pointerEvents: 'none' }} />
+                                            <Button
+                                                size='sm'
+                                                borderRadius='50%'
+                                                onClick={() => {
+                                                    resetField('quantity')
+                                                    updateCart({
+                                                        axiosClientJwt,
+                                                        cart: {
+                                                            quantity: value + 1
+                                                        },
+                                                        dispatch,
+                                                        id: cartItem.product_variant.id,
+                                                        refresh,
+                                                        setError,
+                                                        setRefresh,
+                                                        toast
+                                                    })
+                                                }}
+                                            >
+                                                +
+                                            </Button>
+                                        </HStack>
+                                    </React.Fragment>
+                                )
+                            }}
                         />
                     </Form>
                     {errors?.quantity ? <Box as="div" mt={1} textColor="red.600">{errors.quantity.message}</Box> : null}

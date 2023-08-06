@@ -30,14 +30,14 @@ const columns = (
     navigate: NavigateFunction
 ): ColumnsType<DataType> => [
         {
-            title: 'Promotion name',
+            title: 'Tên khuyến mãi',
             dataIndex: 'name',
             key: 'name',
             width: '12%',
             fixed: 'left'
         },
         {
-            title: 'Coupon code',
+            title: 'Mã khuyến mãi',
             dataIndex: 'coupon_code',
             key: 'coupon_code',
             width: '18%',
@@ -48,7 +48,7 @@ const columns = (
             }
         },
         {
-            title: 'Starts at',
+            title: 'Thời gian bắt đầu',
             dataIndex: 'starts_at',
             width: '15%',
             key: 'starts_at',
@@ -59,7 +59,7 @@ const columns = (
             }
         },
         {
-            title: 'Ends at',
+            title: 'Thời gian kết thúc',
             dataIndex: 'ends_at',
             key: 'ends_at',
             width: '15%',
@@ -70,18 +70,18 @@ const columns = (
             }
         },
         {
-            title: 'Active',
+            title: 'Hoạt động',
             dataIndex: 'active',
             key: 'active',
             width: '100px',
             render: (active: number) => {
                 return (
-                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Hoạt động' : 'Vô hiệu hóa'}</Tag>
                 )
             }
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             width: '150px',
             fixed: 'right',
@@ -186,9 +186,9 @@ const Promotions = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>Promotions</Breadcrumb.Item>
+                        <Breadcrumb.Item>Khuyến mãi</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -196,7 +196,7 @@ const Promotions = () => {
                         <Col span={24}>
                             <Flex justifyContent={"flex-end"} alignItems={"center"}>
                                 <Box mr={3} flex={2}>
-                                    <Input type='text' placeholder='Search by promotion...' onChange={(e) => { setSearch(e.target.value); }} />
+                                    <Input type='text' placeholder='Tìm kiếm...' onChange={(e) => { setSearch(e.target.value); }} />
                                 </Box>
                                 <Box mr={3} flex={1}>
                                     <Select
@@ -206,15 +206,15 @@ const Promotions = () => {
                                         options={[
                                             {
                                                 value: 'all',
-                                                label: 'All',
+                                                label: 'Tất cả',
                                             },
                                             {
                                                 value: 'active',
-                                                label: 'Active',
+                                                label: 'Hoạt động',
                                             },
                                             {
                                                 value: 'disabled',
-                                                label: 'Disabled',
+                                                label: 'Vô hiệu hóa',
                                             },
                                         ]}
                                     />
@@ -225,7 +225,7 @@ const Promotions = () => {
                                     onClick={() => navigate('create')}
                                     icon={<PlusCircleOutlined />}
                                 >
-                                    Create new promotion
+                                    Tạo mới khuyến mãi
                                 </Button>
                             </Flex>
                         </Col>
@@ -252,8 +252,8 @@ const Promotions = () => {
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete role" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={promotion.delete.loading}>
-                <p>Do you want to delete this category (<span style={{ fontWeight: "bold" }}>{promotionDelete?.name}</span>)?</p>
+            <Modal title="Xóa khuyến mãi" open={isModalOpen} okText={'Xóa'} cancelText={'Hủy'} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={promotion.delete.loading}>
+                <p>Bạn có muốn xóa khuyến mãi này (<span style={{ fontWeight: "bold" }}>{promotionDelete?.name}</span>)?</p>
             </Modal>
         </Fragment>
     );

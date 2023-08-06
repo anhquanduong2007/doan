@@ -13,6 +13,7 @@ export interface Order {
     address_id: number
     promotion_id: number
     payment_method: string
+    profit: number
     user_info_payment_id: string
     quantity: number
     total_price: number

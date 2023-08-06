@@ -247,10 +247,8 @@ export const deleteProduct = async ({ id, dispatch, axiosClientJwt, navigate, me
             }, 1000);
         } else {
             dispatch(deleteProductFailed(null));
-            setTimeout(function () {
-                setIsModalOpen(false)
-            }, 1000)
-
+            message.warning('This product cannot be deleted!')
+            setIsModalOpen(false)
         }
     } catch (error: any) {
         dispatch(deleteProductFailed(null));
@@ -470,10 +468,8 @@ export const deleteProductVariant = async ({ id, dispatch, axiosClientJwt, navig
             }, 1000);
         } else {
             dispatch(deleteProductVariantFailed(null));
-            setTimeout(function () {
-                setIsModalOpen(false)
-            }, 1000)
-
+            message.warning('This product cannot be deleted!')
+            setIsModalOpen(false)
         }
     } catch (error: any) {
         dispatch(deleteProductVariantFailed(null));

@@ -23,7 +23,7 @@ const SiderBar = () => {
             {
                 key: "dashboard",
                 icon: "",
-                label: "Dashboard",
+                label: "Bảng điều khiển",
                 className: location.pathname === "/dashboard" ? "ant-menu-item-selected" : "",
                 onClick: () => {
                     navigate('/dashboard')
@@ -32,12 +32,12 @@ const SiderBar = () => {
             {
                 key: "catalog",
                 icon: "",
-                label: "Catalog",
+                label: "Quản lí sản phẩm",
                 children: [
                     {
                         key: "products",
                         icon: <InboxOutlined />,
-                        label: "Products",
+                        label: "Sản phẩm",
                         className: location.pathname === "catalog/products" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('catalog/products')
@@ -46,7 +46,7 @@ const SiderBar = () => {
                     {
                         key: "categories",
                         icon: <FolderOpenOutlined />,
-                        label: "Categories",
+                        label: "Danh mục",
                         className: location.pathname === "catalog/categories" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('catalog/categories')
@@ -55,7 +55,7 @@ const SiderBar = () => {
                     {
                         key: "assets",
                         icon: <PictureOutlined />,
-                        label: "Assets",
+                        label: "Ảnh",
                         className: location.pathname === "catalog/assets" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('catalog/assets')
@@ -66,12 +66,12 @@ const SiderBar = () => {
             {
                 key: "sales",
                 icon: "",
-                label: "Sales",
+                label: "Bán hàng",
                 children: [
                     {
                         key: "orders",
                         icon: <ShoppingCartOutlined />,
-                        label: "Orders",
+                        label: "Đơn hàng",
                         className: location.pathname === "sales/orders" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('sales/orders')
@@ -82,12 +82,12 @@ const SiderBar = () => {
             {
                 key: "customers",
                 icon: "",
-                label: "Customers",
+                label: "Khách hàng",
                 children: [
                     {
                         key: "customers-sub",
                         icon: <UserOutlined />,
-                        label: "Customers",
+                        label: "Khách hàng",
                         className: location.pathname === "/customers" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('/customers')
@@ -98,12 +98,12 @@ const SiderBar = () => {
             {
                 key: "marketing",
                 icon: "",
-                label: "Marketing",
+                label: "Tiếp thị",
                 children: [
                     {
                         key: "promotions",
                         icon: <TagOutlined />,
-                        label: "Promotions",
+                        label: "Khuyến mãi",
                         className: location.pathname === "/marketing/promotions" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('/marketing/promotions')
@@ -114,12 +114,12 @@ const SiderBar = () => {
             {
                 key: "settings",
                 icon: "",
-                label: "Settings",
+                label: "Cài đặt",
                 children: [
                     {
                         key: "administrators",
                         icon: <UserAddOutlined />,
-                        label: "Administrators",
+                        label: "Quản trị viên",
                         className: location.pathname === "settings/administrators" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('settings/administrators')
@@ -128,7 +128,7 @@ const SiderBar = () => {
                     {
                         key: "roles",
                         icon: <UsergroupAddOutlined />,
-                        label: "Roles",
+                        label: "Vai trò",
                         className: location.pathname === "settings/roles" ? "ant-menu-item-selected" : "",
                         onClick: () => {
                             navigate('settings/roles')

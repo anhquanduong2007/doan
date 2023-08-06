@@ -74,13 +74,13 @@ const LoginPage: React.FC = () => {
                                             return (
                                                 <div ref={emailErrorRef}>
                                                     <Input placeholder='superadmin@gmail.com' {...field} />
-                                                    {errors?.email ? <Box as="div" mt={1} textColor="red.600">{errors.email?.type === 'required' ? "Please input your email!" : errors.email.message}</Box> : null}
+                                                    {errors?.email ? <Box as="div" mt={1} textColor="red.600">{errors.email?.type === 'required' ? "Vui lòng điền email!" : errors.email.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="Password">
+                                <Form.Item label="Mật khẩu">
                                     <Controller
                                         name="password"
                                         control={control}
@@ -89,14 +89,14 @@ const LoginPage: React.FC = () => {
                                             return (
                                                 <div ref={passwordErrorRef}>
                                                     <Input.Password {...field} />
-                                                    {errors?.password ? <Box as="div" mt={1} textColor="red.600">{errors.password?.type === 'required' ? "Please input your password!" : errors.password.message}</Box> : null}
+                                                    {errors?.password ? <Box as="div" mt={1} textColor="red.600">{errors.password?.type === 'required' ? "Vui lòng điền mật khẩu!" : errors.password.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
                                 {
-                                    auth.loading ? <Button type="primary" loading>Loading...</Button> : <Button type='primary' htmlType='submit'>Login</Button>
+                                    auth.loading ? <Button type="primary" loading>Đang tải...</Button> : <Button type='primary' htmlType='submit'>Đăng nhập</Button>
                                 }
                             </Form>
                         </Box>

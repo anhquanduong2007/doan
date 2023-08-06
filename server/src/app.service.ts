@@ -126,7 +126,7 @@ export class AppService implements OnApplicationBootstrap {
             const role = await this.prisma.role.create({
                 data: {
                     role_code: "customer",
-                    role_name: "customer",
+                    role_name: "Customer",
                     description: "customer",
                     permissions: userPermissions
                 }

@@ -17,39 +17,34 @@ interface PermissionType {
 
 const permissions: PermissionType[] = [
     {
-        title: "Product",
-        description: "Grants permissions on Product",
+        title: "Sản phẩm",
+        description: "Cấp quyền trên sản phẩm",
         permissions: ["ReadProduct", "CreateProduct", "DeleteProduct", "UpdateProduct"]
     },
     {
-        title: "Category",
-        description: "Grants permissions on Category",
+        title: "Danh mục",
+        description: "Cấp quyền trên danh mục",
         permissions: ["ReadCategory", "CreateCategory", "DeleteCategory", "UpdateCategory"]
     },
     {
-        title: "Asset",
-        description: "Grants permissions on Asset",
+        title: "Ảnh",
+        description: "Cấp quyền trên ảnh",
         permissions: ["ReadAsset", "CreateAsset", "DeleteAsset"]
     },
     {
-        title: "Customer",
-        description: "Grants permissions on Customer",
+        title: "Đơn hàng",
+        description: "Cấp quyền trên đơn hàng",
+        permissions: ['ReadOrder', 'DeleteOrder', 'UpdateOrder', 'CreateOrder',]
+    },
+    {
+        title: "Khách hàng",
+        description: "Cấp quyền trên khách hàng",
         permissions: ["ReadCustomer", "CreateCustomer", "DeleteCustomer", "UpdateCustomer"]
     },
     {
-        title: "Promotion",
-        description: "Grants permissions on Promotion",
+        title: "Khuyến mãi",
+        description: "Cấp quyền trên khuyến mãi",
         permissions: ["ReadPromotion", "CreatePromotion", "DeletePromotion", "UpdatePromotion"]
-    },
-    {
-        title: "Administrator",
-        description: "Grants permissions on Administrator",
-        permissions: ["ReadAdministrator", "CreateAdministrator", "DeleteAdministrator", "UpdateAdministrator"]
-    },
-    {
-        title: "Role",
-        description: "Grants permissions on Role",
-        permissions: ["ReadRole", "CreateRole", "DeleteRole", "UpdateRole"]
     },
 ]
 
@@ -172,12 +167,12 @@ const RoleCreateUpdate = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/settings/roles'>Roles</Link>
+                            <Link to='/settings/roles'>Vai trò</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>{id ? 'Update' : 'Create'}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{id ? 'Cập nhật' : 'Tạo'}</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -188,18 +183,18 @@ const RoleCreateUpdate = () => {
                                     <Flex justifyContent="flex-end" alignItems="center">
                                         {
                                             id && role.update.loading ?
-                                                <Button type="primary" loading>Updating...</Button> :
+                                                <Button type="primary" loading>Đang cập nhật...</Button> :
                                                 role.create.loading ?
-                                                    <Button type="primary" loading>Creating...</Button> :
-                                                    id ? <Button htmlType="submit" type="primary">Update</Button> :
-                                                        <Button htmlType="submit" type="primary">Create</Button>
+                                                    <Button type="primary" loading>Đang tạo...</Button> :
+                                                    id ? <Button htmlType="submit" type="primary">Cập nhật</Button> :
+                                                        <Button htmlType="submit" type="primary">Tạo</Button>
                                         }
                                     </Flex>
                                 </Col>
                                 <Divider />
                                 <Col span={24}>
                                     <Card>
-                                        <Form.Item label="Role name">
+                                        <Form.Item label="Tên vai trò">
                                             <Controller
                                                 name="role_name"
                                                 control={control}
@@ -207,14 +202,14 @@ const RoleCreateUpdate = () => {
                                                 render={({ field }) => {
                                                     return (
                                                         <div ref={roleNameErrorRef}>
-                                                            <Input {...field} placeholder="Eg: superadmin" />
-                                                            {errors?.role_name ? <Box as="div" mt={1} textColor="red.600">{errors.role_name?.type === 'required' ? "Please input your role name!" : errors.role_name.message}</Box> : null}
+                                                            <Input {...field} placeholder="Ví dụ: superadmin" />
+                                                            {errors?.role_name ? <Box as="div" mt={1} textColor="red.600">{errors.role_name?.type === 'required' ? "Vui lòng điền tên vai trò!" : errors.role_name.message}</Box> : null}
                                                         </div>
                                                     )
                                                 }}
                                             />
                                         </Form.Item>
-                                        <Form.Item label="Role code">
+                                        <Form.Item label="Mã vai trò">
                                             <Controller
                                                 name="role_code"
                                                 control={control}
@@ -222,14 +217,14 @@ const RoleCreateUpdate = () => {
                                                 render={({ field }) => {
                                                     return (
                                                         <div ref={roleCodeErrorRef}>
-                                                            <Input {...field} placeholder="Eg: superadmin" />
-                                                            {errors?.role_code ? <Box as="div" mt={1} textColor="red.600">{errors.role_code?.type === 'required' ? "Please input your role code!" : errors.role_code.message}</Box> : null}
+                                                            <Input {...field} placeholder="Ví dụ: superadmin" />
+                                                            {errors?.role_code ? <Box as="div" mt={1} textColor="red.600">{errors.role_code?.type === 'required' ? "Vui lòng nhập mã vai trò!" : errors.role_code.message}</Box> : null}
                                                         </div>
                                                     )
                                                 }}
                                             />
                                         </Form.Item>
-                                        <Form.Item label="Description">
+                                        <Form.Item label="Ghi chú">
                                             <Controller
                                                 name="description"
                                                 control={control}
@@ -242,7 +237,7 @@ const RoleCreateUpdate = () => {
                                                 }}
                                             />
                                         </Form.Item>
-                                        <Form.Item label="Permissions">
+                                        <Form.Item label="Các quyền">
                                             {permissions.map((permission, index: number) => {
                                                 return (
                                                     <Row key={index}>
