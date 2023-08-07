@@ -34,7 +34,7 @@ export const loginUser = async (user: { email: string, password: string }, dispa
                 localStorage.setItem("refreshToken", res.response.refresh_token as string)
                 toast({
                     status: 'success',
-                    title: "Logged in successfully!",
+                    title: "Đăng nhập thành công!",
                     position: "top-right",
                     isClosable: true,
                 })
@@ -50,7 +50,7 @@ export const loginUser = async (user: { email: string, password: string }, dispa
         dispatch(loginFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Có gì đó không đúng!",
             isClosable: true,
         })
     }
@@ -73,7 +73,7 @@ export const logOut = async (dispatch: AppDispatch, navigate: Function, axiosCli
         dispatch(logOutFailed());
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Có gì đó không đúng!",
             isClosable: true,
         })
     }
@@ -90,7 +90,7 @@ export const registeUser = async (user: { email: string, password: string, first
                 localStorage.setItem("refreshToken", res.response.refresh_token as string)
                 toast({
                     status: 'success',
-                    title: "Register customer successfully!",
+                    title: "Đăng kí thành công!",
                     variant: 'left-accent',
                     isClosable: true,
                 })
@@ -106,7 +106,7 @@ export const registeUser = async (user: { email: string, password: string, first
         dispatch(registerFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Có gì đó không đúng!",
             isClosable: true,
         })
     }
@@ -130,7 +130,7 @@ export const getMe = async ({ axiosClientJwt, dispatch, toast }: GetMeParams) =>
         dispatch(meFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Có gì đó khong đúng!",
             isClosable: true,
         })
     }

@@ -120,7 +120,7 @@ const Rating = () => {
         }
         return (
             <Flex justifyContent="center" flexDirection="column" alignItems="center">
-                <Box fontWeight="semibold" fontSize="1rem" textTransform="uppercase">The product has no reviews yet</Box>
+                <Box fontWeight="semibold" fontSize="1rem" textTransform="uppercase">Sản phẩm đang không có lượt đánh giá nào</Box>
                 <Rate value={0} disabled />
             </Flex>
         )
@@ -151,11 +151,11 @@ const Rating = () => {
                             <Divider />
                             <Col span={24}>
                                 <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-                                    <Box textAlign="center" fontWeight="bold" fontSize="2xl">Rating</Box>
-                                    <Form.Item label="Stars">
+                                    <Box textAlign="center" fontWeight="bold" fontSize="2xl">Đánh giá cho sản phẩm</Box>
+                                    <Form.Item label="Đánh giá">
                                         <Rate value={star} onChange={(value: number) => { setStar(value) }} />
                                     </Form.Item>
-                                    <Form.Item label="Title">
+                                    <Form.Item label="Tiêu đề">
                                         <Controller
                                             name="title"
                                             control={control}
@@ -164,13 +164,13 @@ const Rating = () => {
                                                 return (
                                                     <div ref={titleErrorRef}>
                                                         <Input {...field} />
-                                                        {errors?.title ? <Box as="div" mt={1} textColor="red.600">{errors.title?.type === 'required' ? "Please input your title!" : errors.title.message}</Box> : null}
+                                                        {errors?.title ? <Box as="div" mt={1} textColor="red.600">{errors.title?.type === 'required' ? "Yêu cầu nhập tiêu đề!" : errors.title.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Content">
+                                    <Form.Item label="Nội dung">
                                         <Controller
                                             name="content"
                                             control={control}
@@ -179,7 +179,7 @@ const Rating = () => {
                                                 return (
                                                     <div ref={titleErrorRef}>
                                                         <Input.TextArea {...field} />
-                                                        {errors?.content ? <Box as="div" mt={1} textColor="red.600">{errors.content?.type === 'required' ? "Please input your content!" : errors.content.message}</Box> : null}
+                                                        {errors?.content ? <Box as="div" mt={1} textColor="red.600">{errors.content?.type === 'required' ? "Yêu cầu nhập nội dung!" : errors.content.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}

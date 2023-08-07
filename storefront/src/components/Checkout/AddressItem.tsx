@@ -95,7 +95,7 @@ const AddressItem = ({ address, refresh, setRefresh, setMode, setUpdateAddress, 
                                     showModal(address.id)
                                 }}
                             >
-                                Delete address
+                                Xóa địa chỉ
                             </Box>
                             <Box as="p" cursor={"pointer"} onClick={() => {
                                 setUpdateAddress(address.id)
@@ -105,7 +105,7 @@ const AddressItem = ({ address, refresh, setRefresh, setMode, setUpdateAddress, 
                                 setMode(true)
                             }}
                             >
-                                Edit address
+                                Chỉnh sửa địa chỉ
                             </Box>
                             <Box
                                 as="p"
@@ -117,7 +117,7 @@ const AddressItem = ({ address, refresh, setRefresh, setMode, setUpdateAddress, 
                                     setAddressId(address.id)
                                 }}
                             >
-                                Set as default shipping
+                                Đặt làm mặc định
                             </Box>
                         </Fragment>
                     }
@@ -133,43 +133,43 @@ const AddressItem = ({ address, refresh, setRefresh, setMode, setUpdateAddress, 
                 {
                     address.default_shipping_address && (
                         <p>
-                            <Button disabled icon={<InboxOutlined />}>Default shipping</Button>
+                            <Button disabled icon={<InboxOutlined />}>Địa chỉ mặc định</Button>
                         </p>
                     )
                 }
-                <Tooltip title={`Street line 1: ${address.street_line_1}`}>
+                <Tooltip title={`Tuyến phố 1: ${address.street_line_1}`}>
                     <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        <Box as="span" fontWeight="semibold">Street line 1: </Box>{address.street_line_1}
+                        <Box as="span" fontWeight="semibold">Tuyến phố 1: </Box>{address.street_line_1}
                     </p>
                 </Tooltip>
-                <Tooltip title={`Street line 2: ${address.street_line_2 ? address.street_line_2 : '-'}`}>
+                <Tooltip title={`Tuyến phố 2: ${address.street_line_2 ? address.street_line_2 : '-'}`}>
                     <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        <Box as="span" fontWeight="semibold">Street line 2: </Box>{address.street_line_2 ? address.street_line_2 : '-'}
+                        <Box as="span" fontWeight="semibold">Tuyến phố 2: </Box>{address.street_line_2 ? address.street_line_2 : '-'}
                     </p>
                 </Tooltip>
-                <Tooltip title={`City: ${address.city}`}>
+                <Tooltip title={`Thành phố: ${address.city}`}>
                     <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        <Box as="span" fontWeight="semibold">City: </Box>{address.city}
+                        <Box as="span" fontWeight="semibold">Thành phố: </Box>{address.city}
                     </p>
                 </Tooltip>
-                <Tooltip title={`Country: ${address.country}`}>
+                <Tooltip title={`Quốc gia:: ${address.country}`}>
                     <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        <Box as="span" fontWeight="semibold">Country: </Box>{address.country}
+                        <Box as="span" fontWeight="semibold">Quốc gia: </Box>{address.country}
                     </p>
                 </Tooltip>
-                <Tooltip title={`Postal code: ${address.postal_code}`}>
+                <Tooltip title={`Mã bưu điện: ${address.postal_code}`}>
                     <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        <Box as="span" fontWeight="semibold">Postal code: </Box>{address.postal_code}
+                        <Box as="span" fontWeight="semibold">Mã bưu điện: </Box>{address.postal_code}
                     </p>
                 </Tooltip>
-                <Tooltip title={`Province: ${address.province}`}>
+                <Tooltip title={`Tỉnh: ${address.province}`}>
                     <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        <Box as="span" fontWeight="semibold">Province: </Box>{address.province}
+                        <Box as="span" fontWeight="semibold">Tỉnh: </Box>{address.province}
                     </p>
                 </Tooltip>
             </Card>
-            <Modal title="Delete address" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
-                <p>You definitely want to delete this address ?</p>
+            <Modal title="Xóa địa chỉ" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
+                <p>Bạn có chắc muốn xóa địa chỉ này?</p>
             </Modal>
         </Fragment>
     );

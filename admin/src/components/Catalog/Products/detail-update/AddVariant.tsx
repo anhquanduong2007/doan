@@ -113,7 +113,7 @@ function ManageVariant() {
           <Button type="primary" htmlType="submit" loading={store.createProductVariantOption.loading}>Tạo</Button>
         </Flex>
         <Flex mb={3} flexDirection={"column"}>
-          <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Options</Box>
+          <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Các tùy chọn</Box>
           {fields.map((field, index) => {
             return (
               <Box mb={2}>
@@ -152,11 +152,11 @@ function ManageVariant() {
                     <MinusCircleOutlined onClick={() => remove(index)} />
                   </Box>
                 </Flex>
-                {'option' in errors && errors?.option[index] ? <Box as="span" textColor="red.500">{errors.option[index]?.value?.type === 'required' ? "This field is required!" : errors.option[index].value.message}</Box> : null}
+                {'option' in errors && errors?.option[index] ? <Box as="span" textColor="red.500">{errors.option[index]?.value?.type === 'required' ? "Trường này là bắt buộc!" : errors.option[index].value.message}</Box> : null}
               </Box>
             );
           })}
-          <Button onClick={() => { append({ name: "", value: "" }) }}>Add Option</Button>
+          <Button onClick={() => { append({ name: "", value: "" }) }}>Thêm tùy chọn</Button>
         </Flex>
         <div style={{ marginTop: "1rem" }}>
           <Table

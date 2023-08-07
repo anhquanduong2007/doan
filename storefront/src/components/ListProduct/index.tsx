@@ -72,7 +72,7 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
         <Fragment>
             <Row gutter={[0, 16]}>
                 <Col span={24}>
-                    <Input placeholder='Search by name' onChange={(e) => { setSearch(e.target.value); }} />
+                    <Input placeholder='Tìm kiếm sản phẩm theo tên' onChange={(e) => { setSearch(e.target.value); }} />
                 </Col>
                 <Col span={24}>
                     {dataToRender()}

@@ -58,7 +58,7 @@ const LoginPage: React.FC = () => {
                                 layout='vertical'
                                 autoComplete="off"
                             >
-                                <Form.Item label="Email">
+                                <Form.Item label="Địa chỉ Email">
                                     <Controller
                                         name="email"
                                         control={control}
@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="Password">
+                                <Form.Item label="Mật khẩu">
                                     <Controller
                                         name="password"
                                         control={control}
@@ -89,10 +89,10 @@ const LoginPage: React.FC = () => {
                                     />
                                 </Form.Item>
                                 {
-                                    auth.loading ? <Button type="primary" loading className='mb-2'>Loading...</Button> : <Button type='primary' htmlType='submit' className='mb-2'>Login</Button>
+                                    auth.loading ? <Button type="primary" loading className='mb-2'>Xin chờ...</Button> : <Button type='primary' htmlType='submit' className='mb-2'>Đăng nhập</Button>
                                 }
                             </Form>
-                            <Link to="/register" className='underline cursor-pointer text-[gray] font-light'>New customer? Create your account</Link>
+                            <Link to="/register" className='underline cursor-pointer text-[gray] font-light'>Khách hàng mới? Tạo tài khoản của bạn</Link>
                         </Box>
                     </Col>
                 </Row>

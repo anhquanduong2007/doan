@@ -86,10 +86,10 @@ const CheckoutPage = () => {
                     <Col>
                         <Breadcrumb spacing='8px' marginBottom='35px' separator={<ChevronRight size={14} />}>
                             <BreadcrumbItem>
-                                <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Home</Link>
+                                <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Trang chủ</Link>
                             </BreadcrumbItem>
                             <BreadcrumbItem isCurrentPage>
-                                <Link to='/#' className='!text-[#999] text-sm font-medium'>Checkout</Link>
+                                <Link to='/#' className='!text-[#999] text-sm font-medium'>Thanh toán</Link>
                             </BreadcrumbItem>
                         </Breadcrumb>
                     </Col>
@@ -120,7 +120,7 @@ const CheckoutPage = () => {
                                 {/* Payment method */}
                                 <div className='mb-[1rem]'>
                                     <Card variant="outline" padding={8}>
-                                        <div className='text-center font-bold'>Payment methods</div>
+                                        <div className='text-center font-bold'>Phương thức thanh toán</div>
                                         <Divider />
                                         <Row gutter={[12, 12]}>
                                             <Col span={12} >
@@ -130,7 +130,7 @@ const CheckoutPage = () => {
                                                     className='cursor-pointer flex justify-center items-center'
                                                     onClick={() => { setPaymentMethod(PaymentMethod.Standard) }}
                                                 >
-                                                    <span className='text-center font-semibold'>Payment on delivery</span>
+                                                    <span className='text-center font-semibold'>Thanh toán khi nhận hàng</span>
                                                 </Card>
                                             </Col>
                                             <Col span={12}>
@@ -141,7 +141,7 @@ const CheckoutPage = () => {
                                                     className='cursor-pointer flex justify-center items-center'
                                                     onClick={() => { setPaymentMethod(PaymentMethod.Card) }}
                                                 >
-                                                    <p className='text-center font-semibold'>Payment by Paypal</p>
+                                                    <p className='text-center font-semibold'>Thanh toán qua Paypal</p>
                                                     <div className='flex flex-row justify-center mb-3'>
                                                         <img src={Icon1} alt="" />
                                                     </div>
@@ -153,26 +153,26 @@ const CheckoutPage = () => {
                             </Col>
                             <Col span={6}>
                                 <Card padding={8} variant="outline">
-                                    <div className='text-center font-bold'>Order</div>
+                                    <div className='text-center font-bold'>Đơn hàng</div>
                                     <Divider />
                                     <div className='flex justify-between items-center mb-1'>
-                                        <span className='font-semibold'>Price</span>
+                                        <span className='font-semibold'>Giá</span>
                                         <span className='font-bold'>{formatMoney(!cart.cart.loading && cart.cart.result ? cart.cart.result.product_variant.price : 0)}</span>
                                     </div>
                                     <div className='flex justify-between items-center mb-1'>
-                                        <span className='font-semibold'>Quantity</span>
+                                        <span className='font-semibold'>Số lượng</span>
                                         <span className='font-bold'>x{!cart.cart.loading && cart.cart.result ? cart.cart.result.quantity : 0}</span>
                                     </div>
                                     {
                                         !checkout.promotion.loading && checkout.promotion.result ? (
                                             <div className='flex justify-between items-center mb-1'>
-                                                <span className='font-semibold'>Coupon</span>
+                                                <span className='font-semibold'>Mã giảm giá</span>
                                                 <span className='font-bold'>{checkout.promotion.result.discount}%</span>
                                             </div>
                                         ) : null
                                     }
                                     <div className='flex justify-between items-center mb-4'>
-                                        <span className='font-semibold'>Total</span>
+                                        <span className='font-semibold'>Tổng đơn hàng</span>
                                         <span className='font-bold'>
                                             {formatMoney(!cart.cart.loading && cart.cart.result ? !checkout.promotion.loading && checkout.promotion.result ? cart.cart.result.product_variant.price * cart.cart.result.quantity * ((100 - checkout.promotion.result.discount) / 100) : cart.cart.result.product_variant.price * cart.cart.result.quantity : 0)}
                                         </span>
@@ -213,7 +213,7 @@ const CheckoutPage = () => {
                                                         }
                                                     }}
                                                 >
-                                                    Pay
+                                                   Thanh toán
                                                 </Button>
                                             </div>) : null
                                     }
