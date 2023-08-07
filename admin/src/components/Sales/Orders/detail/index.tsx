@@ -42,10 +42,10 @@ const OrderDetail = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/sales/orders'>Orders</Link>
+                            <Link to='/sales/orders'>Đơn hàng</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>{!order.single.loading && order.single.result ? order.single.result.code : null}</Breadcrumb.Item>
                     </Breadcrumb>
@@ -61,24 +61,24 @@ const OrderDetail = () => {
                                                 (() => {
                                                     switch (order.single.result.status) {
                                                         case StatusOrder.Confirm:
-                                                            return <Tag color="cyan">Confirm</Tag>
+                                                            return <Tag color="cyan">Xác nhận</Tag>
                                                         case StatusOrder.Shipped:
-                                                            return <Tag color="orange">Shipped</Tag>
+                                                            return <Tag color="orange">Đang vận chuyển</Tag>
                                                         case StatusOrder.Completed:
-                                                            return <Tag color="green">Completed</Tag>
+                                                            return <Tag color="green">Hoàn thành</Tag>
                                                         case StatusOrder.Cancel:
-                                                            return <Tag color="red">Cancel</Tag>
+                                                            return <Tag color="red">Hủy</Tag>
                                                         case StatusOrder.Refund:
-                                                            return <Tag color="magenta">Refund</Tag>
+                                                            return <Tag color="magenta">Hoàn trả</Tag>
                                                         default:
-                                                            return <Tag color="blue">Open</Tag>
+                                                            return <Tag color="blue">Mở</Tag>
                                                     }
                                                 })()
                                                 : null
                                         }
                                     </Box>
                                     <Box>
-                                        {!order.single.loading && order.single.result ? order.single.result.payment ? <Tag>Paid</Tag> : <Tag>Unpaid</Tag> : null}
+                                        {!order.single.loading && order.single.result ? order.single.result.payment ? <Tag>Đã thanh toán</Tag> : <Tag>Chưa thanh toán</Tag> : null}
                                     </Box>
                                 </Flex>
                                 <Popover placement="leftTop" content={
@@ -109,7 +109,7 @@ const OrderDetail = () => {
                                                 })
                                             }}
                                         >
-                                            Cancel order
+                                            Hủy đơn hàng
                                         </Box>
                                         <Box
                                             _hover={{ background: '#dbdbdb' }}
@@ -137,7 +137,7 @@ const OrderDetail = () => {
                                                 })
                                             }}
                                         >
-                                            Refund order
+                                            Hoàn trả đơn hàng
                                         </Box>
                                         <Box
                                             _hover={{ background: '#dbdbdb' }}
@@ -159,7 +159,7 @@ const OrderDetail = () => {
                                                 setRefresh
                                             })}
                                         >
-                                            Delete order
+                                            Xóa đơn hàng
                                         </Box>
                                         <Box
                                             _hover={{ background: '#dbdbdb' }}
@@ -213,17 +213,17 @@ const OrderDetail = () => {
                                                 }
                                             }}
                                         >
-                                            Manually transition to state...
+                                            Tiếp tục trạng thái tiếp theo...
                                         </Box>
                                     </Fragment>
-                                } title="Order processing">
-                                    <Button type="primary">{!order.single.loading && order.single.result ? order.single.result.status === StatusOrder.Completed ? null : 'Actions' : null}</Button>
+                                } title="Xử lý đơn hàng">
+                                    <Button type="primary">{!order.single.loading && order.single.result ? order.single.result.status === StatusOrder.Completed ? null : 'Hành động' : null}</Button>
                                 </Popover>
                             </Flex>
                         </Col>
                         <Divider />
                         <Col span={24}>
-                            <Spin spinning={order.single.loading} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',maxHeight: 'unset' }}>
+                            <Spin spinning={order.single.loading} style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', maxHeight: 'unset' }}>
                                 <Card>
                                     <Row>
                                         <OrderInfo />
@@ -234,7 +234,6 @@ const OrderDetail = () => {
                                                 <OrderHistory />
                                             </Row>
                                         </Col>
-
                                     </Row>
                                 </Card>
                             </Spin>

@@ -97,11 +97,11 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
     };
 
     return (
-        <Modal title="Update product variant" open={isModalOpen} onOk={handleSubmit(onSubmit)} onCancel={handleCancel} centered width={"80%"} confirmLoading={product.productVariantUpdate.loading}>
+        <Modal title="Cập nhật biến thể sản phẩm" cancelText={'Hủy'} okText={'Cập nhật'} open={isModalOpen} onOk={handleSubmit(onSubmit)} onCancel={handleCancel} centered width={"80%"} confirmLoading={product.productVariantUpdate.loading}>
             <Form layout='vertical'>
                 <Row gutter={[16, 16]}>
                     <Col span={19}>
-                        <Form.Item label="Product name">
+                        <Form.Item label="Tên">
                             <Controller
                                 name="name"
                                 rules={{ required: true }}
@@ -109,8 +109,8 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                 render={({ field }) => {
                                     return (
                                         <div ref={nameErrorRef}>
-                                            <Input {...field} placeholder="Eg: Shirt sm" />
-                                            {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Please input your product variant name!" : errors.name.message}</Box> : null}
+                                            <Input {...field} placeholder="Ví dụ: Shirt sm" />
+                                            {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Vui lòng điền tên biến thể!" : errors.name.message}</Box> : null}
                                         </div>
                                     )
                                 }}
@@ -125,13 +125,13 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                     return (
                                         <div ref={skuErrorRef}>
                                             <Input {...field} placeholder="sm-0152" />
-                                            {errors?.sku ? <Box as="div" mt={1} textColor="red.600">{errors.sku?.type === 'required' ? "Please input your product sku!" : errors.sku.message}</Box> : null}
+                                            {errors?.sku ? <Box as="div" mt={1} textColor="red.600">{errors.sku?.type === 'required' ? "Vui lòng điền SKU!" : errors.sku.message}</Box> : null}
                                         </div>
                                     )
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="Origin price">
+                        <Form.Item label="Giá gốc">
                             <Controller
                                 name="origin_price"
                                 control={control}
@@ -147,7 +147,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="Price">
+                        <Form.Item label="Giá bán">
                             <Controller
                                 name="price"
                                 control={control}
@@ -163,7 +163,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                 }}
                             />
                         </Form.Item>
-                        <Form.Item label="Stock">
+                        <Form.Item label="Số lượng">
                             <Controller
                                 name="stock"
                                 control={control}
@@ -185,7 +185,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                     src={featuredAsset ? featuredAsset?.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
                                 />
                             </Box>
-                            <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Select image</Button>
+                            <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Chọn ảnh</Button>
                         </Flex>
                     </Col>
                 </Row>

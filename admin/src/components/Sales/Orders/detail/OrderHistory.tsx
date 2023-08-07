@@ -12,7 +12,7 @@ const OrderHistory = () => {
                 {!order.single.loading && order.single.result ? (
                     order.single.result.order_history.map((history, index) => {
                         return (
-                            <Timeline.Item key={index}>{`${history.content} at ${new Date(history.created_date).toISOString().substring(0, 10)} - ${moment(history.created_date).utc().format('HH:mm:ss')}`}</Timeline.Item>
+                            <Timeline.Item key={index}>{`${history.content} ${new Date(history.created_date).toISOString().substring(0, 10)} - ${moment(history.created_date).utc().format('HH:mm:ss')}`}</Timeline.Item>
                         )
                     })
                 ) : ''}

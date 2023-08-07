@@ -32,7 +32,7 @@ export class ProductController {
 
     // ** Cart
     @Get("cart")
-    @Permission()
+    @Permission(Permissions.ReadCart)
     async getListProductVariantFromCard(@Req() req: Request, @Res() res: Response) {
         const userId = req.user['userId']
         const response = await this.productService.getListProductVariantFromCart(userId);
@@ -40,14 +40,14 @@ export class ProductController {
     }
 
     @Get("cart/:id")
-    @Permission()
+    @Permission(Permissions.ReadCart)
     async getItemOnCart(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.productService.getItemOnCart(id);
         return res.json({ response });
     }
 
     @Post("cart/:id")
-    @Permission()
+    @Permission(Permissions.CreateCart)
     async addProductVariantToCard(@Req() req: Request, @Param('id', ParseIntPipe) id: number, @Body() dto: AddProductVariantToCartDto, @Res() res: Response) {
         const userId = req.user['userId']
         const response = await this.productService.addProductVariantToCart(dto, userId, id)
@@ -55,7 +55,7 @@ export class ProductController {
     }
 
     @Delete("cart/delete/:id")
-    @Permission()
+    @Permission(Permissions.DeleteCart)
     async removeProductVariantFromCard(@Req() req: Request, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const userId = req.user['userId']
         const response = await this.productService.removeProductVariantFromCart(userId, id)
@@ -63,7 +63,7 @@ export class ProductController {
     }
 
     @Put("cart/update/:id")
-    @Permission()
+    @Permission(Permissions.UpdateCart)
     async updateProductVariantInCard(@Req() req: Request, @Body() dto: AddProductVariantToCartDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const userId = req.user['userId']
         const response = await this.productService.updateProductVariantInCart(dto, userId, id)

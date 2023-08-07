@@ -47,7 +47,7 @@ const columns = (
     setAssetDelete: (id: number) => void,
 ): ColumnsType<DataType> => [
         {
-            title: 'Name',
+            title: 'Tên',
             dataIndex: 'name',
             ellipsis: true,
             key: 'name',
@@ -67,13 +67,13 @@ const columns = (
             }
         },
         {
-            title: 'Url',
+            title: 'Đường dẫn',
             ellipsis: true,
             dataIndex: 'url',
             key: 'url',
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             width: 150,
             render: (_, record) => {
@@ -160,9 +160,9 @@ const Asset = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>Assets</Breadcrumb.Item>
+                        <Breadcrumb.Item>Ảnh</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -170,10 +170,10 @@ const Asset = () => {
                         <Col span={24}>
                             <Flex>
                                 <Box mr={3} flex={1}>
-                                    <Input type='text' placeholder='Search by asset name' onChange={(e) => { setSearch(e.target.value) }} />
+                                    <Input type='text' placeholder='Tìm kiếm theo tên' onChange={(e) => { setSearch(e.target.value) }} />
                                 </Box>
                                 <Upload {...props(refresh, setRefresh, setLoading)}>
-                                    <Button type="primary" loading={loading}>Upload Assets</Button>
+                                    <Button type="primary" loading={loading}>Tải ảnh lên</Button>
                                 </Upload>
                             </Flex>
                         </Col>
@@ -199,8 +199,8 @@ const Asset = () => {
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Delete asset" open={isModalOpen} onOk={handleOkDelete} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
-                <p>Do you want to delete this asset?</p>
+            <Modal title="Xóa ảnh" okText={'Xóa'} cancelText={'Hủy'} open={isModalOpen} onOk={handleOkDelete} onCancel={handleCancel} centered confirmLoading={store.delete.loading}>
+                <p>Bạn có muốn xóa ảnh này?</p>
             </Modal>
         </Fragment>
     );

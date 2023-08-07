@@ -68,27 +68,27 @@ const ModalUpdateProductOption = ({ isModalUpdateProductOptionOpen, setIsModalUp
     }
 
     return (
-        <Modal title="Update product option" open={isModalUpdateProductOptionOpen} onOk={handleSubmit(onSubmit)} onCancel={handleCancel} centered confirmLoading={product.productOptionUpdate.loading}>
+        <Modal title="Cập nhật sản phẩm option" cancelText={'Hủy'} okText={'Cập nhật'} open={isModalUpdateProductOptionOpen} onOk={handleSubmit(onSubmit)} onCancel={handleCancel} centered confirmLoading={product.productOptionUpdate.loading}>
             <Form layout='vertical'>
                 <Row gutter={[16, 16]}>
                     <Col span={24}>
-                        <Form.Item label="Name Option">
+                        <Form.Item label="Tên Option">
                             <Select
                                 value={nameOption}
                                 disabled
                                 options={[
                                     {
                                         value: 'Size',
-                                        label: 'Size',
+                                        label: 'Kích cỡ',
                                     },
                                     {
                                         value: 'Color',
-                                        label: 'Color',
+                                        label: 'Mãu',
                                     },
                                 ]}
                             />
                         </Form.Item>
-                        <Form.Item label="Value">
+                        <Form.Item label="Giá trị">
                             <Controller
                                 name="value"
                                 control={control}
@@ -97,7 +97,7 @@ const ModalUpdateProductOption = ({ isModalUpdateProductOptionOpen, setIsModalUp
                                     return (
                                         <div ref={valueErrorRef}>
                                             <Input {...field} placeholder="XL" />
-                                            {errors?.value ? <Box as="div" mt={1} textColor="red.600">{errors.value?.type === 'required' ? "Please input your product sku!" : errors.value.message}</Box> : null}
+                                            {errors?.value ? <Box as="div" mt={1} textColor="red.600">{errors.value?.type === 'required' ? "Vui lòng điền giá trị option!" : errors.value.message}</Box> : null}
                                         </div>
                                     )
                                 }}

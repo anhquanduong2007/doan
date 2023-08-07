@@ -2,7 +2,7 @@ import { Controller, Post, Body, Res, Get, Put, Delete, Param, ParseIntPipe, Que
 import { PaginationDto } from 'src/common/dto';
 import { Permission } from 'src/common/decorator';
 import { Permissions } from 'src/constant';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { PromotionService } from './promotion.service';
 import { CheckPromotionCodeDto, PromotionCreateDto, PromotionUpdateDto } from './dto';
 
@@ -20,7 +20,6 @@ export class PromotionController {
     }
 
     @Post('/check-code')
-    @Permission()
     async checkPromotionCode(@Body() dto: CheckPromotionCodeDto, @Res() res: Response) {
         const response = await this.promotionService.checkPromotionCode(dto);
         return res.json({ response });
@@ -28,7 +27,7 @@ export class PromotionController {
 
     @Get()
     @Permission(Permissions.ReadPromotion)
-    async getRoles(@Query() pagination: PaginationDto, @Res() res: Response) {
+    async getPromotions(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.promotionService.promotions(pagination);
         return res.json({ response });
     }
@@ -42,7 +41,7 @@ export class PromotionController {
 
     @Get(':id')
     @Permission(Permissions.ReadPromotion)
-    async getRole(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    async getPromotion(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.promotionService.promotion(id);
         return res.json({ response });
     }

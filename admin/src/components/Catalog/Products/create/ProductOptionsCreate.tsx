@@ -81,8 +81,8 @@ const ProductOptionsCreate = ({ control, setVariantItem, setValue, watch, errors
                                             return (
                                                 <Box>
                                                     <Select style={{ width: 120 }} value={value} {...other}>
-                                                        <Select.Option value="Size">Size</Select.Option>
-                                                        <Select.Option value="Color">Color</Select.Option>
+                                                        <Select.Option value="Size">Kích cỡ</Select.Option>
+                                                        <Select.Option value="Color">Màu</Select.Option>
                                                     </Select>
                                                 </Box>
                                             );
@@ -107,11 +107,11 @@ const ProductOptionsCreate = ({ control, setVariantItem, setValue, watch, errors
                                     <MinusCircleOutlined onClick={() => remove(index)} />
                                 </Box>
                             </Flex>
-                            {'option' in errors && errors?.option[index] ? <Box as="span" textColor="red.500">{errors.option[index]?.value?.type === 'required' ? "This field is required!" : errors.option[index].value.message}</Box> : null}
+                            {'option' in errors && errors?.option[index] ? <Box as="span" textColor="red.500">{errors.option[index]?.value?.type === 'required' ? "Vui lòng tạo option!" : errors.option[index].value.message}</Box> : null}
                         </Box>
                     );
                 })}
-                <Button onClick={() => { append({ name: "", value: "" }) }}>Add Option</Button>
+                <Button onClick={() => { append({ name: "", value: "" }) }}>Thêm Option</Button>
             </Flex>
         </Fragment>
     );

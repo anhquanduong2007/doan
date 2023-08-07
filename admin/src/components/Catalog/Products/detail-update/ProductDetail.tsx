@@ -131,13 +131,13 @@ const ProductDetail = () => {
                             <Flex justifyContent="space-between" alignItems="center">
                                 <Flex justifyContent="center" alignItems="center">
                                     <Switch checked={active} size='small' onChange={() => setActive(!active)} />
-                                    <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                                    <Box as="span" ml={2} fontWeight="semibold">Hoạt động</Box>
                                 </Flex>
                                 {
                                     id && product.update.loading ?
-                                        <Button type="primary" loading>Updating...</Button> :
+                                        <Button type="primary" loading>Đang cập nhật...</Button> :
 
-                                        <Button htmlType="submit" type="primary">Update</Button>
+                                        <Button htmlType="submit" type="primary">Cập nhật</Button>
                                 }
                             </Flex>
                         </Col>
@@ -145,7 +145,7 @@ const ProductDetail = () => {
                         <Col span={24}>
                             <Row gutter={[16, 16]}>
                                 <Col span={19}>
-                                    <Form.Item label="Product name">
+                                    <Form.Item label="Tên sản phẩm">
                                         <Controller
                                             name="name"
                                             rules={{ required: true }}
@@ -153,14 +153,14 @@ const ProductDetail = () => {
                                             render={({ field }) => {
                                                 return (
                                                     <div ref={productNameErrorRef}>
-                                                        <Input {...field} placeholder="Eg: Quan" />
-                                                        {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Please input your product name!" : errors.name.message}</Box> : null}
+                                                        <Input {...field} placeholder="Ví dụ: Quan" />
+                                                        {errors?.name ? <Box as="div" mt={1} textColor="red.600">{errors.name?.type === 'required' ? "Vui lòng điền tên sản phẩm!" : errors.name.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Description">
+                                    <Form.Item label="Mô tả">
                                         <CKEditor
                                             editor={ClassicEditor}
                                             data={description}
@@ -169,7 +169,7 @@ const ProductDetail = () => {
                                             }}
                                         />
                                     </Form.Item>
-                                    <Form.Item label="Category">
+                                    <Form.Item label="Danh mục">
                                         <Select
                                             loading={category.list.loading}
                                             value={categoryId}
@@ -192,7 +192,7 @@ const ProductDetail = () => {
                                                 src={featuredAsset ? featuredAsset.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
                                             />
                                         </Box>
-                                        <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Select image</Button>
+                                        <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Chọn ảnh</Button>
                                     </Flex>
                                 </Col>
                             </Row>

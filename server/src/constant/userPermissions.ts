@@ -8,5 +8,9 @@ export const userPermissions = [
     Permissions.ReadCustomer,
     Permissions.ReadOrder,
     Permissions.ReadRate,
-    Permissions.CreateRate
+    Permissions.CreateRate,
+    Permissions.CreateCart,
+    Permissions.ReadCart,
+    Permissions.UpdateCart,
+    Permissions.DeleteCart
 ]

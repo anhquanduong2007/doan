@@ -67,7 +67,7 @@ const ProductCreate: React.FC = () => {
       } else {
          Inotification({
             type: "warning",
-            message: "Please create option!",
+            message: "Vui lòng tạo option!",
          });
       }
    };
@@ -78,12 +78,12 @@ const ProductCreate: React.FC = () => {
             <Col span={24}>
                <Breadcrumb>
                   <Breadcrumb.Item>
-                     <Link to="/">Home</Link>
+                     <Link to="/">Trang chủ</Link>
                   </Breadcrumb.Item>
                   <Breadcrumb.Item>
-                     <Link to="/catalog/products">Products</Link>
+                     <Link to="/catalog/products">Sản phẩm</Link>
                   </Breadcrumb.Item>
-                  <Breadcrumb.Item>Create</Breadcrumb.Item>
+                  <Breadcrumb.Item>Tạo mới</Breadcrumb.Item>
                </Breadcrumb>
             </Col>
             <Col span={24}>
@@ -92,10 +92,10 @@ const ProductCreate: React.FC = () => {
                      <Flex justifyContent="space-between" alignItems="center">
                         <Flex justifyContent="center" alignItems="center">
                            <Switch checked={enabled} size="small" onChange={() => setEnabled(!enabled)} />
-                           <Box as="span" ml={2} fontWeight="semibold">Enabled</Box>
+                           <Box as="span" ml={2} fontWeight="semibold">Hoạt động</Box>
                         </Flex>
                         <Button type="primary" htmlType="submit" loading={product.createProduct.loading}>
-                           {!id ? "Create" : "Update"}
+                           {!id ? "Tạo" : "Cập nhật"}
                         </Button>
                      </Flex>
                      <Divider />
@@ -123,7 +123,7 @@ const ProductCreate: React.FC = () => {
                                        />
                                     </Box>
                                     <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>
-                                       Select image
+                                       Chọn ảnh
                                     </Button>
                                  </Flex>
                               </Col>

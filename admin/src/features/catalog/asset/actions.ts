@@ -36,7 +36,7 @@ export const getListAsset = async ({ pagination, dispatch, axiosClientJwt, navig
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -62,7 +62,7 @@ export const deleteAsset = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteAssetSuccess(res.response.data))
-                message.success('Delete asset successfully!')
+                message.success('Xóa ảnh thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
@@ -78,7 +78,7 @@ export const deleteAsset = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)

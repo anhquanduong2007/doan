@@ -15,18 +15,17 @@ interface DataType {
     id: number
     name: string;
     url: string
-    active: number
+    active: boolean
 }
 
 const columns = (
     navigate: NavigateFunction
 ): ColumnsType<DataType> => [
         {
-            title: 'Product name',
+            title: 'Tên sản phẩm',
             dataIndex: 'name',
             key: 'name',
             render: (name, record) => {
-                console.log(record.url)
                 return (
                     <Flex alignItems={"center"}>
                         <Avatar src={<img src={record.url} style={{ width: 40 }} />} />
@@ -36,22 +35,22 @@ const columns = (
             }
         },
         {
-            title: 'Active',
+            title: 'Hoạt động',
             dataIndex: 'active',
             key: 'active',
             render: (active: number) => {
                 return (
-                    <Tag color={active === 1 ? 'green' : 'gold'}>{active === 1 ? 'Active' : 'Disabled'}</Tag>
+                    <Tag color={active ? 'green' : 'gold'}>{active ? 'Hoạt động' : 'Vô hiệu hóa'}</Tag>
                 )
             }
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             render: (_, record) => {
                 return (
                     <Space size="middle">
-                        <Button onClick={() => { navigate(`/catalog/products/detail-update/${record.id}`) }}>Open</Button>
+                        <Button onClick={() => { navigate(`/catalog/products/detail-update/${record.id}`) }}>Xem chi tiết</Button>
                     </Space>
                 )
             },
@@ -80,7 +79,6 @@ const ProductOfCategory = ({ products, loading }: ProductOfCategoryProps) => {
 
     return (
         <Table bordered columns={columns(navigate)} dataSource={dataRender()} loading={loading} />
-
     );
 };
 

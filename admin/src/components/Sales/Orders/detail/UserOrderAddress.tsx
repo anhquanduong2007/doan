@@ -20,34 +20,34 @@ const UserOrderAddress = () => {
                             </Flex>
                         ) : null
                     }>
-                        <Tooltip title={`Street line 1: ${!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_1 : null}`}>
+                        <Tooltip title={`Tuyến phố 1: ${!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_1 : null}`}>
                             <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                <Box as="span" fontWeight="semibold">Street line 1: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_1 : null}
+                                <Box as="span" fontWeight="semibold">Tuyến phố 1: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_1 : null}
                             </p>
                         </Tooltip>
-                        <Tooltip title={`Street line 2: ${!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_2 ? order.single.result.billing_address.street_line_2 : '-' : null}`}>
+                        <Tooltip title={`Tuyến phố 2: ${!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_2 ? order.single.result.billing_address.street_line_2 : '-' : null}`}>
                             <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                <Box as="span" fontWeight="semibold">Street line 2: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_2 ? order.single.result.billing_address.street_line_2 : '-' : null}
+                                <Box as="span" fontWeight="semibold">Tuyến phố 2: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.street_line_2 ? order.single.result.billing_address.street_line_2 : '-' : null}
                             </p>
                         </Tooltip>
-                        <Tooltip title={`City: ${!order.single.loading && order.single.result ? order.single.result.billing_address.city : null}`}>
+                        <Tooltip title={`Thành phố: ${!order.single.loading && order.single.result ? order.single.result.billing_address.city : null}`}>
                             <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                <Box as="span" fontWeight="semibold">City: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.city : null}
+                                <Box as="span" fontWeight="semibold">Thành phố: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.city : null}
                             </p>
                         </Tooltip>
-                        <Tooltip title={`Country: ${!order.single.loading && order.single.result ? order.single.result.billing_address.country : null}`}>
+                        <Tooltip title={`Quốc gia: ${!order.single.loading && order.single.result ? order.single.result.billing_address.country : null}`}>
                             <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                <Box as="span" fontWeight="semibold">Country: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.country : null}
+                                <Box as="span" fontWeight="semibold">Quốc gia: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.country : null}
                             </p>
                         </Tooltip>
-                        <Tooltip title={`Postal code: ${!order.single.loading && order.single.result ? order.single.result.billing_address.postal_code : null}`}>
+                        <Tooltip title={`Mã bưu điện: ${!order.single.loading && order.single.result ? order.single.result.billing_address.postal_code : null}`}>
                             <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                <Box as="span" fontWeight="semibold">Postal code: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.postal_code : null}
+                                <Box as="span" fontWeight="semibold">Mã bưu điện: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.postal_code : null}
                             </p>
                         </Tooltip>
-                        <Tooltip title={`Province: ${!order.single.loading && order.single.result ? order.single.result.billing_address.province : null}`}>
+                        <Tooltip title={`Tỉnh: ${!order.single.loading && order.single.result ? order.single.result.billing_address.province : null}`}>
                             <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                <Box as="span" fontWeight="semibold">Province: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.province : null}
+                                <Box as="span" fontWeight="semibold">Tỉnh: </Box>{!order.single.loading && order.single.result ? order.single.result.billing_address.province : null}
                             </p>
                         </Tooltip>
                     </Card>

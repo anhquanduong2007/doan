@@ -14,7 +14,7 @@ const ProductCreate = ({ control, errors, setValue }: ProductCreateProps) => {
     return (
         <Fragment>
             <Box mb={3}>
-                <Box as="label" htmlFor='name' fontWeight="semibold">Product name</Box>
+                <Box as="label" htmlFor='name' fontWeight="semibold">Tên sản phẩm</Box>
                 <Controller
                     name="name"
                     control={control}
@@ -25,18 +25,18 @@ const ProductCreate = ({ control, errors, setValue }: ProductCreateProps) => {
                                 <Input
                                     status={errors?.name ? 'error' : ''}
                                     id='name'
-                                    placeholder='Eg: Bags'
+                                    placeholder='Ví dụ: Bags'
                                     {...other}
                                     value={value || ''}
                                 />
-                                {errors?.name ? <Box as="span" textColor="red.500">{errors.name?.type === 'required' ? "Product name is required!" : errors.name.message}</Box> : null}
+                                {errors?.name ? <Box as="span" textColor="red.500">{errors.name?.type === 'required' ? "Vui lòng điền tên sản phẩm!" : errors.name.message}</Box> : null}
                             </Box>
                         )
                     }}
                 />
             </Box>
             <Box mb={3}>
-                <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Description</Box>
+                <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Mô tả</Box>
                 <Controller
                     name="description"
                     control={control}

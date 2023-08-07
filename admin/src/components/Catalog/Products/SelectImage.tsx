@@ -46,7 +46,7 @@ const columns = (
     featuredAsset: Asset
 ): ColumnsType<DataType> => [
         {
-            title: 'name',
+            title: 'Tên',
             dataIndex: 'name',
             ellipsis: true,
             key: 'name',
@@ -60,13 +60,13 @@ const columns = (
             }
         },
         {
-            title: 'Url',
+            title: 'Đường dẫn',
             ellipsis: true,
             dataIndex: 'url',
             key: 'url',
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             render: (_, record) => {
                 return (
@@ -143,7 +143,7 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
     }
 
     return (
-        <Modal title="Basic Modal" open={isModalAssetOpen} onOk={handleOk} onCancel={handleCancel} centered width={"90%"} footer={null}>
+        <Modal title="Chọn ảnh" open={isModalAssetOpen} onOk={handleOk} onCancel={handleCancel} centered width={"90%"} footer={null}>
             <Row>
                 <Col span={24}>
                     <Flex>
@@ -151,7 +151,7 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
                             <Input type='text' placeholder='Search by asset name' onChange={(e) => { setSearch(e.target.value); }} />
                         </Box>
                         <Upload {...props(refresh, setRefresh, setLoading)}>
-                            <Button type="primary" loading={loading}>Upload Assets</Button>
+                            <Button type="primary" loading={loading}>Tải ảnh lên</Button>
                         </Upload>
                     </Flex>
                 </Col>

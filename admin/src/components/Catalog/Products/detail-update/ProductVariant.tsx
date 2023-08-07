@@ -69,7 +69,7 @@ const ProductVariant = () => {
                                                     setVariant(product_variant)
                                                 }}
                                             >
-                                                Update
+                                                Cập nhật
                                             </Box>
                                             <Box
                                                 _hover={{ background: '#dbdbdb' }}
@@ -85,11 +85,11 @@ const ProductVariant = () => {
                                                     })
                                                 }}
                                             >
-                                                Delete
+                                                Xóa
                                             </Box>
                                         </Fragment>
                                     }
-                                    title="Action"
+                                    title="Hành động"
                                 >
                                     <EllipsisOutlined style={{ cursor: "pointer" }} />
                                 </Popover>
@@ -128,16 +128,16 @@ const ProductVariant = () => {
                                     <Form.Item label="SKU">
                                         <Input disabled value={product_variant.sku} />
                                     </Form.Item>
-                                    <Form.Item label="Product variant name">
+                                    <Form.Item label="Tên biến thể">
                                         <Input disabled value={product_variant.name} />
                                     </Form.Item>
-                                    <Form.Item label="Origin Price">
+                                    <Form.Item label="Giá gốc">
                                         <Input disabled value={product_variant.origin_price} />
                                     </Form.Item>
-                                    <Form.Item label="Price">
+                                    <Form.Item label="Giá bán">
                                         <Input disabled value={product_variant.price} />
                                     </Form.Item>
-                                    <Form.Item label="Stock">
+                                    <Form.Item label="Số lượng">
                                         <Input disabled value={product_variant.stock} />
                                     </Form.Item>
                                 </Form>
@@ -175,8 +175,8 @@ const ProductVariant = () => {
             </Spin>
             <ModalUpdateProductVariant isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} variant={variant as ProductVariantType} refresh={refresh} setRefresh={setRefresh} />
             <ModalUpdateProductOption isModalUpdateProductOptionOpen={isModalUpdateProductOptionOpen} setIsModalUpdateProductOptionOpen={setIsModalUpdateProductOptionOpen} option={option as ProductOption} refresh={refresh} setRefresh={setRefresh} />
-            <Modal title="Delete product variant" open={isModalDeleteProductVariantOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={product.deleteProductVariant.loading}>
-                Are you sure you want to delete this product variant (<Box as='span' fontWeight='bold'>{productVariantDelete.sku}</Box>)?
+            <Modal title="Xóa biến thể sản phẩm" cancelText={'Hủy'} okText={'Xóa'} open={isModalDeleteProductVariantOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={product.deleteProductVariant.loading}>
+                Bạn có chắc muốn xóa biến thể sản phẩm này (<Box as='span' fontWeight='bold'>{productVariantDelete.sku}</Box>)?
             </Modal>
         </Fragment>
     );

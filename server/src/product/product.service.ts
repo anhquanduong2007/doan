@@ -815,7 +815,6 @@ export class ProductService {
                 data: carts
             }
         } catch (error) {
-            console.log(error)
             return {
                 code: 500,
                 message: "An error occurred in the system!",

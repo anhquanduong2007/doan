@@ -16,10 +16,10 @@ const ProductDetailUpdate = () => {
         <Col span={24}>
           <Breadcrumb>
             <Breadcrumb.Item>
-              <Link to="/">Home</Link>
+              <Link to="/">Trang chủ</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>
-              <Link to="/catalog/products">Products</Link>
+              <Link to="/catalog/products">Sản phẩm</Link>
             </Breadcrumb.Item>
             <Breadcrumb.Item>{id}</Breadcrumb.Item>
           </Breadcrumb>
@@ -29,13 +29,13 @@ const ProductDetailUpdate = () => {
         <Col span={24}>
           <Card>
             <Tabs defaultActiveKey="1">
-              <Tabs.TabPane tab="Product details" key="1">
+              <Tabs.TabPane tab="Chi tiết sản phẩm" key="1">
                 <ProductDetail />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Product variants" key="2">
+              <Tabs.TabPane tab="Các biến thể" key="2">
                 <ProductVariant />
               </Tabs.TabPane>
-              <Tabs.TabPane tab="Create New Variants +" key="3">
+              <Tabs.TabPane tab="Thêm mới biến thể +" key="3">
                 <AddVariant />
               </Tabs.TabPane>
             </Tabs>

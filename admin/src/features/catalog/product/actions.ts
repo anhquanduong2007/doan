@@ -101,7 +101,7 @@ export const createProduct = async ({ product, dispatch, axiosClientJwt, setErro
                 if (resCreateProductVariant?.response?.code === 200 && resCreateProductVariant?.response?.success) {
                     setTimeout(function () {
                         dispatch(createProductSuccess(resCreateProduct.response.data));
-                        message.success('Create product successfully!');
+                        message.success('Tạo sản phẩm thành công!');
                         navigate("/catalog/products")
                     }, 1000);
                 } else if (resCreateProductVariant?.response?.code === 400 && !resCreateProductVariant?.response?.success) {
@@ -126,7 +126,7 @@ export const createProduct = async ({ product, dispatch, axiosClientJwt, setErro
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -215,7 +215,7 @@ export const getListProduct = async ({ pagination, dispatch, axiosClientJwt, nav
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -241,13 +241,13 @@ export const deleteProduct = async ({ id, dispatch, axiosClientJwt, navigate, me
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteProductSuccess(res.response.data))
-                message.success('Delete product successfully!')
+                message.success('Xóa sản phẩm thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
         } else {
             dispatch(deleteProductFailed(null));
-            message.warning('This product cannot be deleted!')
+            message.warning('Sản phẩm này không thể xóa!')
             setIsModalOpen(false)
         }
     } catch (error: any) {
@@ -255,7 +255,7 @@ export const deleteProduct = async ({ id, dispatch, axiosClientJwt, navigate, me
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -291,7 +291,7 @@ export const getProduct = async ({ id, dispatch, axiosClientJwt, navigate }: Get
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -326,7 +326,7 @@ export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigat
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updateProductSuccess(res.response.data));
-                message.success('Update product successfully!');
+                message.success('Cập nhật sản phẩm thành công!');
                 setRefresh(!refresh)
             }, 1000)
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -340,7 +340,7 @@ export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigat
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -377,7 +377,7 @@ export const updateProductVariant = async ({ productVariant, setIsModalOpen, axi
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updateProductVariantSuccess(res.response.data));
-                message.success('Update product variant successfully!');
+                message.success('Cập nhật biến thể sản phẩm thành công!');
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000)
@@ -392,7 +392,7 @@ export const updateProductVariant = async ({ productVariant, setIsModalOpen, axi
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -424,7 +424,7 @@ export const updateProductOption = async ({ productOption, setIsModalOpen, axios
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updateProductOptionSuccess(res.response.data));
-                message.success('Update product option successfully!');
+                message.success('Cập nhật option sản phẩm thành công!');
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000)
@@ -436,7 +436,7 @@ export const updateProductOption = async ({ productOption, setIsModalOpen, axios
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -462,13 +462,13 @@ export const deleteProductVariant = async ({ id, dispatch, axiosClientJwt, navig
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteProductVariantSuccess(res.response.data))
-                message.success('Delete product variant successfully!')
+                message.success('Xóa sản phẩm biến thể thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
         } else {
             dispatch(deleteProductVariantFailed(null));
-            message.warning('This product cannot be deleted!')
+            message.warning('Sản phẩm biến thể này không thể xóa!')
             setIsModalOpen(false)
         }
     } catch (error: any) {
@@ -476,7 +476,7 @@ export const deleteProductVariant = async ({ id, dispatch, axiosClientJwt, navig
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -542,7 +542,7 @@ export const createProductVariantOption = async ({ axiosClientJwt, dispatch, get
             if (resCreateProductVariant?.response?.code === 200 && resCreateProductVariant?.response?.success) {
                 setTimeout(function () {
                     dispatch(createProductVariantOptionFailed(null));
-                    message.success('Create product variants successfully!');
+                    message.success('Tạo biến thể thành công!');
                     navigate(`/catalog/products`)
                 }, 1000);
             } else if (resCreateProductVariant?.response?.code === 400 && !resCreateProductVariant?.response?.success) {
@@ -564,7 +564,7 @@ export const createProductVariantOption = async ({ axiosClientJwt, dispatch, get
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')

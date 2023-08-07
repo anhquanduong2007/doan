@@ -49,10 +49,10 @@ export class OrderService {
             let profit: number = 0
             if (promotion_id) {
                 price = isValidProductVariant.price * quantity * ((100 - isValidPromotion.discount) / 100)
-                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity * (100 - isValidPromotion.discount) / 100
+                profit = price - (isValidProductVariant.origin_price * quantity)
             } else {
                 price = isValidProductVariant.price * quantity
-                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity
+                profit = price - (isValidProductVariant.origin_price * quantity)
             }
             if (payment_method === PaymentMethod.Standard) {
                 const order = await this.prisma.order.create({
@@ -73,7 +73,7 @@ export class OrderService {
                     await this.prisma.order_history.create({
                         data: {
                             order_id: order.id,
-                            content: "Order has been created"
+                            content: "Đơn hàng được tạo lúc"
                         }
                     }),
                     await this.prisma.product_variant.update({
@@ -261,7 +261,7 @@ export class OrderService {
                 if (order.status === "Open") {
                     await this.prisma.order_history.create({
                         data: {
-                            content: "Order has been verified",
+                            content: "Đơn hàng được xác nhận lúc",
                             order_id: id
                         }
                     })
@@ -306,7 +306,7 @@ export class OrderService {
                 if (order.status === "Confirm") {
                     await this.prisma.order_history.create({
                         data: {
-                            content: "Order has been shipped",
+                            content: "Đơn hàng được giao lúc",
                             order_id: id
                         }
                     })
@@ -351,7 +351,7 @@ export class OrderService {
                 if (order.status === "Shipped") {
                     await this.prisma.order_history.create({
                         data: {
-                            content: "Order has been completed",
+                            content: "Đơn hàng được hoàn thành lúc",
                             order_id: id
                         }
                     })
@@ -399,7 +399,7 @@ export class OrderService {
                     await Promise.all([
                         await this.prisma.order_history.create({
                             data: {
-                                content: "Order has been refund",
+                                content: "Đơn hàng được hoàn trả lúc",
                                 order_id: id
                             }
                         }),
@@ -455,7 +455,7 @@ export class OrderService {
                     await Promise.all([
                         this.prisma.order_history.create({
                             data: {
-                                content: "Order has been cancelled",
+                                content: "Đơn hàng được hủy lúc",
                                 order_id: order.id
                             }
                         }),

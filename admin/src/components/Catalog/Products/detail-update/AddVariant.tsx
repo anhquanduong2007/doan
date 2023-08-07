@@ -100,7 +100,7 @@ function ManageVariant() {
       } else {
         Inotification({
           type: "warning",
-          message: "Please create option!",
+          message: "Vui lòng tạo option!",
         });
       }
     }
@@ -110,7 +110,7 @@ function ManageVariant() {
     <Fragment>
       <Form onFinish={handleSubmit(onSubmit)} autoComplete="off">
         <Flex justifyContent='flex-end'>
-          <Button type="primary" htmlType="submit" loading={store.createProductVariantOption.loading}>Create</Button>
+          <Button type="primary" htmlType="submit" loading={store.createProductVariantOption.loading}>Tạo</Button>
         </Flex>
         <Flex mb={3} flexDirection={"column"}>
           <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Options</Box>
@@ -126,8 +126,8 @@ function ManageVariant() {
                         return (
                           <Box>
                             <Select style={{ width: 120 }} value={value} {...other}>
-                              <Select.Option value="Size">Size</Select.Option>
-                              <Select.Option value="Color">Color</Select.Option>
+                              <Select.Option value="Size">Kích cỡ</Select.Option>
+                              <Select.Option value="Color">Màu</Select.Option>
                             </Select>
                           </Box>
                         );

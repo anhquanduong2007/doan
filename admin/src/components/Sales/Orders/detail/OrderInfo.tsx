@@ -14,17 +14,21 @@ const OrderInfo = () => {
             </Flex>
             <Flex borderBottom={"1px solid #dbdbdb"} padding={"10px 0"} justifyContent={"center"} alignItems={"center"}>
                 <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Product name</Flex>
+                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Tên sản phẩm</Flex>
                 <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>SKU</Flex>
-                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Quantity</Flex>
-                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Original price</Flex>
-                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Price</Flex>
-                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Total</Flex>
+                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Số lượng</Flex>
+                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Giá gốc</Flex>
+                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Giá bán</Flex>
+                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>Tổng</Flex>
             </Flex>
             <Flex borderBottom={"1px dashed #dbdbdb"} padding={"10px 0"} justifyContent={"center"} alignItems={"center"}>
                 <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
-                <Flex flex={1} justifyContent={"center"} alignItems={"center"}>{!order.single.loading && order.single.result ? order.single.result.product_variant.name : null}</Flex>
                 <Flex flex={1} justifyContent={"center"} alignItems={"center"} textOverflow='ellipsis' whiteSpace='nowrap' overflow='hidden'>
+                    <Tooltip title={!order.single.loading && order.single.result ? order.single.result.product_variant.name : null}>
+                        {!order.single.loading && order.single.result ? order.single.result.product_variant.name : null}
+                    </Tooltip>
+                </Flex>
+                <Flex flex={1} justifyContent={"center"} alignItems={"center"} textOverflow='ellipsis' whiteSpace='nowrap' overflow='hidden' ml={2}>
                     <Tooltip title={!order.single.loading && order.single.result ? order.single.result.product_variant.sku : null}>
                         {!order.single.loading && order.single.result ? order.single.result.product_variant.sku : null}
                     </Tooltip>
@@ -35,8 +39,10 @@ const OrderInfo = () => {
                 <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"semibold"}>{!order.single.loading && order.single.result ? currency(order.single.result.quantity * order.single.result.product_variant.price) : "0"}</Flex>
             </Flex>
             <Flex borderBottom={"1px dashed #dbdbdb"} padding={"10px 0"} justifyContent={"center"} alignItems={"center"}>
-                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"}>
-                    {!order.single.loading && order.single.result ? order.single.result?.promotion ? order.single.result.promotion.coupon_code : null : null}
+                <Flex flex={1} justifyContent={"center"} alignItems={"center"} fontWeight={"bold"} textOverflow='ellipsis' whiteSpace='nowrap' overflow='hidden'>
+                    <Tooltip title={!order.single.loading && order.single.result ? order.single.result?.promotion ? order.single.result.promotion.coupon_code : null : null}>
+                        {!order.single.loading && order.single.result ? order.single.result?.promotion ? order.single.result.promotion.coupon_code : null : null}
+                    </Tooltip>
                 </Flex>
                 <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>
                 <Flex flex={1} justifyContent={"center"} alignItems={"center"}></Flex>

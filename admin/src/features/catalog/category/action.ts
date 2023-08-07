@@ -48,7 +48,7 @@ export const getListCategory = async ({ pagination, dispatch, axiosClientJwt, na
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -74,7 +74,7 @@ export const deleteCategory = async ({ id, dispatch, axiosClientJwt, navigate, m
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteCategorySuccess(res.response.data))
-                message.success('Delete category successfully!')
+                message.success('Xóa danh mục thành công!')
                 setIsModalOpen(false)
                 setRefresh(!refresh)
             }, 1000);
@@ -90,7 +90,7 @@ export const deleteCategory = async ({ id, dispatch, axiosClientJwt, navigate, m
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -124,7 +124,7 @@ export const createCategory = async ({ category, dispatch, axiosClientJwt, navig
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(createCategorySuccess(res.response.data));
-                message.success('Create category successfully!');
+                message.success('Tạo danh mục thành công!');
                 navigate("/catalog/categories")
             }, 1000);
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -138,7 +138,7 @@ export const createCategory = async ({ category, dispatch, axiosClientJwt, navig
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -173,7 +173,7 @@ export const getCategory = async ({ id, dispatch, axiosClientJwt, navigate }: Ge
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -208,7 +208,7 @@ export const updateCategory = async ({ category, axiosClientJwt, dispatch, navig
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(updateCategorySuccess(res.response.data));
-                message.success('Update category successfully!');
+                message.success('Cập nhật danh mục thành công');
                 navigate("/catalog/categories")
             }, 1000)
         } else if (res?.response?.code === 400 && !res?.response?.success) {
@@ -222,7 +222,7 @@ export const updateCategory = async ({ category, axiosClientJwt, dispatch, navig
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')

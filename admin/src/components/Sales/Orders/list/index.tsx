@@ -44,7 +44,7 @@ const columns = (
     navigate: NavigateFunction
 ): ColumnsType<DataType> => [
         {
-            title: 'Code',
+            title: 'Mã đơn hàng',
             ellipsis: true,
             dataIndex: 'code',
             key: 'code',
@@ -52,7 +52,7 @@ const columns = (
             fixed: 'left'
         },
         {
-            title: 'Customer',
+            title: 'Khách hàng',
             dataIndex: 'customer_name',
             ellipsis: true,
             width: '15%',
@@ -67,7 +67,7 @@ const columns = (
             }
         },
         {
-            title: 'Status',
+            title: 'Trạng thái',
             dataIndex: 'status',
             ellipsis: true,
             key: 'status',
@@ -78,17 +78,17 @@ const columns = (
                         {(() => {
                             switch (status) {
                                 case StatusOrder.Confirm:
-                                    return <Tag color="cyan">Confirm</Tag>
+                                    return <Tag color="cyan">Xác nhận</Tag>
                                 case StatusOrder.Shipped:
-                                    return <Tag color="orange">Shipped</Tag>
+                                    return <Tag color="orange">Đang vận chuyển</Tag>
                                 case StatusOrder.Completed:
-                                    return <Tag color="green">Completed</Tag>
+                                    return <Tag color="green">Hoàn thành</Tag>
                                 case StatusOrder.Cancel:
-                                    return <Tag color="red">Cancel</Tag>
+                                    return <Tag color="red">Hủy</Tag>
                                 case StatusOrder.Refund:
-                                    return <Tag color="magenta">Refund</Tag>
+                                    return <Tag color="magenta">Hoàn trả</Tag>
                                 default:
-                                    return <Tag color="blue">Open</Tag>
+                                    return <Tag color="blue">Mở</Tag>
                             }
                         })()}
                     </span>
@@ -96,7 +96,7 @@ const columns = (
             }
         },
         {
-            title: 'Origin price',
+            title: 'Giá gốc',
             dataIndex: 'origin_price',
             ellipsis: true,
             key: 'origin_price',
@@ -108,7 +108,7 @@ const columns = (
             }
         },
         {
-            title: 'Price',
+            title: 'Giá bán',
             dataIndex: 'price',
             ellipsis: true,
             key: 'price',
@@ -120,7 +120,7 @@ const columns = (
             }
         },
         {
-            title: 'Quantity',
+            title: 'Số lượng',
             dataIndex: 'quantity',
             ellipsis: true,
             key: 'quantity',
@@ -132,7 +132,7 @@ const columns = (
             }
         },
         {
-            title: 'Total',
+            title: 'Tổng giá',
             dataIndex: 'total_price',
             ellipsis: true,
             key: 'total_price',
@@ -144,42 +144,18 @@ const columns = (
             }
         },
         {
-            title: 'Profit',
+            title: 'Lợi nhuận',
             ellipsis: true,
             key: 'profit',
             width: '100px',
             render: (_, record) => {
                 return (
-                    <span style={{ color: record.payment ? 'green' : 'red' }}>+{record.promotion ? currency((record.price - record.origin_price) * record.quantity * (100 - record.promotion.discount) / 100) : currency((record.price - record.origin_price) * record.quantity)}</span>
+                    <span style={{ color: record.payment ? 'green' : 'red' }}>+{currency((record.total_price - (record.origin_price * record.quantity)))}</span>
                 )
             }
         },
         {
-            title: 'Updated at',
-            dataIndex: 'modified_date',
-            ellipsis: true,
-            key: 'modified_date',
-            width: '150px',
-            render: (modified_date: string) => {
-                return (
-                    <span>{timeAgo.format(new Date(modified_date))}</span>
-                )
-            }
-        },
-        {
-            title: 'Placed at',
-            dataIndex: 'created_date',
-            ellipsis: true,
-            key: 'created_date',
-            width: '150px',
-            render: (created_date: string) => {
-                return (
-                    <span>{timeAgo.format(new Date(created_date))}</span>
-                )
-            }
-        },
-        {
-            title: 'Payment method',
+            title: 'Phương thức thanh toán',
             dataIndex: 'payment_method',
             ellipsis: true,
             key: 'payment_method',
@@ -187,20 +163,20 @@ const columns = (
             render: (payment_method: string) => {
                 return (
                     <span>
-                        <Tag>{payment_method}</Tag>
+                        <Tag>{payment_method === 'Standard' ? "Thanh toán thường" : "Paypal"}</Tag>
                     </span>
                 )
             }
         },
         {
-            title: 'Action',
+            title: 'Hành động',
             key: 'action',
             width: '100px',
             fixed: 'right',
             render: (_, record) => {
                 return (
                     <Space size="middle">
-                        <Button icon={<ShoppingCartOutlined />} onClick={() => navigate(`detail/${record.id}`)}>Open</Button>
+                        <Button icon={<ShoppingCartOutlined />} onClick={() => navigate(`detail/${record.id}`)}>Xem chi tiết</Button>
                     </Space>
                 )
             },
@@ -278,9 +254,9 @@ const Orders = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>Orders</Breadcrumb.Item>
+                        <Breadcrumb.Item>Đơn hàng</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -288,7 +264,7 @@ const Orders = () => {
                         <Col span={24}>
                             <Flex>
                                 <Box mr={3} flex={1}>
-                                    <Input type='text' placeholder='Search by code' />
+                                    <Input type='text' placeholder='Tìm theo mã đơn hàng' />
                                 </Box>
                                 <Box mr={3}>
                                     <Select
@@ -298,31 +274,31 @@ const Orders = () => {
                                         options={[
                                             {
                                                 value: 'all',
-                                                label: 'All',
+                                                label: 'Tất cả',
                                             },
                                             {
                                                 value: StatusOrder.Confirm,
-                                                label: 'Confirm',
+                                                label: 'Xác nhận',
                                             },
                                             {
                                                 value: StatusOrder.Cancel,
-                                                label: 'Cancel',
+                                                label: 'Hủy',
                                             },
                                             {
                                                 value: StatusOrder.Completed,
-                                                label: 'Completed',
+                                                label: 'Hoàn thành',
                                             },
                                             {
                                                 value: StatusOrder.Open,
-                                                label: 'Open',
+                                                label: 'Mở',
                                             },
                                             {
                                                 value: StatusOrder.Refund,
-                                                label: 'Refund',
+                                                label: 'Hoàn trả',
                                             },
                                             {
                                                 value: StatusOrder.Shipped,
-                                                label: 'Shipped',
+                                                label: 'Đang vận chuyển',
                                             },
                                         ]}
                                     />

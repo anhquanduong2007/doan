@@ -17,31 +17,31 @@ interface DataType {
 
 export const columns = () => [
     {
-        title: 'Sku',
+        title: 'SKU',
         dataIndex: 'sku',
         key: 'sku',
         render: (sku: JSX.Element) => sku
     },
     {
-        title: 'Variant',
+        title: 'Tên biến thể',
         dataIndex: 'variant',
         key: 'variant',
         render: (variant: JSX.Element) => variant
     },
     {
-        title: 'Origin Price',
+        title: 'Giá gốc',
         dataIndex: 'originPrice',
         key: 'originPrice',
         render: (originPrice: JSX.Element) => originPrice
     },
     {
-        title: 'Price',
+        title: 'Giá bán',
         dataIndex: 'price',
         key: 'price',
         render: (price: JSX.Element) => price
     },
     {
-        title: 'Stock',
+        title: 'Số lượng',
         dataIndex: 'stock',
         key: 'stock',
         render: (stock: JSX.Element) => stock
@@ -64,7 +64,7 @@ export const data = ({ control, errors, variantItem, setValue, clearErrors }): D
                                     className='!my-1'
                                     id='sku'
                                     status={'sku' in errors && errors?.sku[index] ? 'error' : ''}
-                                    placeholder='Eg: bag-sku-01'
+                                    placeholder='Ví dụ: bag-sku-01'
                                     onChange={e => {
                                         setValue(`variant[${index}].sku`, e.target.value);
                                         onChange(e.target.value)
@@ -73,7 +73,7 @@ export const data = ({ control, errors, variantItem, setValue, clearErrors }): D
                                     {...other}
                                     value={value || ''}
                                 />
-                                {'sku' in errors && errors?.sku[index] ? <Box as="span" textColor="red.500">{errors.sku[index]?.type === 'required' ? "Sku is required!" : errors.sku[index].message}</Box> : null}
+                                {'sku' in errors && errors?.sku[index] ? <Box as="span" textColor="red.500">{errors.sku[index]?.type === 'required' ? "Vui lòng điền SKU!" : errors.sku[index].message}</Box> : null}
                             </Fragment>
                         )
                     }}

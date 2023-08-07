@@ -16,11 +16,6 @@ export type FormValuesCategory = {
     description: string
 }
 
-interface ItemProps {
-    label: string;
-    value: number;
-}
-
 const CategoryCreateUpdate = () => {
     // ** State
     const [active, setActive] = useState<boolean>(true)
@@ -125,12 +120,12 @@ const CategoryCreateUpdate = () => {
                 <Col span={24}>
                     <Breadcrumb>
                         <Breadcrumb.Item>
-                            <Link to='/'>Home</Link>
+                            <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/catalog/categories'>Categories</Link>
+                            <Link to='/catalog/categories'>Danh muhc</Link>
                         </Breadcrumb.Item>
-                        <Breadcrumb.Item>{id ? 'Update' : 'Create'}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{id ? 'Cập nhật' : 'Tạo'}</Breadcrumb.Item>
                     </Breadcrumb>
                 </Col>
                 <Col span={24}>
@@ -140,21 +135,21 @@ const CategoryCreateUpdate = () => {
                                 <Flex justifyContent="space-between" alignItems="center">
                                     <Flex justifyContent="center" alignItems="center">
                                         <Switch checked={active} size='small' onChange={() => setActive(!active)} />
-                                        <Box as="span" ml={2} fontWeight="semibold">Active</Box>
+                                        <Box as="span" ml={2} fontWeight="semibold">Hoạt động</Box>
                                     </Flex>
                                     {
                                         id && category.update.loading ?
-                                            <Button type="primary" loading>Updating...</Button> :
+                                            <Button type="primary" loading>Đang cập nhật...</Button> :
                                             category.create.loading ?
-                                                <Button type="primary" loading>Creating...</Button> :
-                                                id ? <Button htmlType="submit" type="primary">Update</Button> :
-                                                    <Button htmlType="submit" type="primary">Create</Button>
+                                                <Button type="primary" loading>Đang tạo...</Button> :
+                                                id ? <Button htmlType="submit" type="primary">Cập nhật</Button> :
+                                                    <Button htmlType="submit" type="primary">Tạo</Button>
                                     }
                                 </Flex>
                             </Col>
                             <Divider />
                             <Col span={24}>
-                                <Form.Item label="Category name">
+                                <Form.Item label="Tên danh mục">
                                     <Controller
                                         name="category_name"
                                         control={control}
@@ -162,14 +157,14 @@ const CategoryCreateUpdate = () => {
                                         render={({ field }) => {
                                             return (
                                                 <div ref={categoryNameErrorRef}>
-                                                    <Input {...field} placeholder="Eg: Shirt" />
-                                                    {errors?.category_name ? <Box as="div" mt={1} textColor="red.600">{errors.category_name?.type === 'required' ? "Please input your category name!" : errors.category_name.message}</Box> : null}
+                                                    <Input {...field} placeholder="Ví dụ: Shirt" />
+                                                    {errors?.category_name ? <Box as="div" mt={1} textColor="red.600">{errors.category_name?.type === 'required' ? "Vui lòng điền tên danh mục!" : errors.category_name.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="Category code">
+                                <Form.Item label="Mã danh mục">
                                     <Controller
                                         name="category_code"
                                         control={control}
@@ -177,14 +172,14 @@ const CategoryCreateUpdate = () => {
                                         render={({ field }) => {
                                             return (
                                                 <div ref={categoryCodeErrorRef}>
-                                                    <Input {...field} placeholder="Eg: shirt" />
-                                                    {errors?.category_code ? <Box as="div" mt={1} textColor="red.600">{errors.category_code?.type === 'required' ? "Please input your category code!" : errors.category_code.message}</Box> : null}
+                                                    <Input {...field} placeholder="Ví dụ: shirt" />
+                                                    {errors?.category_code ? <Box as="div" mt={1} textColor="red.600">{errors.category_code?.type === 'required' ? "Vui lòng điền mã danh mục!" : errors.category_code.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="Description">
+                                <Form.Item label="Ghi chú">
                                     <Controller
                                         name="description"
                                         control={control}
@@ -198,7 +193,7 @@ const CategoryCreateUpdate = () => {
                                     />
                                 </Form.Item>
                                 {id && (
-                                    <Form.Item label="Product of category">
+                                    <Form.Item label="Sản phẩm của danh mục">
                                         <ProductOfCategory products={category.single.result?.product as Product[]} loading={category.single.loading} />
                                     </Form.Item>
                                 )}

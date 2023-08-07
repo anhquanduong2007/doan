@@ -18,9 +18,6 @@ export class AccessTokenGuard extends AuthGuard('jwt') {
         if (!permissions) {
             return true;
         }
-        if (permissions.length === 0) {
-            return true;
-        }
         if (permissions && permissions.includes(Permissions.Anonymous)) {
             return true;
         }

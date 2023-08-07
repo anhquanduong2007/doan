@@ -56,7 +56,7 @@ export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navig
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -91,7 +91,7 @@ export const getOrder = async ({ id, dispatch, axiosClientJwt, navigate }: GetOr
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -117,7 +117,7 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(cancelOrderSuccess(res.response.data));
-                message.success('Order has been cancelled!')
+                message.success('Đơn hàng đã được hủy!')
                 setRefresh(!refresh)
             }, 1000)
         } else {
@@ -128,7 +128,7 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -154,7 +154,7 @@ export const confirmOrder = async ({ id, dispatch, axiosClientJwt, navigate, mes
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(confirmOrderSuccess(res.response.data));
-                message.success('Order has been confirmed!')
+                message.success('Đơn hàng đã được xác nhận!')
                 setRefresh(!refresh)
             }, 1000)
         } else {
@@ -165,7 +165,7 @@ export const confirmOrder = async ({ id, dispatch, axiosClientJwt, navigate, mes
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -191,7 +191,7 @@ export const shippedOrder = async ({ id, dispatch, axiosClientJwt, navigate, mes
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(shippedOrderSuccess(res.response.data));
-                message.success('Order has been shipped!')
+                message.success('Đơn hàng đang được vận chuyển!')
                 setRefresh(!refresh)
             }, 1000)
         } else {
@@ -202,7 +202,7 @@ export const shippedOrder = async ({ id, dispatch, axiosClientJwt, navigate, mes
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -228,7 +228,7 @@ export const completedOrder = async ({ id, dispatch, axiosClientJwt, navigate, m
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(completedOrderSuccess(res.response.data));
-                message.success('Order has been completed!')
+                message.success('Đơn hàng đã hoàn thành!')
                 setRefresh(!refresh)
             }, 1000)
         } else {
@@ -239,7 +239,7 @@ export const completedOrder = async ({ id, dispatch, axiosClientJwt, navigate, m
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -265,7 +265,7 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(refundOrderSuccess(res.response.data));
-                message.success('Order has been refund!')
+                message.success('Đơn hàng đã hoàn trả!')
                 setRefresh(!refresh)
             }, 1000)
         } else {
@@ -276,7 +276,7 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
@@ -302,7 +302,7 @@ export const deleteOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
                 dispatch(deleteOrderSuccess(res.response.data))
-                message.success('Delete order successfully!')
+                message.success('Xóa đơn hàng thành công!')
                 setRefresh(!refresh)
                 navigate('/sales/orders')
             }, 1000);
@@ -314,7 +314,7 @@ export const deleteOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             Inotification({
                 type: 'error',
-                message: 'You do not have permission to perform this action!'
+                message: 'Bạn không có quyền để thực hiện hành động này!'
             })
             setTimeout(function () {
                 navigate('/')
