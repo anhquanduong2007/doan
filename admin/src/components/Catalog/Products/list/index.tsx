@@ -219,8 +219,15 @@ const Products: React.FC = () => {
                     </Row>
                 </Col>
             </Row>
-            <Modal title="Xóa sản phẩm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} centered confirmLoading={product.delete.loading}>
-                <p>Bản có muốn xóa sản phẩm này (<span style={{ fontWeight: "bold" }}>{productDelete?.name}</span>) ?</p>
+            <Modal title="Xóa sản phẩm" open={isModalOpen} centered confirmLoading={product.delete.loading}   footer={[
+          <Button key="back" onClick={handleCancel}>
+            Hủy
+          </Button>,
+          <Button key="submit" type="primary" loading={product.delete.loading} onClick={handleOk}>
+            Xác nhận
+          </Button>,
+        ]}>
+                <p>Bạn có muốn xóa sản phẩm này (<span style={{ fontWeight: "bold" }}>{productDelete?.name}</span>) ?</p>
             </Modal>
         </Fragment>
     );

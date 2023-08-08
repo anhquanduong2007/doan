@@ -66,7 +66,7 @@ const RegisterPage: React.FC = () => {
                                 layout='vertical'
                                 autoComplete="off"
                             >
-                                <Form.Item label="Email">
+                                <Form.Item label="Địa chỉ Email">
                                     <Controller
                                         name="email"
                                         control={control}
@@ -75,13 +75,13 @@ const RegisterPage: React.FC = () => {
                                             return (
                                                 <div ref={emailErrorRef}>
                                                     <Input placeholder='superadmin@gmail.com' {...field} />
-                                                    {errors?.email ? <Box as="div" mt={1} textColor="red.600">{errors.email?.type === 'required' ? "Please input your email!" : errors.email.message}</Box> : null}
+                                                    {errors?.email ? <Box as="div" mt={1} textColor="red.600">{errors.email?.type === 'required' ? "Hãy nhập trường email!" : errors.email.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="First name">
+                                <Form.Item label="Họ">
                                     <Controller
                                         name="first_name"
                                         control={control}
@@ -90,13 +90,13 @@ const RegisterPage: React.FC = () => {
                                             return (
                                                 <div ref={firstNameErrorRef}>
                                                     <Input placeholder='Quan' {...field} />
-                                                    {errors?.first_name ? <Box as="div" mt={1} textColor="red.600">{errors.first_name?.type === 'required' ? "Please input your first name!" : errors.first_name.message}</Box> : null}
+                                                    {errors?.first_name ? <Box as="div" mt={1} textColor="red.600">{errors.first_name?.type === 'required' ? "Hãy nhập trường này!" : errors.first_name.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="Last name">
+                                <Form.Item label="Tên">
                                     <Controller
                                         name="last_name"
                                         control={control}
@@ -105,13 +105,13 @@ const RegisterPage: React.FC = () => {
                                             return (
                                                 <div ref={lastNameErrorRef}>
                                                     <Input placeholder='superadmin@gmail.com' {...field} />
-                                                    {errors?.last_name ? <Box as="div" mt={1} textColor="red.600">{errors.last_name?.type === 'required' ? "Please input your last name!" : errors.last_name.message}</Box> : null}
+                                                    {errors?.last_name ? <Box as="div" mt={1} textColor="red.600">{errors.last_name?.type === 'required' ? "Hãy nhập trường này" : errors.last_name.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
-                                <Form.Item label="Password">
+                                <Form.Item label="Mật khẩu">
                                     <Controller
                                         name="password"
                                         control={control}
@@ -120,17 +120,17 @@ const RegisterPage: React.FC = () => {
                                             return (
                                                 <div ref={passwordErrorRef}>
                                                     <Input.Password {...field} />
-                                                    {errors?.password ? <Box as="div" mt={1} textColor="red.600">{errors.password?.type === 'required' ? "Please input your password!" : errors.password.message}</Box> : null}
+                                                    {errors?.password ? <Box as="div" mt={1} textColor="red.600">{errors.password?.type === 'required' ? "Hãy nhập trường này" : errors.password.message}</Box> : null}
                                                 </div>
                                             )
                                         }}
                                     />
                                 </Form.Item>
                                 {
-                                    auth.loading ? <Button type="primary" loading className='mb-2'>Loading...</Button> : <Button type='primary' htmlType='submit' className='mb-2'>Register</Button>
+                                    auth.loading ? <Button type="primary" loading className='mb-2'>Xin chờ...</Button> : <Button type='primary' htmlType='submit' className='mb-2'>Đăng kí</Button>
                                 }
                             </Form>
-                            <Link to="/login" className='underline cursor-pointer text-[gray] font-light'>Already have an account? Login here</Link>
+                            <Link to="/login" className='underline cursor-pointer text-[gray] font-light'>Đã có tài khoản? Đăng nhập tại đây</Link>
                         </Box>
                     </Col>
                 </Row>

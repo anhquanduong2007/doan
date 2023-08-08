@@ -21,10 +21,10 @@ const ProductPage = () => {
                     <Col span={24}>
                         <Breadcrumb spacing='8px' marginBottom='35px' separator={<ChevronRight size={14} />}>
                             <BreadcrumbItem>
-                                <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Home</Link>
+                                <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Trang chủ</Link>
                             </BreadcrumbItem>
                             <BreadcrumbItem isCurrentPage>
-                                <Link to='#' className='!text-[#999] text-sm font-medium'>Products</Link>
+                                <Link to='#' className='!text-[#999] text-sm font-medium'>Sản phẩm</Link>
                             </BreadcrumbItem>
                         </Breadcrumb>
                     </Col>

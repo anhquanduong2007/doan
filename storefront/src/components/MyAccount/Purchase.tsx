@@ -62,7 +62,7 @@ const Purchase = () => {
                                                     <img src={order.product_variant.featured_asset?.url} className='w-40 object-cover' />
                                                     <Box ml={2}>
                                                         <Flex>
-                                                            <span className='font-semibold'>Order number:</span>
+                                                            <span className='font-semibold'>Mã đơn hàng:</span>
                                                             <span className='ml-2 font-semibold'>{order.code}</span>
                                                         </Flex>
                                                         <Link to={`/products/${order.product_variant.id}`}>{order.product_variant.name}</Link>
@@ -70,43 +70,43 @@ const Purchase = () => {
                                                         {(() => {
                                                             switch (order.status) {
                                                                 case StatusOrder.Confirm:
-                                                                    return <Tag color="cyan">Confirm</Tag>
+                                                                    return <Tag color="cyan">Xác nhận đơn hàng</Tag>
                                                                 case StatusOrder.Shipped:
-                                                                    return <Tag color="orange">Shipped</Tag>
+                                                                    return <Tag color="orange">Đã giao hàng</Tag>
                                                                 case StatusOrder.Completed:
-                                                                    return <Tag color="green">Completed</Tag>
+                                                                    return <Tag color="green">Hoàn thành đơn hàng</Tag>
                                                                 case StatusOrder.Cancel:
-                                                                    return <Tag color="red">Cancel</Tag>
+                                                                    return <Tag color="red">Hủy đơn hàng</Tag>
                                                                 case StatusOrder.Refund:
-                                                                    return <Tag color="magenta">Refund</Tag>
+                                                                    return <Tag color="magenta">Hoàn trả</Tag>
                                                                 default:
-                                                                    return <Tag color="blue">Open</Tag>
+                                                                    return <Tag color="blue">Đơn hàng chờ xác thực</Tag>
                                                             }
                                                         })()}
-                                                        {order.payment ? <Tag>Paid</Tag> : <Tag>Unpaid</Tag>}
+                                                        {order.payment ? <Tag>Đã thanh toán</Tag> : <Tag>Chưa thanh toán</Tag>}
                                                     </Box>
                                                 </Flex>
                                             </Col>
                                             <Col span={5}>
-                                                <p className='font-bold'>Order summary</p>
+                                                <p className='font-bold'>Tóm tắt đơn hàng</p>
                                                 <Flex justifyContent="space-between">
-                                                    <p>Price</p>
+                                                    <p>Giá</p>
                                                     <p>{formatMoney(order.product_variant.price)}</p>
                                                 </Flex>
                                                 <Flex justifyContent="space-between">
-                                                    <p>Quantity</p>
+                                                    <p>Số lượng</p>
                                                     <p>x{order.quantity}</p>
                                                 </Flex>
                                                 {
                                                     order.promotion ? (
                                                         <Flex justifyContent="space-between">
-                                                            <p>Discount</p>
+                                                            <p>Mã discount</p>
                                                             <p>x{order.promotion.discount}%</p>
                                                         </Flex>
                                                     ) : null
                                                 }
                                                 <Flex justifyContent="space-between">
-                                                    <p className='font-bold'>Total</p>
+                                                    <p className='font-bold'>Tổng</p>
                                                     <p className='font-bold'>{formatMoney(order.total_price)}</p>
                                                 </Flex>
                                             </Col>
@@ -116,7 +116,7 @@ const Purchase = () => {
                                                         <Flex justifyContent="flex-end">
                                                             <Menu>
                                                                 <MenuButton as={Button}>
-                                                                    Action
+                                                                    Hành động
                                                                 </MenuButton>
                                                                 <MenuList>
                                                                     <MenuItem
@@ -144,7 +144,7 @@ const Purchase = () => {
                                                                             }
                                                                         }}
                                                                     >
-                                                                        {order.payment ? "Refund" : "Cancel"} order
+                                                                        {order.payment ? "Hoàn trả" : "Hủy"} order
                                                                     </MenuItem>
                                                                 </MenuList>
                                                             </Menu>

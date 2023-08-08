@@ -59,7 +59,7 @@ const CardProduct = ({ product, span }: CardProductProps) => {
             >
                <Link to={`/products/${product?.id}`} className='text-[#999] hover:text-primary transition duration-200 text-sm font-bold'>
                   <Box as='span' mr={2}>{product?.name}</Box>
-                  <Tag color={variant?.stock ? 'green' : 'red'}>{variant?.stock > 0 ? 'Stocking' : 'Out of stock'}</Tag>
+                  <Tag color={variant?.stock ? 'green' : 'red'}>{variant?.stock > 0 ? 'Còn hàng' : 'Hết hàng'}</Tag>
                </Link>
                <Box className='text-[#666] font-bold'>{`${formatMoney(variant?.price)}`}</Box>
                <Box as='div' mt='8px'>
@@ -76,7 +76,7 @@ const CardProduct = ({ product, span }: CardProductProps) => {
                   />
                </Box>
                <Flex justifyContent='flex-start' mt='10px'>
-                  <Button size='sm' colorScheme='blue' borderRadius='3px' onClick={handleAddToCard} isLoading={cart.addToCart.loading}>Add to cart</Button>
+                  <Button size='sm' colorScheme='blue' borderRadius='3px' onClick={handleAddToCard} isLoading={cart.addToCart.loading}>Thêm vào giỏ hàng</Button>
                </Flex>
             </Card>
          </Col>

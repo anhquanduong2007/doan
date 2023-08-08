@@ -45,7 +45,7 @@ const Addresses = () => {
                                 setMode(false)
                             }}
                         >
-                            Create new address
+                            Thêm địa chỉ mới
                         </Button>
                     </div>
                 </Col>

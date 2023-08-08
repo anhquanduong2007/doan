@@ -40,7 +40,7 @@ const CouponModal = ({ couponModal, setCouponModal }: CouponModalProps) => {
 
     return (
         <Fragment>
-            <Modal title="Coupon" open={couponModal} onCancel={() => setCouponModal(false)} centered footer={null}>
+            <Modal title="Mã coupon" open={couponModal} onCancel={() => setCouponModal(false)} centered footer={null}>
                 <Spin spinning={promotion.list.loading} style={{ maxHeight: 'unset' }}>
                     <Box height="500px" overflowY="auto" sx={{ '&::-webkit-scrollbar': { display: 'none' } }}>
                         {
@@ -49,13 +49,13 @@ const CouponModal = ({ couponModal, setCouponModal }: CouponModalProps) => {
                                     return (
                                         <Card title={promotion.name} style={{ marginTop: "1rem", opacity: moment(promotion.ends_at).subtract(1, 'days').date() - moment(new Date()).subtract(1, 'days').date() < 0 ? 0.5 : 1 }}>
                                             <Box mb={2}>
-                                                Coupon code: <span className='font-bold'>{promotion.coupon_code}</span>
+                                                Mã coupon: <span className='font-bold'>{promotion.coupon_code}</span>
                                             </Box>
                                             <Box mb={2}>
-                                                Discount: <span className='font-semibold'>{promotion.discount}%</span>
+                                                Giảm giá: <span className='font-semibold'>{promotion.discount}%</span>
                                             </Box>
                                             <Box>
-                                                Remaining: <span className='font-semibold'>{promotion.limit}</span>
+                                                Thời gian hết hạn: <span className='font-semibold'>{promotion.limit}</span>
                                             </Box>
                                         </Card>
                                     )

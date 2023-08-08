@@ -80,11 +80,11 @@ const ProductDetail = () => {
                     <Col span={24}>
                         <Breadcrumb spacing='8px' marginBottom='35px' separator={<ChevronRight size={14} />}>
                             <BreadcrumbItem>
-                                <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Home</Link>
+                                <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Trang chủ</Link>
                             </BreadcrumbItem>
 
                             <BreadcrumbItem>
-                                <Link to='/products' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Products</Link>
+                                <Link to='/products' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Sản phẩm</Link>
                             </BreadcrumbItem>
 
                             <BreadcrumbItem isCurrentPage>
@@ -107,7 +107,7 @@ const ProductDetail = () => {
                                     <p className='font-bold text-lg'>{formatMoney(product?.product_variants.find((variant) => variant.id === variantId)?.price || 0)}</p>
                                     {/* <form > */}
                                     <div className='flex flex-col gap-2'>
-                                        <p className='font-semibold'>Select option</p>
+                                        <p className='font-semibold'>Chọn biến thể</p>
                                         <Fragment>
                                             <Select value={variantId} onChange={onChangeVariant}>
                                                 {
@@ -121,9 +121,9 @@ const ProductDetail = () => {
                                             </Select>
                                         </Fragment>
                                     </div>
-                                    <p className='font-bold text-sm'>Available: {(product?.product_variants.find((variant) => variant.id === variantId)?.stock || 0)}</p>
+                                    <p className='font-bold text-sm'>Hàng trong kho: {(product?.product_variants.find((variant) => variant.id === variantId)?.stock || 0)}</p>
                                     <div className='flex flex-col gap-2'>
-                                        <p className='font-semibold'>Quantity</p>
+                                        <p className='font-semibold'>Số Lượng</p>
                                         <FormControl>
                                             <Controller
                                                 name='quantity'
@@ -157,13 +157,14 @@ const ProductDetail = () => {
                                                     isLoading={cart.addToCart.loading}
                                                     onClick={handleSubmit(onSubmit)}
                                                 >
-                                                    Add to cart
+                                                    Thêm vào giỏ hàng
                                                 </Button>
                                             ) : null
                                         }
 
                                     </div>
                                     {/* </form> */}
+                                    <p className='font-bold text-2xl'>Mô tả sản phẩm</p>
                                     <p className='text-[#666]' dangerouslySetInnerHTML={{ __html: product?.description || '' }} />
                                 </div>
                             </Col>

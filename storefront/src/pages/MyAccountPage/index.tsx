@@ -13,19 +13,19 @@ const MyAccountPage = () => {
                 <Col span={24}>
                     <Breadcrumb spacing='8px' marginBottom='35px' separator={<ChevronRight size={14} />}>
                         <BreadcrumbItem>
-                            <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Home</Link>
+                            <Link to='/' className='hover:text-primary hover:no-underline transition duration-150 text-sm font-medium'>Trang chủ</Link>
                         </BreadcrumbItem>
                         <BreadcrumbItem>
-                            <Link to='#' className='!text-[#999] text-sm font-medium'>My account</Link>
+                            <Link to='#' className='!text-[#999] text-sm font-medium'>Thông tin tài khoản</Link>
                         </BreadcrumbItem>
                     </Breadcrumb>
                 </Col>
             </Row>
             <Tabs defaultActiveKey="1">
-                <Tabs.TabPane tab="Purchase History" key="1">
+                <Tabs.TabPane tab="Lịch sử mua hàng" key="1">
                     <Purchase />
                 </Tabs.TabPane>
-                <Tabs.TabPane tab="Addresses" key="2">
+                <Tabs.TabPane tab="Địa chỉ" key="2">
                     <Addresses />
                 </Tabs.TabPane>
             </Tabs>

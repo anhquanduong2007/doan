@@ -61,10 +61,10 @@ const Header = () => {
                         </nav>
                         <ul className="hidden lg:flex m-0">
                             <li className="p-4">
-                                <Link className="hover:text-primary transition-all ease-in-out duration-[0.2s] font-medium text-sm" to="/products">Product</Link>
+                                <Link className="hover:text-primary transition-all ease-in-out duration-[0.2s] font-medium text-sm" to="/products">Sản phẩm</Link>
                             </li>
                             <li className="p-4">
-                                <Link className="hover:text-primary transition-all ease-in-out duration-[0.2s] font-medium text-sm" to="/about">About</Link>
+                                <Link className="hover:text-primary transition-all ease-in-out duration-[0.2s] font-medium text-sm" to="/about">Về chúng tôi</Link>
                             </li>
                         </ul>
                     </div>
@@ -85,16 +85,16 @@ const Header = () => {
                                     <div className="flex items-end justify-center">
                                         <Menu>
                                             <MenuButton as={"span"}>
-                                                Hi, {!auth.login.loading && auth.login.result ? auth.login.result.first_name + auth.login.result.last_name : ''}
+                                                Xin chào, {!auth.login.loading && auth.login.result ? auth.login.result.first_name + auth.login.result.last_name : ''}
                                             </MenuButton>
                                             <MenuList>
-                                                <MenuItem onClick={() => { navigate('/account') }}>My account</MenuItem>
-                                                <MenuItem onClick={() => logOut(dispatch, navigate, axiosClientJwt, toast)}>Logout</MenuItem>
+                                                <MenuItem onClick={() => { navigate('/account') }}>Thông tin tài khoản</MenuItem>
+                                                <MenuItem onClick={() => logOut(dispatch, navigate, axiosClientJwt, toast)}>Đăng xuất</MenuItem>
                                             </MenuList>
                                         </Menu>
                                     </div>
                                 ) : (
-                                    <Link to="/login" className="font-semibold">Sign In</Link>
+                                    <Link to="/login" className="font-semibold">Đăng nhập</Link>
                                 )
                             }
                         </div>
