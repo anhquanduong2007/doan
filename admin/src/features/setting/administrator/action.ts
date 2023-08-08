@@ -57,7 +57,7 @@ export const getListAdministrator = async ({ pagination, dispatch, axiosClientJw
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -100,7 +100,7 @@ export const deleteAdministrator = async ({ id, dispatch, axiosClientJwt, naviga
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -135,7 +135,7 @@ export const getAdministrator = async ({ id, dispatch, axiosClientJwt, navigate 
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -185,7 +185,7 @@ export const createAdministrator = async ({ administrator, axiosClientJwt, dispa
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -242,7 +242,7 @@ export const updateAdministrator = async ({ administrator, axiosClientJwt, dispa
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

@@ -1,15 +1,16 @@
-import {Box, Flex} from "@chakra-ui/react"
+import { Box, Flex } from "@chakra-ui/react"
 import autoAnimate from "@formkit/auto-animate"
-import {Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Spin, Switch, message} from "antd"
-import {Fragment, useEffect, useRef, useState} from "react"
-import {Controller, useForm} from "react-hook-form"
-import {Link, useNavigate, useParams} from "react-router-dom"
-import {useAppDispatch, useAppSelector} from "src/app/hooks"
-import {createAxiosJwt} from "src/helper/axiosInstance"
-import type {DatePickerProps} from 'antd';
-import {createAdministrator, getAdministrator, updateAdministrator} from "src/features/setting/administrator/action"
+import { Breadcrumb, Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Spin, Switch, message } from "antd"
+import { Fragment, useEffect, useRef, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "src/app/hooks"
+import { createAxiosJwt } from "src/helper/axiosInstance"
+import type { DatePickerProps } from 'antd';
+import { createAdministrator, getAdministrator, updateAdministrator } from "src/features/setting/administrator/action"
 import moment from 'moment';
-import {getListRole} from "src/features/setting/role/actions"
+import { getListRole } from "src/features/setting/role/actions"
+import { User } from "src/types"
 
 export type FormValuesAdministrator = {
     email: string
@@ -36,8 +37,8 @@ const AdministratorCreateUpdate = () => {
     // ** Third party
     const navigate = useNavigate()
     const params = useParams()
-    const {id} = params
-    const {control, handleSubmit, setValue, setError, formState: {errors}} = useForm<FormValuesAdministrator>({
+    const { id } = params
+    const { control, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormValuesAdministrator>({
         defaultValues: {
             email: '',
             first_name: '',
@@ -50,9 +51,9 @@ const AdministratorCreateUpdate = () => {
     // ** Variables
     const administrator = useAppSelector((state) => state.administrator);
     const role = useAppSelector((state) => state.role);
-    const auth = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
+    const userInfo: User = JSON.parse(localStorage.getItem('userInfo') as string)
 
     // ** Ref
     const firstNameErrorRef = useRef(null);
@@ -72,8 +73,8 @@ const AdministratorCreateUpdate = () => {
 
     useEffect(() => {
         if (id) {
-            if (auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('ReadRole') ||
-                auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) {
+            if (userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('ReadRole') ||
+                userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) {
                 getListRole({
                     axiosClientJwt,
                     dispatch,
@@ -170,6 +171,7 @@ const AdministratorCreateUpdate = () => {
 
     };
 
+
     return (
         <Fragment>
             <Row gutter={[0, 16]}>
@@ -191,7 +193,7 @@ const AdministratorCreateUpdate = () => {
                                 <Col span={24}>
                                     <Flex justifyContent="space-between" alignItems="center">
                                         <Flex justifyContent="center" alignItems="center">
-                                            <Switch checked={active} size='small' onChange={() => setActive(!active)}/>
+                                            <Switch checked={active} size='small' onChange={() => setActive(!active)} />
                                             <Box as="span" ml={2} fontWeight="semibold">Hoạt động</Box>
                                         </Flex>
                                         {
@@ -204,19 +206,19 @@ const AdministratorCreateUpdate = () => {
                                         }
                                     </Flex>
                                 </Col>
-                                <Divider/>
+                                <Divider />
                                 <Col span={24}>
                                     <Form.Item label="Tên">
                                         <Controller
                                             name="first_name"
                                             control={control}
-                                            rules={{required: true}}
-                                            render={({field}) => {
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
                                                 return (
                                                     <div ref={firstNameErrorRef}>
-                                                        <Input {...field} placeholder="Ví dụ: Quan"/>
+                                                        <Input {...field} placeholder="Ví dụ: Quan" />
                                                         {errors?.first_name ? <Box as="div" mt={1}
-                                                                                   textColor="red.600">{errors.first_name?.type === 'required' ? "Vui lòng điền tên của bạn!" : errors.first_name.message}</Box> : null}
+                                                            textColor="red.600">{errors.first_name?.type === 'required' ? "Vui lòng điền tên của bạn!" : errors.first_name.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
@@ -226,13 +228,13 @@ const AdministratorCreateUpdate = () => {
                                         <Controller
                                             name="last_name"
                                             control={control}
-                                            rules={{required: true}}
-                                            render={({field}) => {
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
                                                 return (
                                                     <div ref={lastNameErrorRef}>
-                                                        <Input {...field} placeholder="Ví dụ: Duong"/>
+                                                        <Input {...field} placeholder="Ví dụ: Duong" />
                                                         {errors?.last_name ? <Box as="div" mt={1}
-                                                                                  textColor="red.600">{errors.last_name?.type === 'required' ? "Vui lòng điền họ của bạn!" : errors.last_name.message}</Box> : null}
+                                                            textColor="red.600">{errors.last_name?.type === 'required' ? "Vui lòng điền họ của bạn!" : errors.last_name.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
@@ -242,14 +244,14 @@ const AdministratorCreateUpdate = () => {
                                         <Controller
                                             name="email"
                                             control={control}
-                                            rules={{required: true}}
-                                            render={({field}) => {
+                                            rules={{ required: true }}
+                                            render={({ field }) => {
                                                 return (
                                                     <div ref={lastNameErrorRef}>
                                                         <Input type="email" {...field}
-                                                               placeholder="Eg: qunduong2007@gmail.com"/>
+                                                            placeholder="Eg: qunduong2007@gmail.com" />
                                                         {errors?.email ? <Box as="div" mt={1}
-                                                                              textColor="red.600">{errors.email?.type === 'required' ? "Vui lòng điền email!" : errors.email.message}</Box> : null}
+                                                            textColor="red.600">{errors.email?.type === 'required' ? "Vui lòng điền email!" : errors.email.message}</Box> : null}
                                                     </div>
                                                 )
                                             }}
@@ -261,13 +263,13 @@ const AdministratorCreateUpdate = () => {
                                                 <Controller
                                                     name="password"
                                                     control={control}
-                                                    rules={{required: true}}
-                                                    render={({field}) => {
+                                                    rules={{ required: true }}
+                                                    render={({ field }) => {
                                                         return (
                                                             <div ref={lastNameErrorRef}>
                                                                 <Input.Password {...field} />
                                                                 {errors?.password ? <Box as="div" mt={1}
-                                                                                         textColor="red.600">{errors.password?.type === 'required' ? "Vui lòng điền mật khẩu!" : errors.password.message}</Box> : null}
+                                                                    textColor="red.600">{errors.password?.type === 'required' ? "Vui lòng điền mật khẩu!" : errors.password.message}</Box> : null}
                                                             </div>
                                                         )
                                                     }}
@@ -279,8 +281,8 @@ const AdministratorCreateUpdate = () => {
                                         <Controller
                                             name="phone"
                                             control={control}
-                                            rules={{maxLength: 10, minLength: 10}}
-                                            render={({field}) => {
+                                            rules={{ maxLength: 10, minLength: 10 }}
+                                            render={({ field }) => {
                                                 return (
                                                     <div ref={phoneErrorRef}>
                                                         <Input {...field} />
@@ -295,7 +297,7 @@ const AdministratorCreateUpdate = () => {
                                     <Form.Item label="Ngày sinh">
                                         <DatePicker
                                             value={dateOfBirth ? moment(dateOfBirth?.substring(0, 10), dateFormat) : '' as any}
-                                            onChange={onChangeDatePicker}/>
+                                            onChange={onChangeDatePicker} />
                                     </Form.Item>
                                     <Form.Item label="Giới tính">
                                         <Select
@@ -315,8 +317,8 @@ const AdministratorCreateUpdate = () => {
                                     </Form.Item>
                                     {
                                         id &&
-                                        (auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('ReadRole') ||
-                                            auth.login.result?.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                                        (userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('ReadRole') ||
+                                            userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
                                             <Form.Item label="Roles">
                                                 <Select
                                                     mode="multiple"

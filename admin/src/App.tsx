@@ -39,7 +39,6 @@ const ProtectRoute = ({ children }: ProtectRouteProps) => {
     if (!accessToken) {
       navigate('/login')
     }
-    // navigate('/dashboard')
   }, [accessToken])
 
   return (

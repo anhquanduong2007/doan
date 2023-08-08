@@ -25,14 +25,14 @@ export class OrderService {
             if (!isValidAddress) {
                 return {
                     code: 404,
-                    message: 'Address does not exist in this customer!',
+                    message: 'Địa chỉ không tồn tại với khách hàng này!',
                     success: false,
                 }
             }
             if (!isValidProductVariant) {
                 return {
                     code: 404,
-                    message: 'Product variant does not exist in this customer!',
+                    message: 'Biến thể của sản phẩm không tồn tại với khách hàng này!',
                     success: false,
                 }
             }
@@ -40,7 +40,7 @@ export class OrderService {
                 if (!isValidPromotion) {
                     return {
                         code: 404,
-                        message: 'Promotion does not exist in the system!',
+                        message: 'Mã khuyến mãi không tồn tại trong hệ thống!',
                         success: false,
                     }
                 }
@@ -106,13 +106,13 @@ export class OrderService {
             }
             return {
                 code: 400,
-                message: "Cannot use this payment method!",
+                message: "Không thể sử dụng phương thức thanh toán này!",
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -240,13 +240,13 @@ export class OrderService {
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -279,19 +279,19 @@ export class OrderService {
                 }
                 return {
                     code: 400,
-                    message: 'You cannot perform this action!',
+                    message: 'Bạn không có quyền để thực hiện hành động này!',
                     success: false,
                 }
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -324,19 +324,19 @@ export class OrderService {
                 }
                 return {
                     code: 400,
-                    message: 'You cannot perform this action!',
+                    message: 'Bạn không có quyền để thực hiện hành động này!',
                     success: false,
                 }
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -370,19 +370,19 @@ export class OrderService {
                 }
                 return {
                     code: 400,
-                    message: 'You cannot perform this action!',
+                    message: 'Bạn không có quyền thực hiện hành động này!',
                     success: false,
                 }
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -426,19 +426,19 @@ export class OrderService {
                 }
                 return {
                     code: 400,
-                    message: 'You cannot perform this action!',
+                    message: 'Bạn không có quyền thực hiện hành động này!',
                     success: false,
                 }
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -480,19 +480,19 @@ export class OrderService {
                 }
                 return {
                     code: 400,
-                    message: 'You cannot perform this action!',
+                    message: 'Bạn không có quyền thực hiện hành động này!',
                     success: false,
                 }
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -519,19 +519,19 @@ export class OrderService {
                 }
                 return {
                     code: 400,
-                    message: 'You cannot perform this action!',
+                    message: 'Bạn không có quyền thực hiện hành động này!',
                     success: false,
                 }
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -557,13 +557,13 @@ export class OrderService {
             }
             return {
                 code: 404,
-                message: 'Order does not exist in the system!',
+                message: 'Đơn hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

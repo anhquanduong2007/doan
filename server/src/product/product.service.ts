@@ -33,7 +33,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -74,13 +74,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product does not exist in the system!',
+                message: 'Sản phẩm không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -117,13 +117,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product does not exist in the system!',
+                message: 'Sản phẩm không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -234,7 +234,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -255,7 +255,7 @@ export class ProductService {
                         code: 404,
                         success: false,
                         fieldError: "featured_asset_id",
-                        message: 'Asset does not exist in the system!',
+                        message: 'Ảnh không tồn tại trong hệ thống',
                     }
                 }
                 return {
@@ -276,13 +276,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product does not exist in the system!',
+                message: 'Sản phẩm không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -306,13 +306,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product variant does not exist in the system!',
+                message: 'Biến thể của sản phẩm không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -342,7 +342,7 @@ export class ProductService {
                         return {
                             code: 400,
                             success: false,
-                            message: 'Sku code already exist!',
+                            message: 'SKU đã tồn tại trong hệ thống!',
                             fieldError: "sku",
                         }
                     }
@@ -366,13 +366,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product variant does not exist in the system!',
+                message: 'Biến thể của sản phẩm không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -409,7 +409,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -444,7 +444,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -468,7 +468,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -485,7 +485,7 @@ export class ProductService {
                     code: 400,
                     success: false,
                     fieldError: "sku",
-                    message: 'Sku already exists in the system!',
+                    message: 'SKU đã tồn tại trong hệ thống!',
                 }
             }
             return {
@@ -514,7 +514,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -534,7 +534,7 @@ export class ProductService {
                     success: false,
                     fieldError: "sku",
                     valuesError: skusExist.map((sku) => sku.sku),
-                    message: 'Sku already exists in the system!',
+                    message: 'SKU đã tồn tại trong hệ thống!',
                 }
             }
             return {
@@ -568,7 +568,7 @@ export class ProductService {
             console.log(error)
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -594,13 +594,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product variant does not exist in the system!',
+                message: 'Biến thể của sản phẩm không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -627,13 +627,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product option does not exist in the system!',
+                message: 'Tùy chọn của sản phẩm không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -657,14 +657,14 @@ export class ProductService {
             if (!productVariant) {
                 return {
                     code: 404,
-                    message: 'Product variant does not exist in the system!',
+                    message: 'Biến thể của sản phẩm không tồn tại trong hệ thống!',
                     success: false,
                 }
             }
             if (isVariantExistInCard && isVariantExistInCard.length) {
                 return {
                     code: 400,
-                    message: 'This product already exists on the whole card!',
+                    message: 'Sản phẩm này đã có trong giỏ hàng của bạn!',
                     success: false,
                 }
             }
@@ -690,7 +690,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -707,7 +707,7 @@ export class ProductService {
             if (!isProductVariantExistInCard) {
                 return {
                     code: 404,
-                    message: 'Product variant does not exist in card!',
+                    message: 'Biến thể của sản phẩm không tồn tại trong giỏ hàng!',
                     success: false,
                 }
             }
@@ -725,7 +725,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -743,7 +743,7 @@ export class ProductService {
             if (!productVariant) {
                 return {
                     code: 404,
-                    message: 'Product variant does not exist in the system!',
+                    message: 'Biến thể của sản phẩm không tồn tại trong hệ thống!',
                     success: false,
                 }
             }
@@ -756,14 +756,14 @@ export class ProductService {
             if (!isProductVariantExistInCard) {
                 return {
                     code: 404,
-                    message: 'Product variant does not exist in card!',
+                    message: 'Biến thể của sản phẩm không tồn tại trong giỏ hàng!',
                     success: false,
                 }
             }
             if (productVariant.stock - quantity <= 0 || productVariant.stock - quantity >= productVariant.stock) {
                 return {
                     code: 400,
-                    message: 'Quantity exceeded limit quantity!',
+                    message: 'Số lượng vượt quá giới hạn số lượng!',
                     success: false,
                     fieldError: "quantity"
                 }
@@ -785,7 +785,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -817,7 +817,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -845,13 +845,13 @@ export class ProductService {
             }
             return {
                 code: 404,
-                message: 'Product does not exist in cart!',
+                message: 'Biến thể của sản phẩm không tồn tại trong giỏ hàng1',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -888,7 +888,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -937,7 +937,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -960,7 +960,7 @@ export class ProductService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

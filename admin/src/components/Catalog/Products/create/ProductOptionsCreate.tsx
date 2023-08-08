@@ -68,7 +68,7 @@ const ProductOptionsCreate = ({ control, setVariantItem, setValue, watch, errors
     return (
         <Fragment>
             <Flex mb={3} flexDirection={"column"}>
-                <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Options</Box>
+                <Box as="span" fontWeight="semibold" mb={1} sx={{ display: "inline-block" }}>Các tùy chọn</Box>
                 {fields.map((field, index) => {
                     return (
                         <Box mb={2}>
@@ -111,7 +111,7 @@ const ProductOptionsCreate = ({ control, setVariantItem, setValue, watch, errors
                         </Box>
                     );
                 })}
-                <Button onClick={() => { append({ name: "", value: "" }) }}>Thêm Option</Button>
+                <Button onClick={() => { append({ name: "", value: "" }) }}>Thêm tùy chọn</Button>
             </Flex>
         </Fragment>
     );

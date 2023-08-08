@@ -56,7 +56,7 @@ export const getListCategory = async ({ pagination, dispatch, axiosClientJwt, na
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -99,7 +99,7 @@ export const deleteCategory = async ({ id, dispatch, axiosClientJwt, navigate, m
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -146,7 +146,7 @@ export const createCategory = async ({ category, dispatch, axiosClientJwt, navig
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -181,7 +181,7 @@ export const getCategory = async ({ id, dispatch, axiosClientJwt, navigate }: Ge
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -230,7 +230,7 @@ export const updateCategory = async ({ category, axiosClientJwt, dispatch, navig
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

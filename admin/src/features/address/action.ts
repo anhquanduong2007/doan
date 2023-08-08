@@ -57,7 +57,7 @@ export const deleteAddress = async ({ id, dispatch, axiosClientJwt, navigate, me
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -107,7 +107,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, navigat
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -142,7 +142,7 @@ export const getAddress = async ({ id, dispatch, axiosClientJwt, navigate }: Get
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -194,7 +194,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, navigat
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -235,7 +235,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

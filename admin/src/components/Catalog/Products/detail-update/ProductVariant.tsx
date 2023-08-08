@@ -11,6 +11,7 @@ import {
 import ModalUpdateProductVariant from './ModalUpdateProductVariant';
 import { ProductOption, ProductVariant as ProductVariantType } from 'src/types';
 import ModalUpdateProductOption from './ModalUpdateProductOption';
+import { currency } from 'src/helper/currencyPrice';
 
 const ProductVariant = () => {
     // ** State
@@ -116,7 +117,7 @@ const ProductVariant = () => {
                                                         setOption(option.product_option)
                                                     }}
                                                 >
-                                                    {option.product_option.name} - {option.product_option.value}
+                                                    {option.product_option.name === "Color" ? "Màu" : "Kích cỡ"} - {option.product_option.value}
                                                 </Tag>
                                             )
                                         })}
@@ -132,10 +133,10 @@ const ProductVariant = () => {
                                         <Input disabled value={product_variant.name} />
                                     </Form.Item>
                                     <Form.Item label="Giá gốc">
-                                        <Input disabled value={product_variant.origin_price} />
+                                        <Input disabled value={currency(product_variant.origin_price)} />
                                     </Form.Item>
                                     <Form.Item label="Giá bán">
-                                        <Input disabled value={product_variant.price} />
+                                        <Input disabled value={currency(product_variant.price)} />
                                     </Form.Item>
                                     <Form.Item label="Số lượng">
                                         <Input disabled value={product_variant.stock} />

@@ -19,7 +19,7 @@ export class PromotionService {
         return {
           code: 400,
           success: false,
-          message: 'Coupon code already exist!',
+          message: 'Mã giảm giá đã tồn tại trong hệ thống!',
           fieldError: "coupon_code",
         };
       }
@@ -42,7 +42,7 @@ export class PromotionService {
     } catch (error) {
       return {
         code: 500,
-        message: "An error occurred in the system!",
+        message: "Đã xảy ra lỗi trong hệ thống!",
         success: false,
       }
     }
@@ -126,13 +126,13 @@ export class PromotionService {
       }
       return {
         code: 404,
-        message: 'Promotion does not exist in the system!',
+        message: 'Khuyến mãi không tồn tại trong hệ thống!',
         success: false,
       }
     } catch (error) {
       return {
         code: 500,
-        message: "An error occurred in the system!",
+        message: "Đã xảy ra lỗi trong hệ thống!",
         success: false,
       }
     }
@@ -153,13 +153,13 @@ export class PromotionService {
       }
       return {
         code: 404,
-        message: 'Promotion does not exist in the system!',
+        message: 'Khuyến mãi không tồn tại trong hệ thống!',
         success: false,
       }
     } catch (error) {
       return {
         code: 500,
-        message: "An error occurred in the system!",
+        message: "Đã xảy ra lỗi trong hệ thống!",
         success: false,
       }
     }
@@ -189,7 +189,7 @@ export class PromotionService {
             return {
               code: 400,
               success: false,
-              message: 'Coupon code already exist!',
+              message: 'Mã khuyến mãi đã tồn tại trong hệ thống!',
               fieldError: "coupon_code",
             }
           }
@@ -215,13 +215,13 @@ export class PromotionService {
       }
       return {
         code: 404,
-        message: 'Promotion does not exist in the system!',
+        message: 'Khuyến mãi không tồn tại trong hệ thống!',
         success: false,
       }
     } catch (error) {
       return {
         code: 500,
-        message: "An error occurred in the system!",
+        message: "Đã xảy ra lỗi trong hệ thống!",
         success: false,
       }
     }
@@ -237,7 +237,7 @@ export class PromotionService {
         if (promotion.limit === 0) {
           return {
             code: 400,
-            message: 'Promotion has been out of code!',
+            message: 'Mã khuyến mãi này đã sử dụng hết!',
             success: false,
             fieldError: "coupon_code",
           }
@@ -245,7 +245,7 @@ export class PromotionService {
         if (!promotion.active) {
           return {
             code: 400,
-            message: 'Promotion has been disabled!',
+            message: 'Mã khuyến mãi này không thể sử dụng!',
             success: false,
             fieldError: "coupon_code",
           }
@@ -253,7 +253,7 @@ export class PromotionService {
         if (new Date(promotion.ends_at).getDate() - new Date().getDate() < 0) {
           return {
             code: 400,
-            message: 'Promotion out of date!',
+            message: 'Mã khuyến mãi đã hết hạn!',
             success: false,
             fieldError: "coupon_code",
           }
@@ -267,14 +267,14 @@ export class PromotionService {
       }
       return {
         code: 404,
-        message: 'Promotion does not exist in the system!',
+        message: 'Khuyến mãi không tồn tại trong hệ thống!',
         success: false,
         fieldError: "coupon_code",
       }
     } catch (error) {
       return {
         code: 500,
-        message: "An error occurred in the system!",
+        message: "Đã xảy ra lỗi trong hệ thống!",
         success: false,
       }
     }

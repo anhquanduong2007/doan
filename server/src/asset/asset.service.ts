@@ -39,7 +39,7 @@ export class AssetService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -60,13 +60,13 @@ export class AssetService {
             }
             return {
                 code: 404,
-                message: 'Asset does not exist in the system!',
+                message: 'Ảnh không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -107,13 +107,13 @@ export class AssetService {
             }
             return {
                 code: 404,
-                message: 'Asset does not exist in the system!',
+                message: 'Ảnh không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -151,7 +151,7 @@ export class AssetService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

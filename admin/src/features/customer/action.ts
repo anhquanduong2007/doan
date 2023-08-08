@@ -57,7 +57,7 @@ export const getListCustomer = async ({ pagination, dispatch, axiosClientJwt, na
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -100,7 +100,7 @@ export const deleteCustomer = async ({ id, dispatch, axiosClientJwt, navigate, m
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -150,7 +150,7 @@ export const createCustomer = async ({ customer, axiosClientJwt, dispatch, navig
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -185,7 +185,7 @@ export const getCustomer = async ({ id, dispatch, axiosClientJwt, navigate }: Ge
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -236,7 +236,7 @@ export const updateCustomer = async ({ customer, axiosClientJwt, dispatch, navig
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

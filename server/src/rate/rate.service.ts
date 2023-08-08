@@ -20,7 +20,7 @@ export class RateService {
                     code: 404,
                     success: false,
                     fieldError: 'product_id',
-                    message: 'Product does not exist in the system!',
+                    message: 'Sản phẩm không tồn tại trong hệ thống!',
                 };
             }
             return {
@@ -40,7 +40,7 @@ export class RateService {
         } catch (error) {
             return {
                 code: 500,
-                message: 'An error occurred in the system!',
+                message: 'Đã xảy ra lỗi trong hệ thống!',
                 success: false,
             };
         }
@@ -63,13 +63,13 @@ export class RateService {
             }
             return {
                 code: 404,
-                message: 'Rate does not exist in the system!',
+                message: 'Không tìm thấy đánh giá trong hệ thống!',
                 success: false,
             };
         } catch (error) {
             return {
                 code: 500,
-                message: 'An error occurred in the system!',
+                message: 'Đã xảy ra lỗi trong hệ thống!',
                 success: false,
             };
         }
@@ -90,13 +90,13 @@ export class RateService {
             }
             return {
                 code: 404,
-                message: 'Rate does not exist in the system!',
+                message: 'Không tìm thấy đánh giá trong hệ thống!',
                 success: false,
             };
         } catch (error) {
             return {
                 code: 500,
-                message: 'An error occurred in the system!',
+                message: 'Đã xảy ra lỗi trong hệ thống!',
                 success: false,
             };
         }
@@ -139,7 +139,7 @@ export class RateService {
         } catch (error) {
             return {
                 code: 500,
-                message: 'An error occurred in the system!',
+                message: 'Đã xảy ra lỗi trong hệ thống!',
                 success: false,
             };
         }
@@ -171,13 +171,13 @@ export class RateService {
             }
             return {
                 code: 404,
-                message: 'Rate does not exist in the system!',
+                message: 'Không tìm thấy đánh giá trong hệ thống!',
                 success: false,
             };
         } catch (error) {
             return {
                 code: 500,
-                message: 'An error occurred in the system!',
+                message: 'Đã xảy ra lỗi trong hệ thống!',
                 success: false,
             };
         }

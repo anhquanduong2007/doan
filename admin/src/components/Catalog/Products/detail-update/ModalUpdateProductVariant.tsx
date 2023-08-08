@@ -3,7 +3,7 @@ import autoAnimate from '@formkit/auto-animate';
 import { Button, Col, Form, Input, InputNumber, Modal, Row, message } from 'antd';
 import React, { useRef, useState, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { ProductVariant } from 'src/types';
+import { ProductVariant, User } from 'src/types';
 import { Asset } from 'src/types/asset';
 import SelectImage from '../SelectImage';
 import { updateProductVariant } from 'src/features/catalog/product/actions';
@@ -51,6 +51,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
     const product = useAppSelector((state) => state.product);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
+    const userInfo: User = JSON.parse(localStorage.getItem('userInfo') as string)
 
     // ** Effect
     useEffect(() => {
@@ -139,6 +140,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                     return (
                                         <div >
                                             <InputNumber
+                                                style={{ width: "150px" }}
                                                 formatter={value => `${value} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                                 {...field}
                                             />
@@ -157,6 +159,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                             <InputNumber
                                                 formatter={value => `${value} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                                 {...field}
+                                                style={{ width: "150px" }}
                                             />
                                         </div>
                                     )
@@ -177,20 +180,27 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                             />
                         </Form.Item>
                     </Col>
-                    <Col span={5}>
-                        <Flex flexDirection={'column'} alignItems={"center"}>
-                            <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
-                                <img
-                                    style={{ width: "100%", padding: "10px", height: "300px", objectFit: "contain" }}
-                                    src={featuredAsset ? featuredAsset?.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
-                                />
-                            </Box>
-                            <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Chọn ảnh</Button>
-                        </Flex>
-                    </Col>
+                    {(userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('CreateAsset') ||
+                        userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                            <Col span={5}>
+                                <Flex flexDirection={'column'} alignItems={"center"}>
+                                    <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
+                                        <img
+                                            style={{ width: "100%", padding: "10px", height: "300px", objectFit: "contain" }}
+                                            src={featuredAsset ? featuredAsset?.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
+                                        />
+                                    </Box>
+                                    <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Chọn ảnh</Button>
+                                </Flex>
+                            </Col>
+                        )}
                 </Row>
             </Form>
-            <SelectImage isModalAssetOpen={isModalAssetOpen} setIsModalAssetOpen={setIsModalAssetOpen} setFeaturedAsset={setFeaturedAsset} featuredAsset={featuredAsset as Asset} />
+            {(userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('CreateAsset') ||
+                userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                    <SelectImage isModalAssetOpen={isModalAssetOpen} setIsModalAssetOpen={setIsModalAssetOpen} setFeaturedAsset={setFeaturedAsset} featuredAsset={featuredAsset as Asset} />
+
+                )}
         </Modal>
     );
 };

@@ -12,6 +12,7 @@ import { createAxiosJwt } from 'src/helper/axiosInstance';
 import { Asset } from 'src/types/asset';
 import SelectImage from '../SelectImage';
 import { getListCategory } from 'src/features/catalog/category/action';
+import { User } from 'src/types';
 
 export interface FormValuesProduct {
     name: string
@@ -47,6 +48,7 @@ const ProductDetail = () => {
     const category = useAppSelector((state) => state.category);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
+    const userInfo: User = JSON.parse(localStorage.getItem('userInfo') as string)
 
     // ** Ref
     const slugErrorRef = useRef(null);
@@ -184,23 +186,34 @@ const ProductDetail = () => {
                                         />
                                     </Form.Item>
                                 </Col>
-                                <Col span={5}>
-                                    <Flex flexDirection={'column'} alignItems={"center"}>
-                                        <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
-                                            <img
-                                                style={{ width: "100%", padding: "10px", height: "300px", objectFit: "contain" }}
-                                                src={featuredAsset ? featuredAsset.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
-                                            />
-                                        </Box>
-                                        <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Chọn ảnh</Button>
-                                    </Flex>
-                                </Col>
+                                {(userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('CreateAsset') ||
+                                    userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                                        <Col span={5}>
+                                            <Flex flexDirection={'column'} alignItems={"center"}>
+                                                <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
+                                                    <img
+                                                        style={{ width: "100%", padding: "10px", height: "300px", objectFit: "contain" }}
+                                                        src={featuredAsset ? featuredAsset.url : 'https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg'}
+                                                    />
+                                                </Box>
+                                                <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>Chọn ảnh</Button>
+                                            </Flex>
+                                        </Col>
+                                    )}
                             </Row>
                         </Col>
                     </Row>
                 </Spin>
             </Form>
-            <SelectImage isModalAssetOpen={isModalAssetOpen} setIsModalAssetOpen={setIsModalAssetOpen} setFeaturedAsset={setFeaturedAsset} featuredAsset={featuredAsset as Asset} />
+            {(userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('CreateAsset') ||
+                userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                    <SelectImage
+                        isModalAssetOpen={isModalAssetOpen}
+                        setIsModalAssetOpen={setIsModalAssetOpen}
+                        setFeaturedAsset={setFeaturedAsset}
+                        featuredAsset={featuredAsset as Asset}
+                    />
+                )}
         </Fragment>
     );
 };

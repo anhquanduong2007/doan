@@ -92,7 +92,7 @@ export class ProductController {
 
     @Put("update/:id")
     @Permission(Permissions.UpdateProduct)
-    async productUpdate(@Req() req: Request, @Body() dto: ProductUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+    async productUpdate(@Body() dto: ProductUpdateDto, @Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.productService.productUpdate(dto, id)
         res.json({ response })
     }

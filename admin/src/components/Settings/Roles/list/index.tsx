@@ -11,6 +11,7 @@ import {
     DeleteOutlined,
     PlusCircleOutlined
 } from '@ant-design/icons';
+import { permissionLang } from 'src/constants/permissionsLang';
 
 interface DataType {
     key: number;
@@ -56,14 +57,14 @@ const columns = (
                     <Space wrap>
                         {permissions.map((permission, index) => {
                             if (index + 1 <= 4) {
-                                return <Tag key={index}>{permission}</Tag>
+                                return <Tag key={index}>{permissionLang[permission as keyof typeof permissionLang]}</Tag>
                             }
                         })}
                         {
                             permissions.length > 4 && (
                                 <Tooltip title={permissions.map((permission, index) => {
                                     if (index >= 4) {
-                                        return permission
+                                        return permissionLang[permission as keyof typeof permissionLang]
                                     }
                                 }).filter(notUndefined => notUndefined !== undefined).join(', ')}>
                                     <Tag style={{ cursor: "pointer" }}>+{permissions.length - 4}</Tag>

@@ -62,13 +62,13 @@ export class UserService {
             }
             return {
                 code: 400,
-                message: 'User does not exist in the system!',
+                message: 'Không tìm thấy người dùng trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -93,13 +93,13 @@ export class UserService {
             }
             return {
                 code: 404,
-                message: 'User does not exist in the system!',
+                message: 'Không tìm thấy người dùng trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -244,7 +244,7 @@ export class UserService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -282,13 +282,13 @@ export class UserService {
             }
             return {
                 code: 404,
-                message: 'Administrator does not exist in the system!',
+                message: 'Quản trị viên không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -318,7 +318,7 @@ export class UserService {
                         return {
                             code: 400,
                             success: false,
-                            message: 'Email already exist!',
+                            message: 'Email đã tồn tại trong hệ thống!',
                             fieldError: "email",
                         }
                     }
@@ -360,13 +360,13 @@ export class UserService {
             }
             return {
                 code: 404,
-                message: 'Administrator does not exist in the system!',
+                message: 'Quản trị viên không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -482,7 +482,7 @@ export class UserService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -490,7 +490,7 @@ export class UserService {
 
     public async customer(id: number): Promise<IResponse<Omit<users, "hashed_rt" | "password">>> {
         try {
-            const administrator = await this.prisma.users.findUnique({
+            const customer = await this.prisma.users.findUnique({
                 where: { id },
                 select: {
                     email: true,
@@ -519,23 +519,23 @@ export class UserService {
                     }
                 }
             })
-            if (administrator) {
+            if (customer) {
                 return {
                     code: 200,
                     message: 'Success',
                     success: true,
-                    data: administrator
+                    data: customer
                 }
             }
             return {
                 code: 404,
-                message: 'Customer does not exist in the system!',
+                message: 'Khách hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -565,7 +565,7 @@ export class UserService {
                         return {
                             code: 400,
                             success: false,
-                            message: 'Email code already exist!',
+                            message: 'Email đã tồn tại trong hệ thống!',
                             fieldError: "email",
                         }
                     }
@@ -616,13 +616,13 @@ export class UserService {
             }
             return {
                 code: 404,
-                message: 'Customer does not exist in the system!',
+                message: 'Khách hàng không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

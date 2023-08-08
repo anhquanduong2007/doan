@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks';
 import { createCategory, getCategory, getListCategory, updateCategory } from 'src/features/catalog/category/action';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 import ProductOfCategory from './ProductOfCategory';
-import { Product } from 'src/types';
+import { Product, User } from 'src/types';
 
 export type FormValuesCategory = {
     category_name: string
@@ -41,6 +41,7 @@ const CategoryCreateUpdate = () => {
     const category = useAppSelector((state) => state.category);
     const dispatch = useAppDispatch();
     const axiosClientJwt = createAxiosJwt();
+    const userInfo: User = JSON.parse(localStorage.getItem('userInfo') as string)
 
     // ** Effect
     useEffect(() => {
@@ -123,7 +124,7 @@ const CategoryCreateUpdate = () => {
                             <Link to='/'>Trang chủ</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>
-                            <Link to='/catalog/categories'>Danh muhc</Link>
+                            <Link to='/catalog/categories'>Danh mục</Link>
                         </Breadcrumb.Item>
                         <Breadcrumb.Item>{id ? 'Cập nhật' : 'Tạo'}</Breadcrumb.Item>
                     </Breadcrumb>
@@ -192,11 +193,12 @@ const CategoryCreateUpdate = () => {
                                         }}
                                     />
                                 </Form.Item>
-                                {id && (
-                                    <Form.Item label="Sản phẩm của danh mục">
-                                        <ProductOfCategory products={category.single.result?.product as Product[]} loading={category.single.loading} />
-                                    </Form.Item>
-                                )}
+                                {id && (userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('ReadProduct') ||
+                                    userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                                        <Form.Item label="Sản phẩm của danh mục">
+                                            <ProductOfCategory products={category.single.result?.product as Product[]} loading={category.single.loading} />
+                                        </Form.Item>
+                                    )}
                             </Col>
                         </Form>
 

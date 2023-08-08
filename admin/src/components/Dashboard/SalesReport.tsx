@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
-import { Button, Card, Col, DatePicker, Divider, Pagination, Row, Tooltip } from 'antd';
+import { Button, Card, Col, DatePicker, Divider, Pagination, Row, Tag, Tooltip } from 'antd';
 import * as React from 'react';
 import Dashboard from '.';
 import { currency } from 'src/helper/currencyPrice';
@@ -79,7 +79,11 @@ const SalesReport = ({ dashboard, setStartDate, startDate, setEndDate }: SalesRe
                            <Box flex={1}>{currency(order.total_price)}</Box>
                            <Box flex={1} color={order.payment ? 'green' : 'red'}>{currency(order.profit)}</Box>
                            <Box flex={1}>{order.quantity}</Box>
-                           <Box flex={1}>{order.payment_method}</Box>
+                           <Box flex={1}>
+                              <Tag>
+                                 {order.payment_method === "Standard" ? 'Thanh toán thường' : 'paypal'}
+                              </Tag>
+                           </Box>
                            <Box flex={1}>
                               <Button>
                                  <Link to={`/sales/orders/detail/${order.id}`}>Open</Link>

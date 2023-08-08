@@ -83,7 +83,7 @@ const ModalUpdateProductOption = ({ isModalUpdateProductOptionOpen, setIsModalUp
                                     },
                                     {
                                         value: 'Color',
-                                        label: 'Mãu',
+                                        label: 'Màu',
                                     },
                                 ]}
                             />

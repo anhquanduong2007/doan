@@ -77,7 +77,7 @@ export class OrderController implements OnApplicationBootstrap {
                         await this.prisma.order_history.create({
                             data: {
                                 order_id: order.id,
-                                content: "Order has been created"
+                                content: "Đơn hàng được tạo lúc"
                             }
                         }),
                         await this.prisma.product_variant.update({
@@ -107,7 +107,7 @@ export class OrderController implements OnApplicationBootstrap {
         } catch (error) {
             return res.json({
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             })
         }
@@ -144,14 +144,14 @@ export class OrderController implements OnApplicationBootstrap {
             if (!isValidAddress) {
                 return res.json({
                     code: 404,
-                    message: 'Address does not exist in this customer!',
+                    message: 'Địa chỉ không tồn tại với khách hàng này!',
                     success: false,
                 })
             }
             if (!isValidProductVariant) {
                 return res.json({
                     code: 404,
-                    message: 'Product variant does not exist in this customer!',
+                    message: 'Biến thể của sản phẩm không tồn tại với khách hàng này!',
                     success: false,
                 })
             }
@@ -159,16 +159,7 @@ export class OrderController implements OnApplicationBootstrap {
                 if (!isValidPromotion) {
                     return res.json({
                         code: 404,
-                        message: 'Promotion does not exist in the system!',
-                        success: false,
-                    })
-                }
-            }
-            if (promotion_id) {
-                if (!isValidPromotion) {
-                    return res.json({
-                        code: 404,
-                        message: 'Promotion does not exist in the system!',
+                        message: 'Mã khuyến mãi không tồn tại trong hệ thống!',
                         success: false,
                     })
                 }
@@ -177,10 +168,10 @@ export class OrderController implements OnApplicationBootstrap {
             let profit: number = 0
             if (promotion_id) {
                 price = isValidProductVariant.price * quantity * ((100 - isValidPromotion.discount) / 100)
-                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity * (100 - isValidPromotion.discount) / 100
+                profit = price - (isValidProductVariant.origin_price * quantity)
             } else {
                 price = isValidProductVariant.price * quantity
-                profit = (isValidProductVariant.price - isValidProductVariant.origin_price) * quantity
+                profit = price - (isValidProductVariant.origin_price * quantity)
             }
             const create_payment_json = {
                 "intent": "authorize",
@@ -243,7 +234,7 @@ export class OrderController implements OnApplicationBootstrap {
         } catch (error) {
             return res.json({
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             })
         }

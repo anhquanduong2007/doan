@@ -13,6 +13,7 @@ export const loginUser = async (user: { email: string, password: string }, dispa
             setTimeout(function () {
                 dispatch(loginSuccess(res.response.data));
                 localStorage.setItem("accessToken", res.response.access_token as string)
+                localStorage.setItem("userInfo", JSON.stringify(res.response.data))
                 localStorage.setItem("refreshToken", res.response.refresh_token as string)
                 navigate('/');
             }, 1000);
@@ -26,7 +27,7 @@ export const loginUser = async (user: { email: string, password: string }, dispa
         dispatch(loginFailed(null));
         Inotification({
             type: 'error',
-            message: 'Something went wrong!'
+            message: 'Đã xảy ra sự cố!'
         })
     }
 }
@@ -43,12 +44,13 @@ export const logOut = async (dispatch: AppDispatch, navigate: Function, axiosCli
         dispatch(logOutSuccess());
         localStorage.removeItem("accessToken")
         localStorage.removeItem("refreshToken")
+        localStorage.removeItem("userInfo")
         navigate('/login');
     } catch (error) {
         dispatch(logOutFailed());
         Inotification({
             type: 'error',
-            message: 'Something went wrong!'
+            message: 'Đã xảy ra sự cố!'
         })
     }
 }

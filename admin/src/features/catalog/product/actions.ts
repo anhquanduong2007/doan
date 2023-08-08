@@ -134,7 +134,7 @@ export const createProduct = async ({ product, dispatch, axiosClientJwt, setErro
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -162,7 +162,7 @@ export const createProductOption = async ({ options, axiosClientJwt, productId }
     } catch (error) {
         Inotification({
             type: "error",
-            message: "Something went wrong!",
+            message: "Đã xảy ra sự cố!",
         });
     }
 };
@@ -182,7 +182,7 @@ export const createProductVariant = async ({ variants, axiosClientJwt }: CreateP
     } catch (error) {
         Inotification({
             type: "error",
-            message: "Something went wrong!",
+            message: "Đã xảy ra sự cố!",
         });
     }
 };
@@ -223,7 +223,7 @@ export const getListProduct = async ({ pagination, dispatch, axiosClientJwt, nav
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -264,7 +264,7 @@ export const deleteProduct = async ({ id, dispatch, axiosClientJwt, navigate, me
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -299,7 +299,7 @@ export const getProduct = async ({ id, dispatch, axiosClientJwt, navigate }: Get
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -348,7 +348,7 @@ export const updateProduct = async ({ product, axiosClientJwt, dispatch, navigat
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -400,7 +400,7 @@ export const updateProductVariant = async ({ productVariant, setIsModalOpen, axi
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -444,7 +444,7 @@ export const updateProductOption = async ({ productOption, setIsModalOpen, axios
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -485,7 +485,7 @@ export const deleteProductVariant = async ({ id, dispatch, axiosClientJwt, navig
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -572,7 +572,7 @@ export const createProductVariantOption = async ({ axiosClientJwt, dispatch, get
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

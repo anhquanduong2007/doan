@@ -64,7 +64,7 @@ export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navig
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -99,7 +99,7 @@ export const getOrder = async ({ id, dispatch, axiosClientJwt, navigate }: GetOr
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -136,7 +136,7 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -173,7 +173,7 @@ export const confirmOrder = async ({ id, dispatch, axiosClientJwt, navigate, mes
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -210,7 +210,7 @@ export const shippedOrder = async ({ id, dispatch, axiosClientJwt, navigate, mes
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -247,7 +247,7 @@ export const completedOrder = async ({ id, dispatch, axiosClientJwt, navigate, m
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -284,7 +284,7 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -322,7 +322,7 @@ export const deleteOrder = async ({ id, dispatch, axiosClientJwt, navigate, mess
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

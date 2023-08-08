@@ -33,7 +33,6 @@ const Dashboard = () => {
     const [startDate, setStartDate] = React.useState<string>(moment(new Date())?.toISOString() as string)
     const [endDate, setEndDate] = React.useState<string>()
 
-    console.log(startDate)
     // ** Variables
     const axiosClient = createAxiosClient();
 

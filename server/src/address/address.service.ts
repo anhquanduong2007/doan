@@ -20,7 +20,7 @@ export class AddressService {
             if (!isCustomerValid) {
                 return {
                     code: 404,
-                    message: 'Customer does not exist in the system!',
+                    message: 'Khách hàng không tồn tại trong hệ thống!',
                     success: false,
                 }
             }
@@ -44,7 +44,7 @@ export class AddressService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -60,7 +60,7 @@ export class AddressService {
             if (!isValidCustomer) {
                 return {
                     code: 404,
-                    message: 'Customer does not exist in the system!',
+                    message: 'Khách hàng không tồn tại trong hệ thống!',
                     success: false,
                 }
             }
@@ -77,7 +77,7 @@ export class AddressService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -99,13 +99,13 @@ export class AddressService {
             }
             return {
                 code: 404,
-                message: 'Address does not exist in the system!',
+                message: 'Địa chỉ không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -127,13 +127,13 @@ export class AddressService {
             }
             return {
                 code: 404,
-                message: 'Address does not exist in the system!',
+                message: 'Địa chỉ không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -165,13 +165,13 @@ export class AddressService {
             }
             return {
                 code: 404,
-                message: 'Address does not exist in the system!',
+                message: 'Địa chỉ không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -198,7 +198,7 @@ export class AddressService {
             if (!isValidCustomer) {
                 return {
                     code: 404,
-                    message: 'Customer does not exist in the system!',
+                    message: 'Khách hàng không tồn tại trong hệ thống!',
                     success: false,
                 }
             }
@@ -225,13 +225,13 @@ export class AddressService {
             }
             return {
                 code: 404,
-                message: 'Address does not exist in the system!',
+                message: 'Địa chỉ không tồn tại trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

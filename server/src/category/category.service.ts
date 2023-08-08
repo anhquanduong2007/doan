@@ -24,7 +24,7 @@ export class CategoryService {
                     code: 400,
                     success: false,
                     fieldError: "category_code",
-                    message: 'Category code already exists!',
+                    message: 'Mã danh mục đã tồn tại trong hệ thống!',
                 }
             }
             return {
@@ -43,7 +43,7 @@ export class CategoryService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -66,13 +66,13 @@ export class CategoryService {
             }
             return {
                 code: 404,
-                message: 'Category does not exist in the system!',
+                message: 'Không tìm thấy danh mục trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -100,13 +100,13 @@ export class CategoryService {
             }
             return {
                 code: 404,
-                message: 'Category does not exist in the system!',
+                message: 'Không tìm thấy danh mục trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -176,7 +176,7 @@ export class CategoryService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -207,7 +207,7 @@ export class CategoryService {
                             code: 400,
                             success: false,
                             fieldError: "category_code",
-                            message: 'Category code already exists!',
+                            message: 'Mã danh mục đã tồn tại trong hệ thống!',
                         }
                     }
                 }
@@ -234,7 +234,7 @@ export class CategoryService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

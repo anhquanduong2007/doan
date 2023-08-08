@@ -104,6 +104,8 @@ export const data = ({ control, errors, variantItem, setValue, clearErrors }): D
                                 <InputNumber
                                     className='!my-1'
                                     id='originPrice'
+                                    style={{ width: "100%" }}
+                                    formatter={value => `${value} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     type=''
                                     defaultValue={0}
                                     {...other}
@@ -124,6 +126,8 @@ export const data = ({ control, errors, variantItem, setValue, clearErrors }): D
                             <Fragment>
                                 <InputNumber
                                     className='!my-1'
+                                    style={{ width: "100%" }}
+                                    formatter={value => `${value} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                     id='price'
                                     type=''
                                     defaultValue={0}

@@ -21,7 +21,7 @@ export class RoleService {
                 return {
                     code: 400,
                     success: false,
-                    message: 'Role code already exist!',
+                    message: 'Mã vai trò đã tồn tại trong hệ thống!',
                     fieldError: "role_code",
                 };
             }
@@ -41,7 +41,7 @@ export class RoleService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -56,7 +56,7 @@ export class RoleService {
                 if (role.role_code === "customer" || role.role_code === "superadmin") {
                     return {
                         code: 400,
-                        message: 'You cannot perform this action!',
+                        message: 'Bạn không có quyền để thực hiện hành động này!',
                         success: false,
                     }
                 }
@@ -73,13 +73,13 @@ export class RoleService {
             }
             return {
                 code: 404,
-                message: 'Role does not exist in the system!',
+                message: 'Không tìm thấy vai trò trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -101,13 +101,13 @@ export class RoleService {
             }
             return {
                 code: 404,
-                message: 'Role does not exist in the system!',
+                message: 'Không tìm thấy vai trò trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -160,7 +160,7 @@ export class RoleService {
                         return {
                             code: 400,
                             success: false,
-                            message: 'Role code already exist!',
+                            message: 'Mã vai trò đã tồn tại trong hệ thống!',
                             fieldError: "role_code",
                         }
                     }
@@ -182,13 +182,13 @@ export class RoleService {
             }
             return {
                 code: 400,
-                message: 'Role does not exist in the system!',
+                message: 'Không tìm thấy vai trò trong hệ thống!',
                 success: false,
             }
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

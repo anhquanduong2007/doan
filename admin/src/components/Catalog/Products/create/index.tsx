@@ -41,13 +41,14 @@ const ProductCreate: React.FC = () => {
    const dispatch = useAppDispatch();
    const axiosClientJwt = createAxiosJwt();
    const product = useAppSelector((state) => state.product);
+   const userInfo: User = JSON.parse(localStorage.getItem('userInfo') as string)
 
    const onSubmit = async (data) => {
       const colorOption = data.option && getValueByName(data.option, "Color");
       const sizeOption = data.option && getValueByName(data.option, "Size");
       const options = Object.values(removeEmpty({ colorOption, sizeOption }));
       setProductOptions([...options]);
-      if (productOptions.length > 0) {
+      if ([...options].length > 0) {
          await createProduct({
             axiosClientJwt,
             dispatch,
@@ -114,19 +115,22 @@ const ProductCreate: React.FC = () => {
                                  />
                               </Col>
                               {/* Image */}
-                              <Col span={5}>
-                                 <Flex flexDirection={"column"} alignItems={"center"}>
-                                    <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
-                                       <img
-                                          style={{ width: "100%", padding: "10px", height: "300px", objectFit: "contain" }}
-                                          src={featuredAsset ? featuredAsset.url : "https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg"}
-                                       />
-                                    </Box>
-                                    <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>
-                                       Chọn ảnh
-                                    </Button>
-                                 </Flex>
-                              </Col>
+                              {(userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('CreateAsset') ||
+                                 userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+                                    <Col span={5}>
+                                       <Flex flexDirection={"column"} alignItems={"center"}>
+                                          <Box border={"1px solid #dbdbdb"} borderRadius={"10px"} w={"100%"}>
+                                             <img
+                                                style={{ width: "100%", padding: "10px", height: "300px", objectFit: "contain" }}
+                                                src={featuredAsset ? featuredAsset.url : "https://thumbs.dreamstime.com/b/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132484366.jpg"}
+                                             />
+                                          </Box>
+                                          <Button onClick={() => setIsModalAssetOpen(true)} style={{ marginTop: "10px" }}>
+                                             Chọn ảnh
+                                          </Button>
+                                       </Flex>
+                                    </Col>
+                                 )}
                            </Row>
                            <div style={{ marginTop: "1rem" }}>
                               <Table
@@ -150,12 +154,15 @@ const ProductCreate: React.FC = () => {
                </Card>
             </Col>
          </Row>
-         <SelectImage
-            isModalAssetOpen={isModalAssetOpen}
-            setIsModalAssetOpen={setIsModalAssetOpen}
-            setFeaturedAsset={setFeaturedAsset}
-            featuredAsset={featuredAsset as Asset}
-         />
+         {(userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('CreateAsset') ||
+            userInfo.users_role.map((ur) => ur.role.permissions).flat().includes('SuperAdmin')) && (
+               <SelectImage
+                  isModalAssetOpen={isModalAssetOpen}
+                  setIsModalAssetOpen={setIsModalAssetOpen}
+                  setFeaturedAsset={setFeaturedAsset}
+                  featuredAsset={featuredAsset as Asset}
+               />
+            )}
       </Fragment>
    );
 };

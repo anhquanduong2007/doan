@@ -56,7 +56,7 @@ export const getListPromotion = async ({ pagination, dispatch, axiosClientJwt, n
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -99,7 +99,7 @@ export const deletePromotion = async ({ id, dispatch, axiosClientJwt, navigate, 
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -148,7 +148,7 @@ export const createPromotion = async ({ promotion, dispatch, axiosClientJwt, nav
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -183,7 +183,7 @@ export const getPromotion = async ({ id, dispatch, axiosClientJwt, navigate }: G
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -234,7 +234,7 @@ export const updatePromotion = async ({ promotion, axiosClientJwt, dispatch, nav
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

@@ -53,7 +53,7 @@ export const getListRole = async ({ pagination, dispatch, axiosClientJwt, naviga
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -79,7 +79,7 @@ export const deleteRole = async ({ id, dispatch, axiosClientJwt, navigate, messa
             dispatch(deleteRoleFailed(null));
             Inotification({
                 type: 'error',
-                message: res?.response?.message || 'Something went wrong!'
+                message: res?.response?.message || 'Đã xảy ra sự cố!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -88,7 +88,7 @@ export const deleteRole = async ({ id, dispatch, axiosClientJwt, navigate, messa
             dispatch(deleteRoleFailed(null));
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
             setTimeout(function () {
                 setIsModalOpen(false)
@@ -107,7 +107,7 @@ export const deleteRole = async ({ id, dispatch, axiosClientJwt, navigate, messa
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -153,7 +153,7 @@ export const createRole = async ({ role, dispatch, axiosClientJwt, navigate, mes
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -188,7 +188,7 @@ export const getSingleRole = async ({ axiosClientJwt, dispatch, id, navigate }: 
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -234,7 +234,7 @@ export const updateRole = async ({ axiosClientJwt, dispatch, id, role, message, 
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks';
+import { permissionLang } from 'src/constants/permissionsLang';
 import { createRole, getSingleRole, updateRole } from 'src/features/setting/role/actions';
 import { createAxiosJwt } from 'src/helper/axiosInstance';
 
@@ -34,7 +35,7 @@ const permissions: PermissionType[] = [
     {
         title: "Đơn hàng",
         description: "Cấp quyền trên đơn hàng",
-        permissions: ['ReadOrder', 'DeleteOrder', 'UpdateOrder', 'CreateOrder',]
+        permissions: ['ReadOrder', 'DeleteOrder', 'UpdateOrder']
     },
     {
         title: "Khách hàng",
@@ -268,13 +269,18 @@ const RoleCreateUpdate = () => {
                                                                                                 checked={value || false}
                                                                                                 value={value || false}
                                                                                                 {...other}
+                                                                                                style={{
+                                                                                                    width: "20px"
+                                                                                                }}
                                                                                                 placeholder='Code'
                                                                                             />
                                                                                         </Fragment>
                                                                                     )
                                                                                 }}
                                                                             />
-                                                                            <Box as="label" ml={2} cursor="pointer" fontWeight="semibold" htmlFor={item}>{item}</Box>
+                                                                            <Box as="label" ml={2} cursor="pointer" fontWeight="semibold" htmlFor={item} w={250}>
+                                                                                <span>{permissionLang[item as keyof typeof permissionLang]}</span>
+                                                                            </Box>
                                                                         </Flex>
                                                                     )
                                                                 })}

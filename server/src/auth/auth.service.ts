@@ -39,7 +39,7 @@ export class AuthService {
                 return {
                     code: 400,
                     success: false,
-                    message: 'Duplicated email!',
+                    message: 'Email đã tồn tại trong hệ thống!',
                     fieldError: 'email',
                 };
             }
@@ -70,7 +70,7 @@ export class AuthService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -97,7 +97,7 @@ export class AuthService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -122,7 +122,7 @@ export class AuthService {
                 return {
                     code: 400,
                     success: false,
-                    message: 'Wrong email!',
+                    message: 'Sai email!',
                     fieldError: 'email'
                 }
             }
@@ -131,7 +131,7 @@ export class AuthService {
                 return {
                     code: 400,
                     success: false,
-                    message: 'Wrong password!',
+                    message: 'Sai mật khẩu!',
                     fieldError: 'password'
                 }
             }
@@ -149,7 +149,7 @@ export class AuthService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -166,7 +166,7 @@ export class AuthService {
                 return {
                     code: 400,
                     success: false,
-                    message: "Access Denied!"
+                    message: "Từ chối truy cập!"
                 }
             }
             const rtMatches = await argon2.verify(user.hashed_rt, rt);
@@ -174,7 +174,7 @@ export class AuthService {
                 return {
                     code: 400,
                     success: false,
-                    message: "Access Denied!"
+                    message: "Từ chối truy cập!"
                 }
             }
             const tokens = await this.getTokens(user.id, user.email);
@@ -189,7 +189,7 @@ export class AuthService {
             console.log(error)
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -218,7 +218,7 @@ export class AuthService {
                 return {
                     code: 400,
                     success: false,
-                    message: 'Duplicated email!',
+                    message: 'Email đã tồn tại trong hệ thống!',
                     fieldError: 'email',
                 };
             }
@@ -254,7 +254,7 @@ export class AuthService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }
@@ -314,7 +314,7 @@ export class AuthService {
         } catch (error) {
             return {
                 code: 500,
-                message: "An error occurred in the system!",
+                message: "Đã xảy ra lỗi trong hệ thống!",
                 success: false,
             }
         }

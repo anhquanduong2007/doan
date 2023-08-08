@@ -44,7 +44,7 @@ export const getListAsset = async ({ pagination, dispatch, axiosClientJwt, navig
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }
@@ -87,7 +87,7 @@ export const deleteAsset = async ({ id, dispatch, axiosClientJwt, navigate, mess
         } else {
             Inotification({
                 type: 'error',
-                message: 'Something went wrong!'
+                message: 'Đã xảy ra sự cố!'
             })
         }
     }

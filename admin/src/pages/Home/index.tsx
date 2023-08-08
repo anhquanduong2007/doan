@@ -24,6 +24,8 @@ const HomePage = () => {
         logOut(dispatch, navigate, axiosClientJwt)
     }
 
+    const userInfo = JSON.parse(localStorage.getItem('userInfo') as string)
+
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Header style={{ backgroundColor: "white", position: "relative", zIndex: 10, boxShadow: "0 2px 8px #f0f1f2" }}>
@@ -35,7 +37,7 @@ const HomePage = () => {
                     </Col>
                     <Col span={20}>
                         <Menu mode="horizontal" style={{ border: 0, justifyContent: "end" }}>
-                            <Menu.SubMenu key="info-user" title={`Xin chào, ${!currentUser.loading && currentUser.result && currentUser.result.first_name} ${!currentUser.loading && currentUser.result && currentUser.result.last_name}`}>
+                            <Menu.SubMenu key="info-user" title={`Xin chào, ${userInfo.first_name} ${userInfo.last_name}`}>
                                 <Menu.Item key="home" onClick={() => navigate('/dashboard')}>
                                     Trang chủ
                                 </Menu.Item>
