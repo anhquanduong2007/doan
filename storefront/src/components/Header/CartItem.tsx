@@ -123,7 +123,7 @@ const CartItem = ({ cartItem, onClose, refresh, setRefresh }: CartItemProps) => 
                         onClose()
                     }}
                 >
-                    Checkout
+                    Thanh toán
                 </Button>
                 <Button
                     className="ml-2"
@@ -142,7 +142,7 @@ const CartItem = ({ cartItem, onClose, refresh, setRefresh }: CartItemProps) => 
                             toast
                         })
                     }}>
-                    Delete
+                    Xóa
                 </Button>
             </div>
         </Card>

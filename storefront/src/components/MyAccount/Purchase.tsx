@@ -158,7 +158,7 @@ const Purchase = () => {
                             </Col>
                             <Col span={24}>
                                 <Collapse >
-                                    <Collapse.Panel showArrow={false} header="Detailed overview" key="1">
+                                    <Collapse.Panel showArrow={false} header="Chi tiết" key="1">
                                         <Row gutter={[24, 0]}>
                                             <Col span={12}>
                                                 <Row gutter={[0, 12]}>
@@ -171,32 +171,32 @@ const Purchase = () => {
                                                         }>
                                                             <Tooltip title={`Street line 1: ${order.billing_address.street_line_1}`}>
                                                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Street line 1: </Box>{order.billing_address.street_line_1}
+                                                                    <Box as="span" fontWeight="semibold">Tuyến phố 1: </Box>{order.billing_address.street_line_1}
                                                                 </p>
                                                             </Tooltip>
                                                             <Tooltip title={`Street line 2: ${order.billing_address.street_line_2 ? order.billing_address.street_line_2 : '-'}`}>
                                                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Street line 2: </Box>{order.billing_address.street_line_2 ? order.billing_address.street_line_2 : '-'}
+                                                                    <Box as="span" fontWeight="semibold">Tuyến phố 2: </Box>{order.billing_address.street_line_2 ? order.billing_address.street_line_2 : '-'}
                                                                 </p>
                                                             </Tooltip>
                                                             <Tooltip title={`City: ${order.billing_address.city}`}>
                                                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">City: </Box>{order.billing_address.city}
+                                                                    <Box as="span" fontWeight="semibold">Thành phố: </Box>{order.billing_address.city}
                                                                 </p>
                                                             </Tooltip>
                                                             <Tooltip title={`Country: ${order.billing_address.country}`}>
                                                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Country: </Box>{order.billing_address.country}
+                                                                    <Box as="span" fontWeight="semibold">Quốc gia: </Box>{order.billing_address.country}
                                                                 </p>
                                                             </Tooltip>
                                                             <Tooltip title={`Postal code: ${order.billing_address.postal_code}`}>
                                                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Postal code: </Box>{order.billing_address.postal_code}
+                                                                    <Box as="span" fontWeight="semibold">Mã bưu điện: </Box>{order.billing_address.postal_code}
                                                                 </p>
                                                             </Tooltip>
                                                             <Tooltip title={`Province: ${order.billing_address.province}`}>
                                                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                                                    <Box as="span" fontWeight="semibold">Province: </Box>{order.billing_address.province}
+                                                                    <Box as="span" fontWeight="semibold">Tỉnh: </Box>{order.billing_address.province}
                                                                 </p>
                                                             </Tooltip>
                                                         </CardAntd>

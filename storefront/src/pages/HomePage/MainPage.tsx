@@ -7,8 +7,8 @@ const MainPage = () => {
         <Fragment>
             <Slider />
             <div className='px-10 py-8'>
-                <ProductBy title='New arrivals' url="product/new-arrivals" />
-                <ProductBy title='Most bought' url="product/most-bought"/>
+                <ProductBy title='Hàng mới đến' url="product/new-arrivals" />
+                <ProductBy title='Bán chạy nhất' url="product/most-bought"/>
             </div>
         </Fragment>
     );

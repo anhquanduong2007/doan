@@ -53,7 +53,7 @@ const Address = ({ address, setAddress }: AddressProps) => {
     return (
         <div className='mb-[1rem]'>
             <Card variant="outline" padding={8}>
-                <div className='text-center font-bold'>Address</div>
+                <div className='text-center font-bold'>Địa chỉ</div>
                 <Divider />
                 {
                     address ? (
@@ -76,7 +76,7 @@ const Address = ({ address, setAddress }: AddressProps) => {
                                             setMode(true)
                                         }}
                                     >
-                                        Edit address
+                                        Sửa địa chỉ
                                     </Box>
                                     <Box
                                         as="p"
@@ -86,45 +86,45 @@ const Address = ({ address, setAddress }: AddressProps) => {
                                             setOpen(false)
                                         }}
                                     >
-                                        Choose another address
+                                        Chọn địa chỉ khác
                                     </Box>
                                 </Fragment>
-                            } trigger="click" placement="bottom" title="Action" open={open} onOpenChange={(open: boolean) => setOpen(open)}>
+                            } trigger="click" placement="bottom" title="Hành động" open={open} onOpenChange={(open: boolean) => setOpen(open)}>
                                 <EllipsisOutlined />
                             </Popover>
                         } style={{ flex: 1 }}>
                             <Tooltip title={`Street line 1: ${address.street_line_1}`}>
                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                    <Box as="span" fontWeight="semibold">Street line 1: </Box>{address.street_line_1}
+                                    <Box as="span" fontWeight="semibold">Tuyến phố 1 1: </Box>{address.street_line_1}
                                 </p>
                             </Tooltip>
                             <Tooltip title={`Street line 2: ${address.street_line_2 ? address.street_line_2 : '-'}`}>
                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                    <Box as="span" fontWeight="semibold">Street line 2: </Box>{address.street_line_2 ? address.street_line_2 : '-'}
+                                    <Box as="span" fontWeight="semibold">Tuyến phố 2: </Box>{address.street_line_2 ? address.street_line_2 : '-'}
                                 </p>
                             </Tooltip>
                             <Tooltip title={`City: ${address.city}`}>
                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                    <Box as="span" fontWeight="semibold">City: </Box>{address.city}
+                                    <Box as="span" fontWeight="semibold">Thành phố: </Box>{address.city}
                                 </p>
                             </Tooltip>
                             <Tooltip title={`Country: ${address.country}`}>
                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                    <Box as="span" fontWeight="semibold">Country: </Box>{address.country}
+                                    <Box as="span" fontWeight="semibold">Quốc gia: </Box>{address.country}
                                 </p>
                             </Tooltip>
                             <Tooltip title={`Postal code: ${address.postal_code}`}>
                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                    <Box as="span" fontWeight="semibold">Postal code: </Box>{address.postal_code}
+                                    <Box as="span" fontWeight="semibold">Mã bưu điện: </Box>{address.postal_code}
                                 </p>
                             </Tooltip>
                             <Tooltip title={`Province: ${address.province}`}>
                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                    <Box as="span" fontWeight="semibold">Province: </Box>{address.province}
+                                    <Box as="span" fontWeight="semibold">Tỉnh: </Box>{address.province}
                                 </p>
                             </Tooltip>
                         </CardAntd>
-                    ) : <Button onClick={() => { setIsModalOpen(true) }}>Select or create an address</Button>
+                    ) : <Button onClick={() => { setIsModalOpen(true) }}>Chọn hoặc tạo địa chỉ</Button>
                 }
             </Card>
             <Modal title="Address" open={isModalOpen} onOk={() => setIsModalOpen(false)} onCancel={() => setIsModalOpen(false)} centered width={"80%"}>
@@ -137,7 +137,7 @@ const Address = ({ address, setAddress }: AddressProps) => {
                                 setMode(false)
                             }}
                         >
-                            Create new address
+                            Tạo địa chỉ
                         </Button>
                     </Col>
                     {

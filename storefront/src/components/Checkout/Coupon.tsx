@@ -49,9 +49,9 @@ const Coupon = ({ setCouponModal, control, refresh, setRefresh, handleSubmit, er
         <div className='mb-[1rem]'>
             <Card variant="outline" padding={8} >
                 <Flex justifyContent="flex-end">
-                    <Button onClick={() => setCouponModal(true)}>Xem mã coupon khả dụng</Button>
+                    <Button onClick={() => setCouponModal(true)}>Xem mã giảm giá khả dụng</Button>
                 </Flex>
-                <div className='text-center font-bold'>Mã Coupon</div>
+                <div className='text-center font-bold'>Mã giảm giá</div>
                 <Divider />
                 <Form className='flex'>
                     <Controller
@@ -73,7 +73,7 @@ const Coupon = ({ setCouponModal, control, refresh, setRefresh, handleSubmit, er
                         disabled={!checkout.promotion.loading && checkout.promotion.result ? true : false}
                         loading={checkout.promotion.loading}
                     >
-                        Xác nhạn
+                        Xác nhận
                     </Button>
                     {
                         !checkout.promotion.loading && checkout.promotion.result ? (

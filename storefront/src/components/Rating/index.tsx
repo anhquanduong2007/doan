@@ -186,7 +186,7 @@ const Rating = () => {
                                         />
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type='primary' htmlType='submit' loading={rating.create.loading}>Send</Button>
+                                        <Button type='primary' htmlType='submit' loading={rating.create.loading}>Đánh giá</Button>
                                     </Form.Item>
                                 </Form>
                             </Col>

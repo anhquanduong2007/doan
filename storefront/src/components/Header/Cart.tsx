@@ -58,7 +58,7 @@ const Cart = ({ isOpen, onClose, refresh, setRefresh }: CartProps) => {
                 <DrawerOverlay />
                 <DrawerContent>
                     <DrawerCloseButton />
-                    <DrawerHeader className="font-bold uppercase" borderBottomWidth='1px'>your cart</DrawerHeader>
+                    <DrawerHeader className="font-bold uppercase" borderBottomWidth='1px'>Giỏ hàng của bạn</DrawerHeader>
                     <DrawerBody marginTop={'30px'} display='flex' flexDirection='column' gap='20px' height='500px' overflowY='auto' justifyContent={cart.listProductOnCart.loading ? 'center' : 'flex-start'}>
                         <Spin spinning={cart.listProductOnCart.loading}>
                             {dataCartToRender()}

@@ -37,7 +37,7 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: A
                     toast({
                         status: 'success',
                         variant: 'left-accent',
-                        title: "Added in card!",
+                        title: "Thêm vào giỏ hàng thành công!",
                         isClosable: true,
                         position: "top-right"
                     })
@@ -57,7 +57,7 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: A
         } else {
             toast({
                 status: 'error',
-                title: "You need to login to perform this action!",
+                title: "Bạn cần đăng nhập để thực hiện hành động này!",
                 variant: 'left-accent',
                 isClosable: true,
                 position: "top-right"
@@ -114,7 +114,7 @@ export const deleteFromCart = async ({ axiosClientJwt, dispatch, id, toast, refr
                 dispatch(deleteProductFromCartSuccess(res.response.data));
                 toast({
                     status: 'success',
-                    title: "Deleted from card!",
+                    title: "Xóa khỏi giỏ hàng thành công!",
                     isClosable: true,
                     position: "top-right",
                     variant: 'left-accent',

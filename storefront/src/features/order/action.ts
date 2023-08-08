@@ -72,7 +72,7 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                 dispatch(cancelOrderSuccess(res.response.data));
                 toast({
                     status: 'success',
-                    title: 'Order has been cancelled!',
+                    title: 'Đơn hàng của bạn đã được hủy!',
                     isClosable: true,
                     position: "top-right",
                     variant: 'left-accent',
@@ -87,7 +87,7 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'warning',
-                title: 'You do not have permission to perform this action!',
+                title: 'Bạn không có quyền để thực hiện hành động này!',
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -121,7 +121,7 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
                 dispatch(refundOrderSuccess(res.response.data));
                 toast({
                     status: 'success',
-                    title: 'Order has been refund!',
+                    title: 'Đơn hàng của bạn đã được hoàn trả!',
                     isClosable: true,
                     position: "top-right",
                     variant: 'left-accent',
@@ -136,7 +136,7 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'warning',
-                title: 'You do not have permission to perform this action!',
+                title: 'Bạn không có quyền để thực hiện hành động này!',
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

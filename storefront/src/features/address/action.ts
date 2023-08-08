@@ -32,7 +32,7 @@ export const deleteAddress = async ({ id, dispatch, axiosClientJwt, refresh, set
                 dispatch(deleteAddressSuccess(res.response.data))
                 toast({
                     status: 'success',
-                    title: "Delete address successfully!",
+                    title: "Xóa địa chỉ thành công!",
                     position: "top-right",
                     variant: 'left-accent',
                     isClosable: true,
@@ -52,7 +52,7 @@ export const deleteAddress = async ({ id, dispatch, axiosClientJwt, refresh, set
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'error',
-                title: "You do not have permission to perform this action!",
+                title: "Bạn không có quyền để thực hiện hành động này!",
                 isClosable: true,
             })
         } else {
@@ -88,7 +88,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, refresh
                 dispatch(createAddressSuccess(res.response.data));
                 toast({
                     status: 'success',
-                    title: "Create address successfully!",
+                    title: "Tạo địa chỉ thành công!",
                     position: "top-right",
                     variant: 'left-accent',
                     isClosable: true,
@@ -107,7 +107,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, refresh
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'error',
-                title: "You do not have permission to perform this action!",
+                title: "Bạn không có quyền để thực hiện hành động này!",
                 isClosable: true,
             })
         } else {
@@ -142,7 +142,7 @@ export const getAddress = async ({ id, dispatch, axiosClientJwt, toast }: GetAdd
             setTimeout(function () {
                 toast({
                     status: 'error',
-                    title: "You do not have permission to perform this action!",
+                    title: "Bạn không có quyền để thực hiện hành động này!",
                     isClosable: true,
                     position: "top-right",
                     variant: 'left-accent',
@@ -183,7 +183,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
                 dispatch(updateAddressSuccess(res.response.data));
                 toast({
                     status: 'success',
-                    title: "Update address successfully!",
+                    title: "Cập nhật địa chỉ thành công!",
                     position: "top-right",
                     variant: 'left-accent',
                     isClosable: true,
@@ -202,7 +202,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'error',
-                title: "You do not have permission to perform this action!",
+                title: "Bạn không có quyền để thực hiện hành động này!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -237,7 +237,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
                 dispatch(setDefaultShippingSuccess(res.response.data));
                 toast({
                     status: 'success',
-                    title: 'Set default shipping address successfully!',
+                    title: 'Đặt địa chỉ giao hàng mặc định thành công!',
                     isClosable: true,
                     position: "top-right",
                     variant: 'left-accent',
@@ -252,7 +252,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'error',
-                title: "You do not have permission to perform this action!",
+                title: "Bạn không có quyền để thực hiện hành động này!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

@@ -12,7 +12,6 @@ import { IAxiosResponse, Pagination } from 'src/shared/types';
 import { AxiosInstance, Axios } from 'axios';
 import { AppDispatch } from 'src/app/store';
 
-
 interface GetRatingParams {
     dispatch: AppDispatch,
     axiosClient: Axios,
@@ -84,7 +83,7 @@ export const createRating = async ({ axiosClientJwt, dispatch, navigate, rating,
                 dispatch(createRatingSuccess(res.response.data));
                 toast({
                     status: 'success',
-                    title: 'Rated successfully!',
+                    title: 'Đã đánh giá sản phẩm này!',
                     isClosable: true,
                     position: "top-right"
                 })
@@ -98,7 +97,7 @@ export const createRating = async ({ axiosClientJwt, dispatch, navigate, rating,
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'warning',
-                title: 'You do not have permission to perform this action!',
+                title: 'Bạn không có quyền để thực hiện hành động này!',
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

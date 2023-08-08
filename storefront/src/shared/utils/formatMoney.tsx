@@ -1,7 +1,7 @@
 const formatMoney = (money:number) => {
-  const formatter = new Intl.NumberFormat('en-US', {
+  const formatter = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'VND',
   });
 
   return formatter.format(money)

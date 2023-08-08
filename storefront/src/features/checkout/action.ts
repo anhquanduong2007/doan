@@ -96,7 +96,7 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
                 dispatch(resetPromotion())
                 toast({
                     status: 'success',
-                    title: "Successfully!",
+                    title: "Tạo đơn hàng thành công!",
                     position: "top-right",
                     variant: 'left-accent',
                     isClosable: true,

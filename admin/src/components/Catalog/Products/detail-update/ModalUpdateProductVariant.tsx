@@ -139,7 +139,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                     return (
                                         <div >
                                             <InputNumber
-                                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                formatter={value => `${value} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                                 {...field}
                                             />
                                         </div>
@@ -155,7 +155,7 @@ const ModalUpdateProductVariant = ({ isModalOpen, setIsModalOpen, variant, refre
                                     return (
                                         <div >
                                             <InputNumber
-                                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                formatter={value => `${value} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                                                 {...field}
                                             />
                                         </div>
