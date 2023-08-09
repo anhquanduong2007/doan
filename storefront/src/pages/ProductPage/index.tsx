@@ -13,7 +13,6 @@ const ProductPage = () => {
     const [size, setSize] = React.useState<number[]>([])
     const [color, setColor] = React.useState<number[]>([])
 
-
     return (
         <Fragment>
             <div className='py-8 px-10 mt-16'>

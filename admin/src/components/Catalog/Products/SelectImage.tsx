@@ -25,7 +25,7 @@ const props = (refresh: boolean, setRefresh: (refresh: boolean) => void, setLoad
             if (info.fileList.every((file) => file.status === "done")) {
                 setTimeout(function () {
                     setRefresh(!refresh)
-                    message.success(`File uploaded successfully!`);
+                    message.success(`Tải ảnh lên thành công!`);
                     setLoading(false)
                 }, 1000);
             }
@@ -148,7 +148,7 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
                 <Col span={24}>
                     <Flex>
                         <Box mr={3} flex={1}>
-                            <Input type='text' placeholder='Search by asset name' onChange={(e) => { setSearch(e.target.value); }} />
+                            <Input type='text' placeholder='Tìm kiếm theo tên' onChange={(e) => { setSearch(e.target.value); }} />
                         </Box>
                         <Upload {...props(refresh, setRefresh, setLoading)}>
                             <Button type="primary" loading={loading}>Tải ảnh lên</Button>
@@ -163,7 +163,6 @@ const SelectImage = ({ isModalAssetOpen, setFeaturedAsset, setIsModalAssetOpen, 
                         loading={store.list.loading}
                         pagination={{
                             total: store.list.result?.total,
-                            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
                             defaultCurrent: skip + 1,
                             onChange: handleOnChangePagination,
                             defaultPageSize: take,

@@ -11,11 +11,19 @@ export const loginUser = async (user: { email: string, password: string }, dispa
         const res: IAxiosResponse<User> = await axiosClient.post('auth/login', user);
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                dispatch(loginSuccess(res.response.data));
-                localStorage.setItem("accessToken", res.response.access_token as string)
-                localStorage.setItem("userInfo", JSON.stringify(res.response.data))
-                localStorage.setItem("refreshToken", res.response.refresh_token as string)
-                navigate('/');
+                if (res.response.data.active) {
+                    dispatch(loginSuccess(res.response.data));
+                    localStorage.setItem("accessToken", res.response.access_token as string)
+                    localStorage.setItem("userInfo", JSON.stringify(res.response.data))
+                    localStorage.setItem("refreshToken", res.response.refresh_token as string)
+                    navigate('/dashboard');
+                } else {
+                    dispatch(loginFailed(null));
+                    Inotification({
+                        type: 'error',
+                        message: 'Tài khoản của bạn đã bị vô hiệu hóa!'
+                    })
+                }
             }, 1000);
         } else if (res?.response?.code === 400 && !res?.response?.success) {
             setTimeout(function () {

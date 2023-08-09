@@ -34,7 +34,7 @@ const ProductDetail = () => {
 
     // ** Effect
     React.useEffect(() => {
-        axiosClient.get(`product/${id}`).then((res) => {
+        axiosClient.get(`product/public/${id}`).then((res) => {
             const result = { ...res } as unknown as IAxiosResponse<Product>
             setProduct(result.response.data)
         })

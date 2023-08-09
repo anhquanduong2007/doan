@@ -316,7 +316,6 @@ const Orders = () => {
                                     scroll={{ x: '120vw' }}
                                     pagination={{
                                         total: order.list.result?.total,
-                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
                                         defaultCurrent: skip + 1,
                                         onChange: handleOnChangePagination,
                                         defaultPageSize: take,

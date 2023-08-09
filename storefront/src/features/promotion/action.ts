@@ -43,7 +43,7 @@ export const getListPromotion = async ({ pagination, dispatch, axiosClientJwt, t
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'warning',
-                title: 'You do not have permission to perform this action!',
+                title: 'Bạn không có quyền thực hiện hành động này!',
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -51,7 +51,7 @@ export const getListPromotion = async ({ pagination, dispatch, axiosClientJwt, t
         } else {
             toast({
                 status: 'error',
-                title: 'Something went wrong!',
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

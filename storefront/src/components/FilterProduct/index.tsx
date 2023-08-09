@@ -36,7 +36,7 @@ const FilterProduct = ({ setFilterCategories, setPrice, price, setColor, setSize
 
     // ** Effect
     React.useEffect(() => {
-        axiosClient.get(`category`, {
+        axiosClient.get(`category/public`, {
             params: {
                 skip,
                 take,
@@ -124,7 +124,7 @@ const FilterProduct = ({ setFilterCategories, setPrice, price, setColor, setSize
                 <div className='flex flex-row justify-between mt-3'>
                     <p className='font-semibold'>Giá</p>
                 </div>
-                <Slider value={price} onChange={onChangePrice} min={0} max={1000} />
+                <Slider tipFormatter={value => `${value} ₫`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} value={price} onChange={onChangePrice} min={0} max={100000000} />
             </div>
         </Fragment>
     )

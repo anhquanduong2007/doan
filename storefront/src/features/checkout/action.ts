@@ -39,7 +39,7 @@ export const checkPromotion = async ({ axiosClient, dispatch, refresh, setError,
         dispatch(checkPromotionFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
             position: "top-right",
             variant: 'left-accent',
@@ -111,7 +111,7 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'error',
-                title: "You do not have permission to perform this action!",
+                title: "Bạn không có quyền thực hiện hành động này!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -119,7 +119,7 @@ export const createOrder = async ({ axiosClientJwt, dispatch, navigate, order, t
         } else {
             toast({
                 status: 'error',
-                title: "Something went wrong!",
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

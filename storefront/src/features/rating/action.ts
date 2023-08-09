@@ -55,7 +55,7 @@ export const getListRating = async ({ pagination, dispatch, axiosClient, toast, 
     } catch (error: any) {
         toast({
             status: 'error',
-            title: 'Something went wrong!',
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
             position: "top-right",
             variant: 'left-accent',
@@ -108,7 +108,7 @@ export const createRating = async ({ axiosClientJwt, dispatch, navigate, rating,
         } else {
             toast({
                 status: 'error',
-                title: 'Something went wrong!',
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

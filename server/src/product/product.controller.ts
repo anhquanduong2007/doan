@@ -71,6 +71,18 @@ export class ProductController {
     }
 
     // ** Product
+    @Get('/public')
+    async getPublicProducts(@Query() pagination: PaginationDto, @Res() res: Response) {
+        const response = await this.productService.products(pagination);
+        return res.json({ response });
+    }
+
+    @Get("public/:id")
+    async getPublicProduct(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
+        const response = await this.productService.product(id)
+        res.json({ response })
+    }
+
     @Post("create")
     @Permission(Permissions.CreateProduct)
     async createProduct(@Req() req: Request, @Body() dto: ProductCreateDto, @Res() res: Response) {
@@ -79,16 +91,20 @@ export class ProductController {
     }
 
     @Get(":id")
+    @Permission(Permissions.ReadProduct)
     async getProduct(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         const response = await this.productService.product(id)
         res.json({ response })
     }
 
     @Get()
+    @Permission(Permissions.ReadProduct)
     async getProducts(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.productService.products(pagination);
         return res.json({ response });
     }
+
+  
 
     @Put("update/:id")
     @Permission(Permissions.UpdateProduct)
@@ -130,7 +146,6 @@ export class ProductController {
     @Post("option/bulk-create")
     @Permission(Permissions.CreateProduct)
     async optionBulkCreate(@Req() req: Request, @Body() dto: OptionBulkCreateDto, @Res() res: Response) {
-        const userId = req.user['userId']
         const response = await this.productService.optionBulkCreate(dto)
         res.json({ response })
     }
@@ -145,7 +160,6 @@ export class ProductController {
     @Post("option/create")
     @Permission(Permissions.CreateProduct)
     async optionCreate(@Req() req: Request, @Body() dto: OptionCreateDto, @Res() res: Response) {
-        const userId = req.user['userId']
         const response = await this.productService.optionCreate(dto)
         res.json({ response })
     }
@@ -153,7 +167,6 @@ export class ProductController {
     @Post("variant/create")
     @Permission(Permissions.CreateProduct)
     async productVariantCreate(@Req() req: Request, @Body() dto: ProductVariantCreateDto, @Res() res: Response) {
-        const userId = req.user['userId']
         const response = await this.productService.productVariantCreate(dto)
         res.json({ response })
     }

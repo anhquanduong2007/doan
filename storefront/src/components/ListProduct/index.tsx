@@ -22,7 +22,7 @@ interface ListProductProps {
 
 const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
     // ** State
-    const [products, setProducts] = React.useState<ProductList>()
+    const [products, setProducts] = React.useState<ProductList | null>()
     const [take, setTake] = useState<number>(12)
     const [skip, setSkip] = useState<number>(0)
     const [search, setSearch] = useState<string>('')
@@ -33,7 +33,7 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
 
     // ** Effect
     React.useEffect(() => {
-        axiosClient.get(`product`, {
+        axiosClient.get(`product/public`, {
             params: {
                 skip,
                 take,
@@ -45,6 +45,7 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
             }
         }).then((res) => {
             const result = { ...res } as unknown as IAxiosResponse<Product[]>
+            setProducts(null)
             setProducts(result.response.data as unknown as ProductList)
         })
     }, [filterCategories, value, skip, take, price, opts])
@@ -83,7 +84,6 @@ const ListProduct = ({ filterCategories, price, opts }: ListProductProps) => {
                             <Flex justifyContent="flex-end">
                                 <Pagination
                                     total={products?.total || 0}
-                                    showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
                                     defaultCurrent={skip + 1}
                                     onChange={handleOnChangePagination}
                                     defaultPageSize={take}

@@ -12,6 +12,12 @@ export class CategoryController {
         private readonly categoryService: CategoryService
     ) { }
 
+    @Get('/public')
+    async getPublicCategories(@Query() pagination: PaginationDto, @Res() res: Response) {
+        const response = await this.categoryService.categories(pagination);
+        return res.json({ response });
+    }
+    
     @Post("create")
     @Permission(Permissions.CreateCategory)
     async createCategory(@Body() dto: CategoryCreateDto, @Res() res: Response) {
@@ -41,7 +47,7 @@ export class CategoryController {
     }
 
     @Get()
-    @Permission(Permissions.ReadCategory, Permissions.Anonymous)
+    @Permission(Permissions.ReadCategory)
     async getCategories(@Query() pagination: PaginationDto, @Res() res: Response) {
         const response = await this.categoryService.categories(pagination);
         return res.json({ response });

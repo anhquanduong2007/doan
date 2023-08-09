@@ -26,7 +26,7 @@ const props = (refresh: boolean, setRefresh: (refresh: boolean) => void, setLoad
             if (info.fileList.every((file) => file.status === "done")) {
                 setTimeout(function () {
                     setRefresh(!refresh)
-                    message.success(`File uploaded successfully!`);
+                    message.success(`Tải ảnh lên thành công!`);
                     setLoading(false)
                 }, 1000);
             }
@@ -187,7 +187,6 @@ const Asset = () => {
                                     loading={store.list.loading}
                                     pagination={{
                                         total: store.list.result?.total,
-                                        showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
                                         defaultCurrent: skip + 1,
                                         onChange: handleOnChangePagination,
                                         defaultPageSize: take,

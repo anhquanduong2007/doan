@@ -67,9 +67,10 @@ export const addToCart = async ({ axiosClientJwt, cart, dispatch, id, toast }: A
         dispatch(addToCartFailed(null));
         toast({
             status: 'error',
-            variant: 'left-accent',
-            title: "Something went wrong!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -94,8 +95,10 @@ export const getListProductOnCart = async ({ axiosClientJwt, dispatch, toast }: 
         dispatch(getListProductOnCartFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -128,7 +131,7 @@ export const deleteFromCart = async ({ axiosClientJwt, dispatch, id, toast, refr
         dispatch(deleteProductFromCartFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
             position: "top-right",
             variant: 'left-accent',
@@ -154,8 +157,10 @@ export const getCart = async ({ axiosClientJwt, dispatch, id, toast }: GetCartPa
         dispatch(getCartFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -189,8 +194,10 @@ export const updateCart = async ({ axiosClientJwt, dispatch, id, toast, cart, re
         dispatch(updateCartFailed(null));
         toast({
             status: 'error',
-            title: "Something went wrong!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }

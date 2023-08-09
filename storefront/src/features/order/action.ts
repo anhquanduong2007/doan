@@ -38,7 +38,7 @@ export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navig
         if (error?.response?.status === 403 && error?.response?.statusText === "Forbidden") {
             toast({
                 status: 'warning',
-                title: 'You do not have permission to perform this action!',
+                title: 'Bạn không có quyền thực hiện hành động này!',
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -49,7 +49,7 @@ export const getListOrder = async ({ pagination, dispatch, axiosClientJwt, navig
         } else {
             toast({
                 status: 'error',
-                title: 'Something went wrong!',
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -98,7 +98,7 @@ export const cancelOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
         } else {
             toast({
                 status: 'warning',
-                title: 'Something went wrong!',
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -147,7 +147,7 @@ export const refundOrder = async ({ id, dispatch, axiosClientJwt, navigate, toas
         } else {
             toast({
                 status: 'warning',
-                title: 'Something went wrong!',
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Col, Card, Select, Tag } from 'antd'
 import formatMoney from 'src/shared/utils/formatMoney'
@@ -16,7 +16,11 @@ interface CardProductProps {
 const noImg = 'https://inantemnhan.com.vn/wp-content/uploads/2017/10/no-image.png'
 
 const CardProduct = ({ product, span }: CardProductProps) => {
-   const [variant, setVariant] = useState<ProductVariant>(product?.product_variants[0])
+   const [variant, setVariant] = useState<ProductVariant>()
+
+   useEffect(() => {
+      setVariant(product?.product_variants[0])
+   },[product])
 
    const toast = useToast()
    const dispatch = useAppDispatch()
@@ -28,7 +32,7 @@ const CardProduct = ({ product, span }: CardProductProps) => {
    }
 
    const handleAddToCard = () => {
-      if (variant?.stock > 0) {
+      if (variant && variant?.stock > 0) {
          addToCart({
             axiosClientJwt,
             cart: {
@@ -41,7 +45,7 @@ const CardProduct = ({ product, span }: CardProductProps) => {
       } else {
          toast({
             status: 'warning',
-            title: 'This product is out of stock',
+            title: 'Sản phẩm này đã hết hàng!',
             isClosable: true,
             position: "top-right",
             variant: 'left-accent',
@@ -56,12 +60,13 @@ const CardProduct = ({ product, span }: CardProductProps) => {
                className='flex-1'
                cover={<img src={variant && variant?.featured_asset?.url ? variant.featured_asset.url : product?.featured_asset?.url ? product?.featured_asset?.url : noImg} />}
                hoverable
+               style={{ width: "100%" }}
             >
                <Link to={`/products/${product?.id}`} className='text-[#999] hover:text-primary transition duration-200 text-sm font-bold'>
                   <Box as='span' mr={2}>{product?.name}</Box>
-                  <Tag color={variant?.stock ? 'green' : 'red'}>{variant?.stock > 0 ? 'Còn hàng' : 'Hết hàng'}</Tag>
+                  <Tag color={variant?.stock ? 'green' : 'red'}>{variant && variant?.stock > 0 ? 'Còn hàng' : 'Hết hàng'}</Tag>
                </Link>
-               <Box className='text-[#666] font-bold'>{`${formatMoney(variant?.price)}`}</Box>
+               <Box className='text-[#666] font-bold'>{`${formatMoney(variant && (variant as any)?.price)}`}</Box>
                <Box as='div' mt='8px'>
                   <Select
                      value={variant?.id}

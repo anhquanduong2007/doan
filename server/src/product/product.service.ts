@@ -923,7 +923,11 @@ export class ProductService {
                     },
                     include: {
                         featured_asset: true,
-                        product_variants: true
+                        product_variants: {
+                            include: {
+                                featured_asset: true
+                            }
+                        },
                     }
                 }))
                 products.push(product)

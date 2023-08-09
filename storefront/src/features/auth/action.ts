@@ -29,16 +29,28 @@ export const loginUser = async (user: { email: string, password: string }, dispa
         const res: IAxiosResponse<{}> = await axiosClient.post('auth/login', user);
         if (res?.response?.code === 200 && res?.response?.success) {
             setTimeout(function () {
-                dispatch(loginSuccess(res.response.data));
-                localStorage.setItem("accessToken", res.response.access_token as string)
-                localStorage.setItem("refreshToken", res.response.refresh_token as string)
-                toast({
-                    status: 'success',
-                    title: "Đăng nhập thành công!",
-                    position: "top-right",
-                    isClosable: true,
-                })
-                navigate('/');
+                if ((res.response.data as any).active) {
+                    dispatch(loginSuccess(res.response.data));
+                    localStorage.setItem("accessToken", res.response.access_token as string)
+                    localStorage.setItem("refreshToken", res.response.refresh_token as string)
+                    toast({
+                        status: 'success',
+                        title: "Đăng nhập thành công!",
+                        isClosable: true,
+                        position: "top-right",
+                        variant: 'left-accent',
+                    })
+                    navigate('/');
+                }else{
+                    dispatch(loginFailed(null));
+                    toast({
+                        status: 'error',
+                        title: "Tài khoản của bạn đã bị vô hiệu hóa!",
+                        isClosable: true,
+                        position: "top-right",
+                        variant: 'left-accent',
+                    })
+                }
             }, 1000);
         } else if (res?.response?.code === 400 && !res?.response?.success) {
             setTimeout(function () {
@@ -52,6 +64,8 @@ export const loginUser = async (user: { email: string, password: string }, dispa
             status: 'error',
             title: "Có gì đó không đúng!",
             isClosable: true,
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -73,8 +87,10 @@ export const logOut = async (dispatch: AppDispatch, navigate: Function, axiosCli
         dispatch(logOutFailed());
         toast({
             status: 'error',
-            title: "Có gì đó không đúng!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
+            position: "top-right",
+            variant: 'left-accent',
         })
     }
 }
@@ -130,7 +146,7 @@ export const getMe = async ({ axiosClientJwt, dispatch, toast }: GetMeParams) =>
         dispatch(meFailed(null));
         toast({
             status: 'error',
-            title: "Có gì đó khong đúng!",
+            title: "Đã xảy ra sự cố!",
             isClosable: true,
         })
     }

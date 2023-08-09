@@ -58,7 +58,7 @@ export const deleteAddress = async ({ id, dispatch, axiosClientJwt, refresh, set
         } else {
             toast({
                 status: 'error',
-                title: "Something went wrong!",
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
             })
         }
@@ -113,7 +113,7 @@ export const createAddress = async ({ address, axiosClientJwt, dispatch, refresh
         } else {
             toast({
                 status: 'error',
-                title: "Something went wrong!",
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
             })
         }
@@ -151,7 +151,7 @@ export const getAddress = async ({ id, dispatch, axiosClientJwt, toast }: GetAdd
         } else {
             toast({
                 status: 'error',
-                title: "Something went wrong!",
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
             })
         }
@@ -210,7 +210,7 @@ export const updateAddress = async ({ address, axiosClientJwt, dispatch, id, ref
         } else {
             toast({
                 status: 'error',
-                title: "Something went wrong!",
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',
@@ -260,7 +260,7 @@ export const setDefaultShippingAddressAction = async ({ customer_id, axiosClient
         } else {
             toast({
                 status: 'error',
-                title: "Something went wrong!",
+                title: "Đã xảy ra sự cố!",
                 isClosable: true,
                 position: "top-right",
                 variant: 'left-accent',

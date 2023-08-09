@@ -9,7 +9,6 @@ import Slider1 from '../../assets/slider/slide-01.jpg'
 import Slider2 from '../../assets/slider/slide-02.jpg'
 import Slider3 from '../../assets/slider/slide-03.jpg'
 import Slider4 from '../../assets/slider/slide-04.jpg'
-import "./slider.scss";
 import { Link } from "react-router-dom";
 
 const Slider = () => {
@@ -36,9 +35,10 @@ const Slider = () => {
               <SwiperSlide className="relative" key={index}>
                 <img src={item.src} alt="" />
                 <div className="flex flex-col absolute top-1/2 z-20 left-[10%] translate-y-[-50%]">
-                  <p className="text-xs lg:text-lg">Women Collection 2018</p>
-                  <p className="lg:text-6xl md:text-5xl lg:py-7 md:py-5 text-2xl py-2">New Season</p>
-                  <Link to="/" className="text-white lg:max-w-[180px] max-w-[100px] lg:text-lg text-xs justify-center items-center text-center bg-primary lg:px-6 lg:py-3 py-2 rounded-3xl">Shop Now</Link>
+                  <p className="lg:text-6xl md:text-5xl lg:py-7 md:py-5 text-2xl py-2">Mùa mới</p>
+                  <Link to="/products" className="text-white lg:max-w-[180px] max-w-[100px] lg:text-lg text-xs justify-center items-center text-center bg-primary lg:px-6 lg:py-3 py-2 rounded-3xl">
+                    Mua ngay
+                  </Link>
                 </div>
               </SwiperSlide>
             )
