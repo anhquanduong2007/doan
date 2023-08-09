@@ -131,7 +131,6 @@ export const cartSlice = createSlice({
             state.update.result = action.payload;
             state.update.error = true;
         },
-
     },
 });
 
@@ -150,7 +149,7 @@ export const {
     getCartFailed,
     updateCartStart,
     updateCartSuccess,
-    updateCartFailed
+    updateCartFailed,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;

@@ -37,7 +37,7 @@ const PotentialCustomers = ({dashboard, money, setMoney}: PotentialCustomersProp
                         <InputNumber
                             value={money}
                             style={{width: "100%"}}
-                            formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                            formatter={value => `${value} đ`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                             onChange={onChange}
                         />
                     </Col>

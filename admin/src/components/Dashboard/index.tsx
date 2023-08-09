@@ -29,7 +29,7 @@ interface Dashboard {
 const Dashboard = () => {
     // ** State
     const [dashboard, setDashboard] = useState<Dashboard>()
-    const [money, setMoney] = useState<number>(1000)
+    const [money, setMoney] = useState<number>(1000000)
     const [startDate, setStartDate] = React.useState<string>(moment(new Date())?.toISOString() as string)
     const [endDate, setEndDate] = React.useState<string>()
 

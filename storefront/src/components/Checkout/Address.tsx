@@ -95,7 +95,7 @@ const Address = ({ address, setAddress }: AddressProps) => {
                         } style={{ flex: 1 }}>
                             <Tooltip title={`Street line 1: ${address.street_line_1}`}>
                                 <p style={{ width: "300px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                                    <Box as="span" fontWeight="semibold">Tuyến phố 1 1: </Box>{address.street_line_1}
+                                    <Box as="span" fontWeight="semibold">Tuyến phố 1: </Box>{address.street_line_1}
                                 </p>
                             </Tooltip>
                             <Tooltip title={`Street line 2: ${address.street_line_2 ? address.street_line_2 : '-'}`}>

@@ -84,11 +84,11 @@ const SalesReport = ({ dashboard, setStartDate, startDate, setEndDate }: SalesRe
                                  {order.payment_method === "Standard" ? 'Thanh toán thường' : 'paypal'}
                               </Tag>
                            </Box>
-                           <Box flex={1}>
+                           <Flex flex={1} justifyContent={'center'}>
                               <Button>
                                  <Link to={`/sales/orders/detail/${order.id}`}>Open</Link>
                               </Button>
-                           </Box>
+                           </Flex>
                         </Flex>
                      )
                   })}

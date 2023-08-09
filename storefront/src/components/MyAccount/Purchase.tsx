@@ -80,7 +80,7 @@ const Purchase = () => {
                                                                 case StatusOrder.Refund:
                                                                     return <Tag color="magenta">Hoàn trả</Tag>
                                                                 default:
-                                                                    return <Tag color="blue">Đơn hàng chờ xác thực</Tag>
+                                                                    return <Tag color="blue">Mở</Tag>
                                                             }
                                                         })()}
                                                         {order.payment ? <Tag>Đã thanh toán</Tag> : <Tag>Chưa thanh toán</Tag>}
@@ -208,7 +208,7 @@ const Purchase = () => {
                                                     {
                                                         order.order_history.map((history, index) => {
                                                             return (
-                                                                <Timeline.Item key={index}>{`${history.content} at ${new Date(history.created_date).toISOString().substring(0, 10)} - ${moment(history.created_date).utc().format('HH:mm:ss')}`}</Timeline.Item>
+                                                                <Timeline.Item key={index}>{`${history.content} ${new Date(history.created_date).toISOString().substring(0, 10)} - ${moment(history.created_date).utc().format('HH:mm:ss')}`}</Timeline.Item>
 
                                                             )
                                                         })

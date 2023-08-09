@@ -13,7 +13,7 @@ import {
     getCartFailed,
     updateCartStart,
     updateCartSuccess,
-    updateCartFailed
+    updateCartFailed,
 } from "./cartSlice";
 import { IAxiosResponse } from "src/shared/types/axiosResponse";
 import { AddToCartParams, DeleteFromCartParams, GetCartParams, GetListProductOnCartParams, UpdateCartParams } from "./type";

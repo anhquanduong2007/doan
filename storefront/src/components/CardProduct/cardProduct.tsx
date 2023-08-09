@@ -17,10 +17,11 @@ const noImg = 'https://inantemnhan.com.vn/wp-content/uploads/2017/10/no-image.pn
 
 const CardProduct = ({ product, span }: CardProductProps) => {
    const [variant, setVariant] = useState<ProductVariant>()
+   const [loading, setLoading] = useState<boolean>()
 
    useEffect(() => {
-      setVariant(product?.product_variants[0])
-   },[product])
+      setVariant({ ...product?.product_variants[0] })
+   }, [product])
 
    const toast = useToast()
    const dispatch = useAppDispatch()
@@ -31,8 +32,15 @@ const CardProduct = ({ product, span }: CardProductProps) => {
       setVariant(product?.product_variants?.find((variant) => variant.id === value)!)
    }
 
+   useEffect(() => {
+      if (!cart.addToCart.loading) {
+         setLoading(false)
+      }
+   }, [cart.addToCart.loading])
+
    const handleAddToCard = () => {
       if (variant && variant?.stock > 0) {
+         setLoading(true)
          addToCart({
             axiosClientJwt,
             cart: {
@@ -81,7 +89,9 @@ const CardProduct = ({ product, span }: CardProductProps) => {
                   />
                </Box>
                <Flex justifyContent='flex-start' mt='10px'>
-                  <Button size='sm' colorScheme='blue' borderRadius='3px' onClick={handleAddToCard} isLoading={cart.addToCart.loading}>Thêm vào giỏ hàng</Button>
+                  <Button size='sm' colorScheme='blue' borderRadius='3px' onClick={handleAddToCard} isLoading={loading}>
+                     Thêm vào giỏ hàng
+                  </Button>
                </Flex>
             </Card>
          </Col>

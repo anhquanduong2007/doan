@@ -37,7 +37,6 @@ const CartItem = ({ cartItem, onClose, refresh, setRefresh }: CartItemProps) => 
     const axiosClientJwt = createAxiosJwt();
 
     React.useEffect(() => {
-        console.log(cartItem.quantity)
         setValue('quantity', cartItem.quantity)
     }, [])
 
@@ -57,7 +56,6 @@ const CartItem = ({ cartItem, onClose, refresh, setRefresh }: CartItemProps) => 
                             name='quantity'
                             control={control}
                             render={({ field: { value, ...other } }) => {
-                                console.log(value)
                                 return (
                                     <React.Fragment>
                                         <HStack maxW='320px'>

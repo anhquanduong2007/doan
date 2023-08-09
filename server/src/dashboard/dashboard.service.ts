@@ -101,6 +101,14 @@ export class DashboardService {
                                 created_date: {
                                     gte: start_day,
                                 }
+                            },
+                        ],
+                        NOT: [
+                            {
+                                status: 'Cancel'
+                            },
+                            {
+                                status: 'Refund'
                             }
                         ]
                     },

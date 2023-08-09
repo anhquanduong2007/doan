@@ -57,7 +57,7 @@ export class OrderController implements OnApplicationBootstrap {
                 "transactions": [{
                     "amount": {
                         "currency": "USD",
-                        "total": `${order.total_price.toLocaleString('en-US',
+                        "total": `${(order.total_price / 23).toLocaleString('en-US',
                             { style: 'currency', currency: 'USD' }
                         ).substring(1)}`
                     }
@@ -187,7 +187,7 @@ export class OrderController implements OnApplicationBootstrap {
                         "items": [{
                             "name": isValidProductVariant.name,
                             "sku": isValidProductVariant.sku,
-                            "price": `${price.toLocaleString('en-US',
+                            "price": `${(price / 23).toLocaleString('en-US',
                                 { style: 'currency', currency: 'USD' }
                             ).substring(1)}`,
                             "currency": "USD",
@@ -197,7 +197,7 @@ export class OrderController implements OnApplicationBootstrap {
                     },
                     "amount": {
                         "currency": "USD",
-                        "total": `${price.toLocaleString('en-US',
+                        "total": `${(price / 23).toLocaleString('en-US',
                             { style: 'currency', currency: 'USD' }
                         ).substring(1)}`
                     },

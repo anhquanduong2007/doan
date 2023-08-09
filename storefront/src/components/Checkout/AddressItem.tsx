@@ -117,13 +117,13 @@ const AddressItem = ({ address, refresh, setRefresh, setMode, setUpdateAddress, 
                                     setAddressId(address.id)
                                 }}
                             >
-                                Đặt làm mặc định
+                                Đặt làm địa chỉ giao hàng mặc định
                             </Box>
                         </Fragment>
                     }
                         trigger="click"
                         placement="bottom"
-                        title="Action"
+                        title="Hành động"
                         open={open}
                         onOpenChange={(open: boolean) => setOpen(open)}
                     >
@@ -133,7 +133,7 @@ const AddressItem = ({ address, refresh, setRefresh, setMode, setUpdateAddress, 
                 {
                     address.default_shipping_address && (
                         <p>
-                            <Button disabled icon={<InboxOutlined />}>Địa chỉ mặc định</Button>
+                            <Button disabled icon={<InboxOutlined />}>Địa chỉ giao hàng mặc định</Button>
                         </p>
                     )
                 }
