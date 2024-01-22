@@ -1,23 +1,16 @@
 {
-  "name": "project",
+  "name": "extra-store",
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "admin",
-    "server",
-    "storefront"
+    "server"
   ],
   "scripts": {
     "docker:up": "docker-compose -f docker-compose.yaml up -d && sleep 5",
-    "phuc": "concurrently yarn:dev:server yarn:dev:admin",
     "dev": "yarn docker:up && concurrently yarn:dev:*",
     "dev:server": "cd server && yarn start:dev",
-    "dev:admin": "cd admin && yarn start",
-    "dev:storefront": "cd storefront && yarn start",
-    "build:admin": "cd admin && yarn build",
     "build:server": "cd server && yarn build",
-    "build:storefront": "cd storefront && yarn build",
     "p:studio": "cd server && prisma studio",
     "p:format": "cd server && prisma format",
     "db:push": "cd server && prisma db push",
