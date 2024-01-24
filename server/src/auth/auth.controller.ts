@@ -30,23 +30,23 @@ export class AuthController {
     return res.json({ response });
   }
 
-  @Post('customer/register')
-  async createCustomer(@Body() dto: RegisterDto, @Res() res: Response) {
-    const response = await this.authService.registerCustomer(dto);
-    return res.json({ response });
-  }
+  // @Post('customer/register')
+  // async createCustomer(@Body() dto: RegisterDto, @Res() res: Response) {
+  //   const response = await this.authService.registerCustomer(dto);
+  //   return res.json({ response });
+  // }
 
-  @Get('me')
-  @Permission()
-  async me(@Req() req: Request, @Res() res: Response) {
-    const response = await this.authService.me(req.user['userId']);
-    return res.json({ response });
-  }
+  // @Get('me')
+  // @Permission()
+  // async me(@Req() req: Request, @Res() res: Response) {
+  //   const response = await this.authService.me(req.user['userId']);
+  //   return res.json({ response });
+  // }
 
-  @Post('refreshToken')
-  @UseGuards(RefreshTokenGuard)
-  async refreshTokens(@Req() req: Request, @Res() res: Response) {
-    const response = await this.authService.refreshTokens(req.user['userId'], req.user['refreshToken']);
-    return res.json({ response });
-  }
+  // @Post('refreshToken')
+  // @UseGuards(RefreshTokenGuard)
+  // async refreshTokens(@Req() req: Request, @Res() res: Response) {
+  //   const response = await this.authService.refreshTokens(req.user['userId'], req.user['refreshToken']);
+  //   return res.json({ response });
+  // }
 }

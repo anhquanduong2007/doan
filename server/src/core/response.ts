@@ -1,0 +1,9 @@
+class ResponseSchemaBase {
+    customResponse() {
+
+    }
+
+    successResponse() {
+        
+    }
+}

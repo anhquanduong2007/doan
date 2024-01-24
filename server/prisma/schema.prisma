@@ -8,22 +8,29 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(cuid())
+  id             String     @id @default(cuid())
   password       String
   firstName      String
   lastName       String
   gender         Gender?
-  email          String   @unique
+  email          String     @unique
   image          String?
   phone          String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @default(now()) @updatedAt
-  lastActivityAt DateTime @default(now())
+  status         UserStatus @default(Deactive)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @default(now()) @updatedAt
+  lastActivityAt DateTime   @default(now())
   // address       address[]
   // carts         cart[]
   // orders        order[]
   // rate          rate[]
   // users_role    users_role[]
+}
+
+enum UserStatus {
+  Active   @map("active")
+  Deactive @map("deactive")
+  Locked   @map("locked")
 }
 
 enum Gender {

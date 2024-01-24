@@ -7,7 +7,7 @@
     "server"
   ],
   "scripts": {
-    "docker:up": "docker-compose -f docker-compose.yaml up -d && sleep 5",
+    "docker:up": "docker-compose -f docker-compose.yml up -d && sleep 5",
     "dev": "yarn docker:up && concurrently yarn:dev:*",
     "dev:server": "cd server && yarn start:dev",
     "build:server": "cd server && yarn build",
@@ -18,15 +18,11 @@
     "db:migrate": "cd server && prisma migrate dev"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.6.0",
-    "@emotion/react": "^11.10.8",
-    "@emotion/styled": "^11.10.8",
-    "@types/lodash": "4.14.194",
-    "framer-motion": "^10.12.7",
     "lodash": "4.17.21",
     "javascript-time-ago": "2.5.9"
   },
   "devDependencies": {
-    "concurrently": "8.0.1"
+    "concurrently": "8.2.2",
+    "@types/lodash": "4.14.202"
   }
 }
